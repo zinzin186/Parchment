@@ -5,15 +5,21 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
   var pagingState: PagingState
   
   private let options: PagingOptions
-  private let pagingIndicatorLayoutAttributes: PagingIndicatorLayoutAttributes
+  private let indicatorLayoutAttributes: PagingIndicatorLayoutAttributes
+  private let borderLayoutAttributes: PagingBorderLayoutAttributes
   
   init(pagingState: PagingState, options: PagingOptions) {
     
     self.pagingState = pagingState
     self.options = options
-    self.pagingIndicatorLayoutAttributes = PagingIndicatorLayoutAttributes(
-      forDecorationViewOfKind: PagingIndicator.defaultReuseIdentifier,
+    
+    self.indicatorLayoutAttributes = PagingIndicatorLayoutAttributes(
+      forDecorationViewOfKind: PagingIndicatorView.defaultReuseIdentifier,
       withIndexPath: NSIndexPath(forItem: 0, inSection: 0))
+    
+    self.borderLayoutAttributes = PagingBorderLayoutAttributes(
+      forDecorationViewOfKind: PagingBorderView.defaultReuseIdentifier,
+      withIndexPath: NSIndexPath(forItem: 1, inSection: 0))
     
     super.init()
     
@@ -28,8 +34,10 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
     minimumLineSpacing = 0
     minimumInteritemSpacing = 0
     scrollDirection = .Horizontal
-    register(PagingIndicator.self)
-    pagingIndicatorLayoutAttributes.configure(options)
+    register(PagingIndicatorView.self)
+    register(PagingBorderView.self)
+    indicatorLayoutAttributes.configure(options)
+    borderLayoutAttributes.configure(options)
   }
   
   override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
@@ -38,13 +46,19 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
   
   override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
     var layoutAttributes = super.layoutAttributesForElementsInRect(rect)!
-    layoutAttributes.append(layoutAttributesForDecorationViewOfKind(PagingIndicator.defaultReuseIdentifier, atIndexPath: NSIndexPath(forItem: 0, inSection: 0))!)
+    
+    layoutAttributes.append(layoutAttributesForDecorationViewOfKind(PagingIndicatorView.defaultReuseIdentifier,
+      atIndexPath: NSIndexPath(forItem: 0, inSection: 0))!)
+    
+    layoutAttributes.append(layoutAttributesForDecorationViewOfKind(PagingBorderView.defaultReuseIdentifier,
+      atIndexPath: NSIndexPath(forItem: 1, inSection: 0))!)
+    
     return layoutAttributes
   }
   
   override func layoutAttributesForDecorationViewOfKind(elementKind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-    if elementKind == PagingIndicator.defaultReuseIdentifier {
-      
+    
+    if elementKind == PagingIndicatorView.defaultReuseIdentifier {
       let upcomingIndex = pagingState.upcomingIndex ?? pagingState.currentIndex
       
       let from = PagingIndicatorMetric(
@@ -55,9 +69,15 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
         frame: indicatorFrameForIndex(upcomingIndex),
         insets: indicatorInsetsForIndex(upcomingIndex))
       
-      pagingIndicatorLayoutAttributes.update(from: from, to: to, progress: pagingState.offset)
-      return pagingIndicatorLayoutAttributes
+      indicatorLayoutAttributes.update(from: from, to: to, progress: pagingState.offset)
+      return indicatorLayoutAttributes
     }
+    
+    if elementKind == PagingBorderView.defaultReuseIdentifier {
+      borderLayoutAttributes.update(width: collectionViewContentSize().width)
+      return borderLayoutAttributes
+    }
+    
     return super.layoutAttributesForDecorationViewOfKind(elementKind, atIndexPath: indexPath)
   }
   
