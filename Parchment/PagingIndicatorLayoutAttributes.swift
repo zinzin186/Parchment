@@ -2,6 +2,7 @@ import UIKit
 
 struct PagingIndicatorMetric {
   let frame: CGRect
+  let insets: UIEdgeInsets
 }
 
 class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
@@ -22,15 +23,15 @@ class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
   }
   
   func update(from from: PagingIndicatorMetric, to: PagingIndicatorMetric, progress: CGFloat) {
-
+    
     frame.origin.x = tween(
-      from: from.frame.origin.x,
-      to: to.frame.origin.x,
+      from: from.frame.origin.x + from.insets.left,
+      to: to.frame.origin.x + to.insets.left,
       progress: progress)
     
     frame.size.width = tween(
-      from: from.frame.width,
-      to: to.frame.width,
+      from: from.frame.width - from.insets.right - from.insets.left,
+      to: to.frame.width - to.insets.right - to.insets.left,
       progress: progress)
   }
 
