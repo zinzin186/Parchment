@@ -3,9 +3,17 @@ import Cartography
 
 class PagingCell: UICollectionViewCell {
   
-  var title: String? {
+  private let titleLabel = UILabel(frame: .zero)
+  
+  var viewModel: PagingCellViewModel? {
     didSet {
-      self.titleLabel.text = self.title
+      configureTitleLabel()
+    }
+  }
+  
+  override var selected: Bool {
+    didSet {
+      configureTitleLabel()
     }
   }
   
@@ -15,12 +23,10 @@ class PagingCell: UICollectionViewCell {
   }
   
   required init?(coder: NSCoder) {
-    super.init(coder: coder)
-    configure()
+    fatalError(Error.InitCoder.rawValue)
   }
   
   private func configure() {
-    contentView.backgroundColor = UIColor.redColor()
     contentView.addSubview(titleLabel)
     constrain(contentView, titleLabel) { contentView, titleLabel in
       titleLabel.centerX == contentView.centerX
@@ -28,27 +34,16 @@ class PagingCell: UICollectionViewCell {
     }
   }
   
-  override func preferredLayoutAttributesFittingAttributes(layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-    guard let attributes = layoutAttributes.copy() as? UICollectionViewLayoutAttributes else { return layoutAttributes }
+  private func configureTitleLabel() {
+    guard let viewModel = viewModel else { return }
+    titleLabel.text = viewModel.title
+    titleLabel.font = viewModel.font
     
-    frame = attributes.frame
-    setNeedsLayout()
-    layoutIfNeeded()
-    
-    let size = contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
-    attributes.frame.size.width = size.width
-    attributes.frame.size.height = 50
-    
-    return attributes
+    if selected {
+      titleLabel.textColor = viewModel.selectedTextColor
+    } else {
+      titleLabel.textColor = viewModel.textColor
+    }
   }
-  
-  // MARK: Lazy Getters
-  
-  private lazy var titleLabel: UILabel = {
-    let titleLabel = UILabel(frame: .zero)
-    titleLabel.font = UIFont.systemFontOfSize(17)
-    titleLabel.textColor = UIColor.blackColor()
-    return titleLabel
-  }()
   
 }

@@ -16,7 +16,10 @@ class ViewController: UIViewController {
     pagingViewController.didMoveToParentViewController(self)
     
     constrain(view, pagingViewController.view) { view, pagingView in
-      view.edges == pagingView.edges
+      pagingView.top == view.top + 20
+      pagingView.left == view.left
+      pagingView.right == view.right
+      pagingView.bottom == view.bottom
     }
   }
   

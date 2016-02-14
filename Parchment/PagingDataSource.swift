@@ -3,9 +3,12 @@ import UIKit
 class PagingDataSource: NSObject {
   
   var viewControllers: [UIViewController]
+  private let options: PagingOptions
   
-  init(viewControllers: [UIViewController]) {
+  init(viewControllers: [UIViewController], options: PagingOptions) {
     self.viewControllers = viewControllers
+    self.options = options
+    super.init()
   }
   
 }
@@ -14,7 +17,9 @@ extension PagingDataSource: UICollectionViewDataSource {
   
   func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
     let cell: PagingCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
-    cell.title = viewControllers[indexPath.row].title
+    cell.viewModel = PagingCellViewModel(
+      title: viewControllers[indexPath.row].title,
+      theme: options.theme)
     return cell
   }
   

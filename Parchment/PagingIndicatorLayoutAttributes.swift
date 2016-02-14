@@ -6,8 +6,14 @@ struct PagingIndicatorMetric {
 
 class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
 
-  func configure(from from: PagingIndicatorMetric, to: PagingIndicatorMetric, progress: CGFloat) {
-    
+  func configure(options: PagingOptions) {
+    frame.size.height = 4
+    frame.origin.y = options.headerHeight - 4
+    zIndex = 100
+  }
+  
+  func update(from from: PagingIndicatorMetric, to: PagingIndicatorMetric, progress: CGFloat) {
+
     frame.origin.x = tween(
       from: from.frame.origin.x,
       to: to.frame.origin.x,
@@ -17,10 +23,6 @@ class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
       from: from.frame.width,
       to: to.frame.width,
       progress: progress)
-    
-    frame.size.height = 4
-    frame.origin.y = 46
-    zIndex = 100
   }
 
   

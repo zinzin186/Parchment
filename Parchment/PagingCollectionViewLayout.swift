@@ -3,14 +3,20 @@ import UIKit
 class PagingCollectionViewLayout: UICollectionViewFlowLayout {
   
   var pagingState: PagingState
-  var pagingIndicatorLayoutAttributes: PagingIndicatorLayoutAttributes
   
-  init(pagingState: PagingState) {
+  private let options: PagingOptions
+  private let pagingIndicatorLayoutAttributes: PagingIndicatorLayoutAttributes
+  
+  init(pagingState: PagingState, options: PagingOptions) {
+    
     self.pagingState = pagingState
+    self.options = options
     self.pagingIndicatorLayoutAttributes = PagingIndicatorLayoutAttributes(
       forDecorationViewOfKind: PagingIndicator.defaultReuseIdentifier,
       withIndexPath: NSIndexPath(forItem: 0, inSection: 0))
+    
     super.init()
+    
     configure()
   }
   
@@ -23,6 +29,7 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
     minimumInteritemSpacing = 0
     scrollDirection = .Horizontal
     register(PagingIndicator.self)
+    pagingIndicatorLayoutAttributes.configure(options)
   }
   
   override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
@@ -41,7 +48,7 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
       let from = PagingIndicatorMetric(frame: indicatorFrameForIndex(pagingState.currentIndex))
       let to = PagingIndicatorMetric(frame: indicatorFrameForIndex(pagingState.upcomingIndex ?? pagingState.currentIndex))
       
-      pagingIndicatorLayoutAttributes.configure(from: from, to: to, progress: pagingState.offset)
+      pagingIndicatorLayoutAttributes.update(from: from, to: to, progress: pagingState.offset)
       return pagingIndicatorLayoutAttributes
     }
     return super.layoutAttributesForDecorationViewOfKind(elementKind, atIndexPath: indexPath)
