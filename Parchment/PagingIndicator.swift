@@ -2,18 +2,11 @@ import UIKit
 
 class PagingIndicator: UICollectionReusableView {
   
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    configure()
-  }
-  
-  required init?(coder: NSCoder) {
-    super.init(coder: coder)
-    configure()
-  }
-  
-  private func configure() {
-    backgroundColor = UIColor.blueColor()
+  override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {
+    super.applyLayoutAttributes(layoutAttributes)
+    if let attributes = layoutAttributes as? PagingIndicatorLayoutAttributes {
+      backgroundColor = attributes.backgroundColor
+    }
   }
   
 }

@@ -6,10 +6,19 @@ struct PagingIndicatorMetric {
 
 class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
 
+  var backgroundColor: UIColor?
+  
   func configure(options: PagingOptions) {
-    frame.size.height = 4
-    frame.origin.y = options.headerHeight - 4
-    zIndex = 100
+    switch options.indicatorOptions {
+    case let .Visible(height, _):
+      backgroundColor = options.theme.indicatorBackgroundColor
+      zIndex = Int.max
+      frame.size.height = height
+      frame.origin.y = options.headerHeight - height
+      alpha = 1
+    case .Hidden:
+      alpha = 0
+    }
   }
   
   func update(from from: PagingIndicatorMetric, to: PagingIndicatorMetric, progress: CGFloat) {
