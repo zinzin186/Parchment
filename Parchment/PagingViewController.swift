@@ -48,17 +48,22 @@ public class PagingViewController: UIViewController {
   }
   
   private func handlePagingStateUpdate() {
+    
+    collectionViewLayout.pagingState = pagingState
+    pagingContentViewController.pagingState = pagingState
+    
     switch pagingState {
     case let .Current(index, _):
       let indexPath = NSIndexPath(forItem: index, inSection: 0)
       collectionView.selectItemAtIndexPath(indexPath,
         animated: true,
         scrollPosition: .CenteredHorizontally)
-    default:
-      collectionViewLayout.pagingState = pagingState
+    case .Next, .Previous:
       collectionViewLayout.invalidateLayout()
+      collectionView.selectItemAtIndexPath(pagingState.selectedIndexPath(),
+        animated: false,
+        scrollPosition: .None)
     }
-    pagingContentViewController.pagingState = pagingState
   }
   
   // MARK: Lazy Getters
@@ -73,6 +78,7 @@ public class PagingViewController: UIViewController {
     collectionView.dataSource = self.dataSource
     collectionView.delegate = self
     collectionView.backgroundColor = UIColor.whiteColor()
+    collectionView.scrollEnabled = false
     return collectionView
   }()
   
@@ -111,7 +117,7 @@ extension PagingViewController: PagingContentViewControllerDelegate {
     if upcomingIndex > pagingState.currentIndex {
       self.pagingState = .Next(pagingState.currentIndex, upcomingIndex, offset)
     } else if upcomingIndex < pagingState.currentIndex {
-      self.pagingState = .Previous(pagingState.currentIndex, upcomingIndex, fabs(offset))
+      self.pagingState = .Previous(pagingState.currentIndex, upcomingIndex, offset)
     }
   }
   

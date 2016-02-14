@@ -47,4 +47,12 @@ enum PagingState {
     }
   }
   
+  func selectedIndexPath() -> NSIndexPath {
+    if offset > fabs(0.5) {
+      return NSIndexPath(forItem: upcomingIndex ?? currentIndex, inSection: 0)
+    } else {
+      return NSIndexPath(forItem: currentIndex, inSection: 0)
+    }
+  }
+  
 }

@@ -69,7 +69,7 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
         frame: indicatorFrameForIndex(upcomingIndex),
         insets: indicatorInsetsForIndex(upcomingIndex))
       
-      indicatorLayoutAttributes.update(from: from, to: to, progress: pagingState.offset)
+      indicatorLayoutAttributes.update(from: from, to: to, progress: fabs(pagingState.offset))
       return indicatorLayoutAttributes
     }
     
