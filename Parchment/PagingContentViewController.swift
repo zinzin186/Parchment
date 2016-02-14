@@ -71,12 +71,18 @@ extension PagingContentViewController: UIScrollViewDelegate {
     
     if let upcomingViewController = self.upcomingViewController {
       if let upcomingIndex = dataSource.viewControllers.indexOf(upcomingViewController) {
-        delegate?.pagingContentViewController(self, didChangeOffset: offset, towardsIndex: upcomingIndex)
+        delegate?.pagingContentViewController(self,
+          didChangeOffset: offset,
+          towardsIndex: upcomingIndex)
       }
     } else if offset < 0 {
-      delegate?.pagingContentViewController(self, didChangeOffset: offset, towardsIndex: pagingState.currentIndex - 1)
+      delegate?.pagingContentViewController(self,
+        didChangeOffset: offset,
+        towardsIndex: pagingState.currentIndex - 1)
     } else if offset > 0 {
-      delegate?.pagingContentViewController(self, didChangeOffset: offset, towardsIndex: pagingState.currentIndex + 1)
+      delegate?.pagingContentViewController(self,
+        didChangeOffset: offset,
+        towardsIndex: pagingState.currentIndex + 1)
     }
   }
   
