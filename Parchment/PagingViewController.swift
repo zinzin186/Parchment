@@ -49,8 +49,9 @@ public class PagingViewController: UIViewController {
         animated: true,
         scrollPosition: .CenteredHorizontally)
     case .Next, .Previous:
+      let indexPath = NSIndexPath(forItem: pagingState.visualSelectionIndex, inSection: 0)
       collectionViewLayout.invalidateLayout()
-      collectionView.selectItemAtIndexPath(pagingState.selectedIndexPath(),
+      collectionView.selectItemAtIndexPath(indexPath,
         animated: false,
         scrollPosition: .None)
     }
