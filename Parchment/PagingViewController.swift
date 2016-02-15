@@ -104,11 +104,15 @@ extension PagingViewController: UICollectionViewDelegateFlowLayout {
 
 extension PagingViewController: PagingContentViewControllerDelegate {
   
-  func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset offset: CGFloat, towardsIndex upcomingIndex: Int) {
-    if upcomingIndex > pagingState.currentIndex {
-      self.pagingState = .Next(pagingState.currentIndex, upcomingIndex, offset)
-    } else if upcomingIndex < pagingState.currentIndex {
-      self.pagingState = .Previous(pagingState.currentIndex, upcomingIndex, offset)
+  func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset offset: CGFloat) {
+    pagingState = pagingState.offsetBy(offset)
+  }
+  
+  func pagingContentViewController(pagingContentViewController: PagingContentViewController, willMoveToIndex index: Int) {
+    if index > pagingState.currentIndex {
+      pagingState = .Next(pagingState.currentIndex, index, 0)
+    } else {
+      pagingState = .Previous(pagingState.currentIndex, index, 0)
     }
   }
   

@@ -28,14 +28,25 @@ enum PagingState {
     }
   }
   
-  var upcomingIndex: Int? {
+  var upcomingIndex: Int {
     switch self {
-    case let .Previous(_, index, _):
+    case let .Previous(_, upcomingIndex, _):
+      return upcomingIndex
+    case let .Next(_, upcomingIndex, _):
+      return upcomingIndex
+    case let .Current(index, _):
       return index
-    case let .Next(_, index, _):
-      return index
+    }
+  }
+  
+  var targetIndex: Int {
+    switch self {
+    case .Previous:
+      return upcomingIndex != currentIndex ? upcomingIndex : currentIndex - 1
+    case .Next:
+      return upcomingIndex != currentIndex ? upcomingIndex : currentIndex + 1
     case .Current:
-      return nil
+      return currentIndex
     }
   }
   
@@ -49,10 +60,19 @@ enum PagingState {
   
   var visualSelectionIndex: Int {
     if fabs(offset) > 0.5 {
-      return upcomingIndex ?? currentIndex
+      return targetIndex ?? currentIndex
     } else {
       return currentIndex
     }
+  }
+  
+  func offsetBy(offset: CGFloat) -> PagingState {
+    if offset > 0 {
+      return .Next(currentIndex, upcomingIndex, offset)
+    } else if offset < 0 {
+      return .Previous(currentIndex, upcomingIndex, offset)
+    }
+    return .Current(currentIndex, directionForUpcomingIndex(currentIndex))
   }
   
 }

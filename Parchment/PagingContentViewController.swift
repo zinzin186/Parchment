@@ -2,8 +2,9 @@ import UIKit
 import Cartography
 
 protocol PagingContentViewControllerDelegate: class {
-  func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset: CGFloat, towardsIndex: Int)
+  func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset: CGFloat)
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didMoveToIndex: Int)
+  func pagingContentViewController(pagingContentViewController: PagingContentViewController, willMoveToIndex: Int)
 }
 
 class PagingContentViewController: UIViewController {
@@ -49,15 +50,20 @@ class PagingContentViewController: UIViewController {
   }
   
   func setViewControllerForIndex(index: Int, direction: PagingDirection, animated: Bool) {
+    
     let viewController = dataSource.viewControllers[index]
-    upcomingViewController = viewController
+    guard let upcomingIndex = dataSource.viewControllers.indexOf(viewController) else {
+      return
+    }
+    
+    delegate?.pagingContentViewController(self, willMoveToIndex: upcomingIndex)
+    
     pageViewController.setViewControllers([viewController],
       direction: direction.pageViewControllerNavigationDirection,
       animated: animated,
       completion: { completed in
         if completed {
           self.delegate?.pagingContentViewController(self, didMoveToIndex: index)
-          self.upcomingViewController = nil
         }
     })
   }
@@ -68,22 +74,7 @@ extension PagingContentViewController: UIScrollViewDelegate {
   
   func scrollViewDidScroll(scrollView: UIScrollView) {
     let offset = CGFloat(scrollView.contentOffset.x / scrollView.bounds.width) - 1
-    
-    if let upcomingViewController = self.upcomingViewController {
-      if let upcomingIndex = dataSource.viewControllers.indexOf(upcomingViewController) {
-        delegate?.pagingContentViewController(self,
-          didChangeOffset: offset,
-          towardsIndex: upcomingIndex)
-      }
-    } else if offset < 0 {
-      delegate?.pagingContentViewController(self,
-        didChangeOffset: offset,
-        towardsIndex: pagingState.currentIndex - 1)
-    } else if offset > 0 {
-      delegate?.pagingContentViewController(self,
-        didChangeOffset: offset,
-        towardsIndex: pagingState.currentIndex + 1)
-    }
+    delegate?.pagingContentViewController(self, didChangeOffset: offset)
   }
   
 }

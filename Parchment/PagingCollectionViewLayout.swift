@@ -59,15 +59,14 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
   override func layoutAttributesForDecorationViewOfKind(elementKind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
     
     if elementKind == PagingIndicatorView.defaultReuseIdentifier {
-      let upcomingIndex = pagingState.upcomingIndex ?? pagingState.currentIndex
       
       let from = PagingIndicatorMetric(
         frame: indicatorFrameForIndex(pagingState.currentIndex),
         insets: indicatorInsetsForIndex(pagingState.currentIndex))
       
       let to = PagingIndicatorMetric(
-        frame: indicatorFrameForIndex(upcomingIndex),
-        insets: indicatorInsetsForIndex(upcomingIndex))
+        frame: indicatorFrameForIndex(pagingState.targetIndex),
+        insets: indicatorInsetsForIndex(pagingState.targetIndex))
       
       indicatorLayoutAttributes.update(from: from, to: to, progress: fabs(pagingState.offset))
       return indicatorLayoutAttributes
