@@ -39,6 +39,7 @@
 		3EA04A951C53E0960054E5E0 /* PagingIndicatorLayoutAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA04A941C53E0960054E5E0 /* PagingIndicatorLayoutAttributes.swift */; };
 		3EA04A971C53E1160054E5E0 /* Tween.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA04A961C53E1160054E5E0 /* Tween.swift */; };
 		3EA04A991C53E1260054E5E0 /* ArithmeticType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA04A981C53E1260054E5E0 /* ArithmeticType.swift */; };
+		3ED31B701C71FEF50059235D /* PagingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED31B6F1C71FEF50059235D /* PagingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +99,7 @@
 		3EA04A941C53E0960054E5E0 /* PagingIndicatorLayoutAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorLayoutAttributes.swift; sourceTree = "<group>"; };
 		3EA04A961C53E1160054E5E0 /* Tween.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tween.swift; sourceTree = "<group>"; };
 		3EA04A981C53E1260054E5E0 /* ArithmeticType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArithmeticType.swift; sourceTree = "<group>"; };
+		3ED31B6F1C71FEF50059235D /* PagingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +154,7 @@
 				3E9E8D031C70C68500F265A4 /* PagingDirection.swift */,
 				3E9E8D171C710FA500F265A4 /* PagingOptions.swift */,
 				3EA04A791C53C1170054E5E0 /* PagingViewController.swift */,
+				3ED31B6F1C71FEF50059235D /* PagingView.swift */,
 				3E9E8D0E1C70D3D900F265A4 /* PagingContentViewController.swift */,
 				3EA04A8C1C53D5070054E5E0 /* PagingCollectionViewLayout.swift */,
 				3EA04A8E1C53D53B0054E5E0 /* PagingDataSource.swift */,
@@ -367,6 +370,7 @@
 				3EA04A7A1C53C1170054E5E0 /* PagingViewController.swift in Sources */,
 				3EA04A971C53E1160054E5E0 /* Tween.swift in Sources */,
 				3EA04A991C53E1260054E5E0 /* ArithmeticType.swift in Sources */,
+				3ED31B701C71FEF50059235D /* PagingView.swift in Sources */,
 				3E9E8D051C70C68500F265A4 /* PagingDirection.swift in Sources */,
 				3E9E8D0F1C70D3D900F265A4 /* PagingContentViewController.swift in Sources */,
 				3E9E8D1C1C711D3F00F265A4 /* PagingBorderLayoutAttributes.swift in Sources */,

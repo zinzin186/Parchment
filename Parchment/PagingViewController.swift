@@ -1,5 +1,4 @@
 import UIKit
-import Cartography
 
 public class PagingViewController: UIViewController {
   
@@ -21,32 +20,23 @@ public class PagingViewController: UIViewController {
     fatalError(Error.InitCoder.rawValue)
   }
   
+  public override func loadView() {
+    view = PagingView(
+      pagingContentView: pagingContentViewController.view,
+      collectionView: collectionView,
+      options: options)
+  }
+  
   public override func viewDidLoad() {
     super.viewDidLoad()
-    view.addSubview(collectionView)
     addViewController(pagingContentViewController)
-    setupConstraints()
     pagingContentViewController.setViewControllerForIndex(pagingState.currentIndex,
       direction: .Forward,
       animated: false)
   }
   
   // MARK: Private
-  
-  private func setupConstraints() {
-    constrain(view, collectionView, pagingContentViewController.view) { view, collectionView, pagingContentViewController in
-      collectionView.height == options.headerHeight
-      collectionView.left == view.left
-      collectionView.right == view.right
-      collectionView.top == view.top
-      
-      pagingContentViewController.top == collectionView.bottom
-      pagingContentViewController.left == view.left
-      pagingContentViewController.right == view.right
-      pagingContentViewController.bottom == view.bottom
-    }
-  }
-  
+
   private func handlePagingStateUpdate() {
     
     collectionViewLayout.pagingState = pagingState
