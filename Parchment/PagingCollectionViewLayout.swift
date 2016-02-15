@@ -7,6 +7,9 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
   private let options: PagingOptions
   private let indicatorLayoutAttributes: PagingIndicatorLayoutAttributes
   private let borderLayoutAttributes: PagingBorderLayoutAttributes
+  private var range: Range<Int> {
+    return 0..<(collection.numberOfItemsInSection(0) - 1)
+  }
   
   init(pagingState: PagingState, options: PagingOptions) {
     
@@ -82,46 +85,33 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
   
   // MARK: Private
   
-  private func indicatorInsetsForIndex(index: Int) -> UIEdgeInsets {
-    switch options.indicatorOptions {
-    case let .Visible(_, insets):
-      if index == 0 {
-        return UIEdgeInsets(top: 0, left: insets.left, bottom: 0, right: 0)
-      } else if index + 1 >= collection.numberOfItemsInSection(0) {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: insets.right)
-      } else {
-        return UIEdgeInsets()
+  private func indicatorInsetsForIndex(index: Int) -> PagingIndicatorMetric.Inset {
+    if case let .Visible(_, insets) = options.indicatorOptions {
+      if index == range.startIndex {
+        return .Left(insets.left)
+      } else if index >= range.endIndex {
+        return .Right(insets.right)
       }
-    case .Hidden:
-      return UIEdgeInsets()
     }
+    return .None
   }
   
   private func indicatorFrameForIndex(index: Int) -> CGRect {
-    
-    if index < 0 {
-      let currentIndexPath = NSIndexPath(forItem: pagingState.currentIndex, inSection: 0)
-      let layoutAttributes = layoutAttributesForItemAtIndexPath(currentIndexPath)!
-      var frame = layoutAttributes.frame
-      frame.origin.x -= frame.size.width
-      return frame
+    if index < range.startIndex {
+      let frame = frameForIndex(pagingState.currentIndex)
+      return frame.offsetBy(dx: -frame.width, dy: 0)
+    } else if index > range.endIndex {
+      let frame = frameForIndex(pagingState.currentIndex)
+      return frame.offsetBy(dx: frame.width, dy: 0)
+    } else {
+      return frameForIndex(index)
     }
-    
-    // When the selected item is the last item in the collection
-    // view, there is no upcoming layout attribute. Instead, we
-    // copy the selected item's layout attributes and update its
-    // frame to match where the indicator should go next
-    if index >= collection.numberOfItemsInSection(0) {
-      let currentIndexPath = NSIndexPath(forItem: pagingState.currentIndex, inSection: 0)
-      let layoutAttributes = layoutAttributesForItemAtIndexPath(currentIndexPath)!
-      var frame = layoutAttributes.frame
-      frame.origin.x += frame.size.width
-      return frame
-    }
-    
-    let indexPath = NSIndexPath(forItem: index, inSection: 0)
-    return layoutAttributesForItemAtIndexPath(indexPath)!.frame
-    
+  }
+  
+  private func frameForIndex(index: Int) -> CGRect {
+    let currentIndexPath = NSIndexPath(forItem: index, inSection: 0)
+    let layoutAttributes = layoutAttributesForItemAtIndexPath(currentIndexPath)!
+    return layoutAttributes.frame
   }
   
 }

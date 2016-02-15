@@ -1,14 +1,16 @@
 import Foundation
 
 enum PagingDirection {
-  case Reverse, Forward
+  case Reverse
+  case Forward
+  case None
 }
 
 extension PagingDirection {
   
   var pageViewControllerNavigationDirection: UIPageViewControllerNavigationDirection {
     switch self {
-    case .Forward:
+    case .Forward, .None:
       return .Forward
     case .Reverse:
       return .Reverse

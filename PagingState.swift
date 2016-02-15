@@ -1,10 +1,12 @@
 import Foundation
 
 enum PagingState {
-  
   case Previous(Int, Int, CGFloat)
   case Current(Int, PagingDirection)
   case Next(Int, Int, CGFloat)
+}
+
+extension PagingState {
   
   var offset: CGFloat {
     switch self {
@@ -50,29 +52,12 @@ enum PagingState {
     }
   }
   
-  func directionForUpcomingIndex(index: Int) -> PagingDirection {
-    if self.currentIndex > index {
-      return .Reverse
-    } else {
-      return .Forward
-    }
-  }
-  
   var visualSelectionIndex: Int {
     if fabs(offset) > 0.5 {
       return targetIndex ?? currentIndex
     } else {
       return currentIndex
     }
-  }
-  
-  func offsetBy(offset: CGFloat) -> PagingState {
-    if offset > 0 {
-      return .Next(currentIndex, upcomingIndex, offset)
-    } else if offset < 0 {
-      return .Previous(currentIndex, upcomingIndex, offset)
-    }
-    return .Current(currentIndex, directionForUpcomingIndex(currentIndex))
   }
   
 }

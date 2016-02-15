@@ -84,8 +84,18 @@ public class PagingViewController: UIViewController {
 extension PagingViewController: UICollectionViewDelegateFlowLayout {
   
   public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    let direction = pagingState.directionForUpcomingIndex(indexPath.row)
-    pagingContentViewController.setViewControllerForIndex(indexPath.row, direction: direction, animated: true)
+    
+    var direction: PagingDirection {
+      if pagingState.currentIndex > indexPath.row {
+        return .Reverse
+      } else {
+        return .Forward
+      }
+    }
+    
+    pagingContentViewController.setViewControllerForIndex(indexPath.row,
+      direction: direction,
+      animated: true)
   }
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
@@ -105,19 +115,28 @@ extension PagingViewController: UICollectionViewDelegateFlowLayout {
 extension PagingViewController: PagingContentViewControllerDelegate {
   
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset offset: CGFloat) {
-    pagingState = pagingState.offsetBy(offset)
+    
+    let currentIndex = pagingState.currentIndex
+    let upcomingIndex = pagingState.upcomingIndex
+    
+    if offset > 0 {
+      pagingState = .Next(currentIndex, upcomingIndex, offset)
+    } else if offset < 0 {
+      pagingState = .Previous(currentIndex, upcomingIndex, offset)
+    }
   }
   
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, willMoveToIndex index: Int) {
+    
     if index > pagingState.currentIndex {
       pagingState = .Next(pagingState.currentIndex, index, 0)
-    } else {
+    } else if index < pagingState.currentIndex {
       pagingState = .Previous(pagingState.currentIndex, index, 0)
     }
   }
   
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didMoveToIndex index: Int) {
-    pagingState = .Current(index, pagingState.directionForUpcomingIndex(index))
+    pagingState = .Current(index, .None)
   }
   
 }

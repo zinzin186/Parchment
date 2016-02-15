@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E0A517B1C726B4A00DB9A5E /* PagingIndicatorMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0A517A1C726B4A00DB9A5E /* PagingIndicatorMetric.swift */; };
 		3E9E8D041C70C68500F265A4 /* PagingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9E8D021C70C68500F265A4 /* PagingState.swift */; };
 		3E9E8D051C70C68500F265A4 /* PagingDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9E8D031C70C68500F265A4 /* PagingDirection.swift */; };
 		3E9E8D071C70C6E600F265A4 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9E8D061C70C6E600F265A4 /* Error.swift */; };
@@ -67,6 +68,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3E0A517A1C726B4A00DB9A5E /* PagingIndicatorMetric.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorMetric.swift; sourceTree = "<group>"; };
 		3E9E8D021C70C68500F265A4 /* PagingState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PagingState.swift; path = ../PagingState.swift; sourceTree = "<group>"; };
 		3E9E8D031C70C68500F265A4 /* PagingDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PagingDirection.swift; path = ../PagingDirection.swift; sourceTree = "<group>"; };
 		3E9E8D061C70C6E600F265A4 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Error.swift; path = ../Error.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				3EA04A901C53D55E0054E5E0 /* PagingIndicatorView.swift */,
 				3E9E8D1D1C711E2400F265A4 /* PagingBorderView.swift */,
 				3EA04A941C53E0960054E5E0 /* PagingIndicatorLayoutAttributes.swift */,
+				3E0A517A1C726B4A00DB9A5E /* PagingIndicatorMetric.swift */,
 				3E9E8D1B1C711D3F00F265A4 /* PagingBorderLayoutAttributes.swift */,
 				3EA04A921C53D58B0054E5E0 /* PagingCell.swift */,
 				3E9E8D191C7110F700F265A4 /* PagingCellViewModel.swift */,
@@ -388,6 +391,7 @@
 				3EA04A8F1C53D53B0054E5E0 /* PagingDataSource.swift in Sources */,
 				3EA04A781C53C0B20054E5E0 /* ReusableView.swift in Sources */,
 				3E9E8D0B1C70CDA900F265A4 /* UIViewController.swift in Sources */,
+				3E0A517B1C726B4A00DB9A5E /* PagingIndicatorMetric.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

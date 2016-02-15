@@ -6,17 +6,13 @@ class PagingBorderLayoutAttributes: UICollectionViewLayoutAttributes {
   var insets: UIEdgeInsets = UIEdgeInsets()
   
   func configure(options: PagingOptions) {
-    switch options.borderOptions {
-    case let .Visible(height, borderInsets):
+    if case let .Visible(height, borderInsets) = options.borderOptions {
       insets = borderInsets
       backgroundColor = options.theme.borderBackgroundColor
       frame.origin.x = insets.left
       frame.origin.y = options.headerHeight - height
       frame.size.height = height
       zIndex = Int.max - 1
-      alpha = 1
-    case .Hidden:
-      alpha = 0
     }
   }
   
