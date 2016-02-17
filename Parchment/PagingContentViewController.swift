@@ -9,7 +9,7 @@ protocol PagingContentViewControllerDelegate: class {
 
 class PagingContentViewController: UIViewController {
   
-  var pagingState: PagingState
+  var state: PagingState
   weak var delegate: PagingContentViewControllerDelegate?
   private let dataSource: PagingDataSource
   private let pageViewController: UIPageViewController
@@ -17,9 +17,9 @@ class PagingContentViewController: UIViewController {
   private var pendingViewController: UIViewController?
   private var upcomingViewController: UIViewController?
   
-  init(dataSource: PagingDataSource, pagingState: PagingState) {
+  init(dataSource: PagingDataSource, state: PagingState) {
     
-    self.pagingState = pagingState
+    self.state = state
     self.dataSource = dataSource
     self.pageViewController = UIPageViewController(
       transitionStyle: .Scroll,

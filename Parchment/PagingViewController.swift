@@ -4,11 +4,7 @@ public class PagingViewController: UIViewController {
   
   private let dataSource: PagingDataSource
   private let options: PagingOptions
-  private var pagingState: PagingState = .Current(0, .Forward) {
-    didSet {
-      handlePagingStateUpdate()
-    }
-  }
+  private let stateMachine: PagingStateMachine = PagingStateMachine()
   
   public init(viewControllers: [UIViewController], options: PagingOptions = DefaultPagingOptions()) {
     self.dataSource = PagingDataSource(viewControllers: viewControllers, options: options)
@@ -30,26 +26,43 @@ public class PagingViewController: UIViewController {
   public override func viewDidLoad() {
     super.viewDidLoad()
     addViewController(pagingContentViewController)
-    pagingContentViewController.setViewControllerForIndex(pagingState.currentIndex,
-      direction: .Forward,
+    pagingContentViewController.setViewControllerForIndex(stateMachine.state.currentIndex,
+      direction: stateMachine.directionForIndex(stateMachine.state.currentIndex),
       animated: false)
+    
+    stateMachine.stateObservers.append { [weak self] (stateMachine, oldState) in
+      self?.handleStateUpdate(stateMachine.state)
+    }
+    
+    stateMachine.eventObservers.append { [weak self] (stateMachine, event) in
+      self?.handleEventUpdate(event)
+    }
   }
   
   // MARK: Private
+  
+  private func handleEventUpdate(event: PagingEvent) {
+    if case let .Select(index, direction) = event {
+      pagingContentViewController.setViewControllerForIndex(index,
+        direction: direction,
+        animated: true)
+    }
+  }
 
-  private func handlePagingStateUpdate() {
+  private func handleStateUpdate(state: PagingState) {
     
-    collectionViewLayout.pagingState = pagingState
-    pagingContentViewController.pagingState = pagingState
+    collectionViewLayout.state = state
+    pagingContentViewController.state = state
     
-    switch pagingState {
-    case let .Current(index, _):
+    switch state {
+    case let .Current(index):
       let indexPath = NSIndexPath(forItem: index, inSection: 0)
       collectionView.selectItemAtIndexPath(indexPath,
         animated: true,
-        scrollPosition: .CenteredHorizontally)
+        scrollPosition: options.selectedScrollPosition)
+      
     case .Next, .Previous:
-      let indexPath = NSIndexPath(forItem: pagingState.visualSelectionIndex, inSection: 0)
+      let indexPath = NSIndexPath(forItem: state.visualSelectionIndex, inSection: 0)
       collectionViewLayout.invalidateLayout()
       collectionView.selectItemAtIndexPath(indexPath,
         animated: false,
@@ -60,11 +73,15 @@ public class PagingViewController: UIViewController {
   // MARK: Lazy Getters
   
   private lazy var collectionViewLayout: PagingCollectionViewLayout = {
-    return PagingCollectionViewLayout(pagingState: self.pagingState, options: self.options)
+    return PagingCollectionViewLayout(
+      state: self.stateMachine.state,
+      options: self.options)
   }()
   
   private lazy var collectionView: UICollectionView = {
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
+    let collectionView = UICollectionView(
+      frame: .zero,
+      collectionViewLayout: self.collectionViewLayout)
     collectionView.register(PagingCell.self)
     collectionView.dataSource = self.dataSource
     collectionView.delegate = self
@@ -74,7 +91,9 @@ public class PagingViewController: UIViewController {
   }()
   
   private lazy var pagingContentViewController: PagingContentViewController = {
-    let pagingContentViewController = PagingContentViewController(dataSource: self.dataSource, pagingState: self.pagingState)
+    let pagingContentViewController = PagingContentViewController(
+      dataSource: self.dataSource,
+      state: self.stateMachine.state)
     pagingContentViewController.delegate = self
     return pagingContentViewController
   }()
@@ -84,18 +103,7 @@ public class PagingViewController: UIViewController {
 extension PagingViewController: UICollectionViewDelegateFlowLayout {
   
   public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    
-    var direction: PagingDirection {
-      if pagingState.currentIndex > indexPath.row {
-        return .Reverse
-      } else {
-        return .Forward
-      }
-    }
-    
-    pagingContentViewController.setViewControllerForIndex(indexPath.row,
-      direction: direction,
-      animated: true)
+    stateMachine.fire(.Select(indexPath.row, stateMachine.directionForIndex(indexPath.row)))
   }
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
@@ -115,28 +123,15 @@ extension PagingViewController: UICollectionViewDelegateFlowLayout {
 extension PagingViewController: PagingContentViewControllerDelegate {
   
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset offset: CGFloat) {
-    
-    let currentIndex = pagingState.currentIndex
-    let upcomingIndex = pagingState.upcomingIndex
-    
-    if offset > 0 {
-      pagingState = .Next(currentIndex, upcomingIndex, offset)
-    } else if offset < 0 {
-      pagingState = .Previous(currentIndex, upcomingIndex, offset)
-    }
+    stateMachine.fire(.UpdateOffset(offset))
   }
   
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, willMoveToIndex index: Int) {
-    
-    if index > pagingState.currentIndex {
-      pagingState = .Next(pagingState.currentIndex, index, 0)
-    } else if index < pagingState.currentIndex {
-      pagingState = .Previous(pagingState.currentIndex, index, 0)
-    }
+    stateMachine.fire(.WillMove(index))
   }
   
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didMoveToIndex index: Int) {
-    pagingState = .Current(index, .None)
+    stateMachine.fire(.DidMove(index))
   }
   
 }

@@ -1,8 +1,10 @@
 import Foundation
 
-enum PagingState {
+
+
+enum PagingState: Equatable {
   case Previous(Int, Int, CGFloat)
-  case Current(Int, PagingDirection)
+  case Current(Int)
   case Next(Int, Int, CGFloat)
 }
 
@@ -25,7 +27,7 @@ extension PagingState {
       return index
     case let .Next(index, _, _):
       return index
-    case let .Current(index, _):
+    case let .Current(index):
       return index
     }
   }
@@ -36,7 +38,7 @@ extension PagingState {
       return upcomingIndex
     case let .Next(_, upcomingIndex, _):
       return upcomingIndex
-    case let .Current(index, _):
+    case let .Current(index):
       return index
     }
   }
@@ -60,4 +62,17 @@ extension PagingState {
     }
   }
   
+}
+
+func ==(lhs: PagingState, rhs: PagingState) -> Bool {
+  switch (lhs, rhs) {
+  case (let .Previous(x, y, z), let .Previous(a, b, c)) where x == a && y == b && z == c:
+    return true
+  case (let .Next(x, y, z), let .Next(a, b, c)) where x == a && y == b && z == c:
+    return true
+  case (let .Current(x), let .Current(a)) where x == a:
+    return true
+  default:
+    return false
+  }
 }

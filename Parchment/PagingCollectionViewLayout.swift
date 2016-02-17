@@ -2,18 +2,19 @@ import UIKit
 
 class PagingCollectionViewLayout: UICollectionViewFlowLayout {
   
-  var pagingState: PagingState
+  var state: PagingState
   
   private let options: PagingOptions
   private let indicatorLayoutAttributes: PagingIndicatorLayoutAttributes
   private let borderLayoutAttributes: PagingBorderLayoutAttributes
+  
   private var range: Range<Int> {
     return 0..<(collection.numberOfItemsInSection(0) - 1)
   }
   
-  init(pagingState: PagingState, options: PagingOptions) {
+  init(state: PagingState, options: PagingOptions) {
     
-    self.pagingState = pagingState
+    self.state = state
     self.options = options
     
     self.indicatorLayoutAttributes = PagingIndicatorLayoutAttributes(
@@ -64,14 +65,14 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
     if elementKind == PagingIndicatorView.defaultReuseIdentifier {
       
       let from = PagingIndicatorMetric(
-        frame: indicatorFrameForIndex(pagingState.currentIndex),
-        insets: indicatorInsetsForIndex(pagingState.currentIndex))
+        frame: indicatorFrameForIndex(state.currentIndex),
+        insets: indicatorInsetsForIndex(state.currentIndex))
       
       let to = PagingIndicatorMetric(
-        frame: indicatorFrameForIndex(pagingState.targetIndex),
-        insets: indicatorInsetsForIndex(pagingState.targetIndex))
+        frame: indicatorFrameForIndex(state.targetIndex),
+        insets: indicatorInsetsForIndex(state.targetIndex))
       
-      indicatorLayoutAttributes.update(from: from, to: to, progress: fabs(pagingState.offset))
+      indicatorLayoutAttributes.update(from: from, to: to, progress: fabs(state.offset))
       return indicatorLayoutAttributes
     }
     
@@ -98,10 +99,10 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
   
   private func indicatorFrameForIndex(index: Int) -> CGRect {
     if index < range.startIndex {
-      let frame = frameForIndex(pagingState.currentIndex)
+      let frame = frameForIndex(state.currentIndex)
       return frame.offsetBy(dx: -frame.width, dy: 0)
     } else if index > range.endIndex {
-      let frame = frameForIndex(pagingState.currentIndex)
+      let frame = frameForIndex(state.currentIndex)
       return frame.offsetBy(dx: frame.width, dy: 0)
     } else {
       return frameForIndex(index)
