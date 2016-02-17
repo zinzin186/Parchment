@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		3E0A517B1C726B4A00DB9A5E /* PagingIndicatorMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0A517A1C726B4A00DB9A5E /* PagingIndicatorMetric.swift */; };
 		3E0A517D1C73122500DB9A5E /* PagingStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0A517C1C73122500DB9A5E /* PagingStateMachine.swift */; };
+		3E504EC71C7465B000AE1CE3 /* PagingStateMachineSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E504EC61C7465B000AE1CE3 /* PagingStateMachineSpec.swift */; };
+		3E504EC91C7465B000AE1CE3 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
+		3E504ED21C7466CD00AE1CE3 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E504ED01C7466CD00AE1CE3 /* Nimble.framework */; };
+		3E504ED31C7466CD00AE1CE3 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E504ED11C7466CD00AE1CE3 /* Quick.framework */; };
 		3E9E8D041C70C68500F265A4 /* PagingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9E8D021C70C68500F265A4 /* PagingState.swift */; };
 		3E9E8D051C70C68500F265A4 /* PagingDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9E8D031C70C68500F265A4 /* PagingDirection.swift */; };
 		3E9E8D071C70C6E600F265A4 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9E8D061C70C6E600F265A4 /* Error.swift */; };
@@ -46,6 +50,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3E504ECA1C7465B000AE1CE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3EA04A421C53BFE40054E5E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3EA04A4A1C53BFE40054E5E0;
+			remoteInfo = Parchment;
+		};
 		3EA04A881C53C6F70054E5E0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3EA04A421C53BFE40054E5E0 /* Project object */;
@@ -72,6 +83,11 @@
 /* Begin PBXFileReference section */
 		3E0A517A1C726B4A00DB9A5E /* PagingIndicatorMetric.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorMetric.swift; sourceTree = "<group>"; };
 		3E0A517C1C73122500DB9A5E /* PagingStateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingStateMachine.swift; sourceTree = "<group>"; };
+		3E504EC41C7465B000AE1CE3 /* ParchmentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParchmentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E504EC61C7465B000AE1CE3 /* PagingStateMachineSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingStateMachineSpec.swift; sourceTree = "<group>"; };
+		3E504EC81C7465B000AE1CE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3E504ED01C7466CD00AE1CE3 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
+		3E504ED11C7466CD00AE1CE3 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		3E9E8D021C70C68500F265A4 /* PagingState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PagingState.swift; path = ../PagingState.swift; sourceTree = "<group>"; };
 		3E9E8D031C70C68500F265A4 /* PagingDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PagingDirection.swift; path = ../PagingDirection.swift; sourceTree = "<group>"; };
 		3E9E8D061C70C6E600F265A4 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Error.swift; path = ../Error.swift; sourceTree = "<group>"; };
@@ -109,6 +125,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3E504EC11C7465B000AE1CE3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E504ED21C7466CD00AE1CE3 /* Nimble.framework in Frameworks */,
+				3E504ED31C7466CD00AE1CE3 /* Quick.framework in Frameworks */,
+				3E504EC91C7465B000AE1CE3 /* Parchment.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3EA04A471C53BFE40054E5E0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -129,11 +155,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3E504EC51C7465B000AE1CE3 /* ParchmentTests */ = {
+			isa = PBXGroup;
+			children = (
+				3E504EC61C7465B000AE1CE3 /* PagingStateMachineSpec.swift */,
+				3E504EC81C7465B000AE1CE3 /* Info.plist */,
+			);
+			path = ParchmentTests;
+			sourceTree = "<group>";
+		};
 		3EA04A411C53BFE40054E5E0 = {
 			isa = PBXGroup;
 			children = (
 				3EA04A4D1C53BFE40054E5E0 /* Parchment */,
 				3EA04A5B1C53BFF40054E5E0 /* Example */,
+				3E504EC51C7465B000AE1CE3 /* ParchmentTests */,
 				3EA04A841C53C3960054E5E0 /* Frameworks */,
 				3EA04A4C1C53BFE40054E5E0 /* Products */,
 			);
@@ -144,6 +180,7 @@
 			children = (
 				3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */,
 				3EA04A5A1C53BFF40054E5E0 /* Example.app */,
+				3E504EC41C7465B000AE1CE3 /* ParchmentTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -213,6 +250,8 @@
 		3EA04A841C53C3960054E5E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3E504ED01C7466CD00AE1CE3 /* Nimble.framework */,
+				3E504ED11C7466CD00AE1CE3 /* Quick.framework */,
 				3EA04A821C53C3860054E5E0 /* Cartography.framework */,
 			);
 			name = Frameworks;
@@ -241,6 +280,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		3E504EC31C7465B000AE1CE3 /* ParchmentTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3E504ECE1C7465B000AE1CE3 /* Build configuration list for PBXNativeTarget "ParchmentTests" */;
+			buildPhases = (
+				3E504EC01C7465B000AE1CE3 /* Sources */,
+				3E504EC11C7465B000AE1CE3 /* Frameworks */,
+				3E504EC21C7465B000AE1CE3 /* Resources */,
+				3E504ECF1C7465D900AE1CE3 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3E504ECB1C7465B000AE1CE3 /* PBXTargetDependency */,
+			);
+			name = ParchmentTests;
+			productName = ParchmentTests;
+			productReference = 3E504EC41C7465B000AE1CE3 /* ParchmentTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		3EA04A4A1C53BFE40054E5E0 /* Parchment */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3EA04A531C53BFE40054E5E0 /* Build configuration list for PBXNativeTarget "Parchment" */;
@@ -290,6 +348,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Martin Rechsteiner";
 				TargetAttributes = {
+					3E504EC31C7465B000AE1CE3 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
 					3EA04A4A1C53BFE40054E5E0 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = C48GZ8PUTA;
@@ -315,11 +376,19 @@
 			targets = (
 				3EA04A4A1C53BFE40054E5E0 /* Parchment */,
 				3EA04A591C53BFF40054E5E0 /* Example */,
+				3E504EC31C7465B000AE1CE3 /* ParchmentTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3E504EC21C7465B000AE1CE3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3EA04A491C53BFE40054E5E0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -341,6 +410,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3E504ECF1C7465D900AE1CE3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Nimble.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Quick.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
 		3EA04A7D1C53C31E0054E5E0 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -372,6 +456,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3E504EC01C7465B000AE1CE3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E504EC71C7465B000AE1CE3 /* PagingStateMachineSpec.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3EA04A461C53BFE40054E5E0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -416,6 +508,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3E504ECB1C7465B000AE1CE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3EA04A4A1C53BFE40054E5E0 /* Parchment */;
+			targetProxy = 3E504ECA1C7465B000AE1CE3 /* PBXContainerItemProxy */;
+		};
 		3EA04A891C53C6F70054E5E0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3EA04A4A1C53BFE40054E5E0 /* Parchment */;
@@ -443,6 +540,34 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		3E504ECC1C7465B000AE1CE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = ParchmentTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.ParchmentTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3E504ECD1C7465B000AE1CE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = ParchmentTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.ParchmentTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		3EA04A511C53BFE40054E5E0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -614,6 +739,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3E504ECE1C7465B000AE1CE3 /* Build configuration list for PBXNativeTarget "ParchmentTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3E504ECC1C7465B000AE1CE3 /* Debug */,
+				3E504ECD1C7465B000AE1CE3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		3EA04A451C53BFE40054E5E0 /* Build configuration list for PBXProject "Parchment" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
