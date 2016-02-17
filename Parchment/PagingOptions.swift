@@ -26,6 +26,7 @@ public protocol PagingTheme {
 
 public protocol PagingOptions {
   var headerHeight: CGFloat { get }
+  var selectedScrollPosition: UICollectionViewScrollPosition { get }
   var cellSize: PagingCellSize { get }
   var theme: PagingTheme { get }
   var borderOptions: PagingBorderOptions { get }
@@ -46,6 +47,7 @@ private let insets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
 struct DefaultPagingOptions: PagingOptions {
   let headerHeight: CGFloat = 40
   let cellSize: PagingCellSize = .SizeToFit(minWidth: 150)
+  let selectedScrollPosition: UICollectionViewScrollPosition = .Left
   let theme: PagingTheme = DefaultPagingTheme()
   let indicatorOptions: PagingIndicatorOptions = .Visible(height: 4, insets: insets)
   let borderOptions: PagingBorderOptions = .Visible(height: 1, insets: insets)
