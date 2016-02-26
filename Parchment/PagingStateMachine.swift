@@ -2,11 +2,14 @@ import Foundation
 
 class PagingStateMachine {
   
+  var stateObservers: [(stateMachine: PagingStateMachine, oldState: PagingState) -> Void] = []
+  var eventObservers: [(stateMachine: PagingStateMachine, event: PagingEvent) -> Void] = []
+  
   var state: PagingState {
     return internalState
   }
   
-  var internalState: PagingState = .Current(0) {
+  private var internalState: PagingState = .Current(index: 0) {
     didSet {
       if oldValue != internalState {
         for observer in self.stateObservers {
@@ -16,18 +19,15 @@ class PagingStateMachine {
     }
   }
   
-  var stateObservers: [(stateMachine: PagingStateMachine, oldState: PagingState) -> Void] = []
-  var eventObservers: [(stateMachine: PagingStateMachine, event: PagingEvent) -> Void] = []
-  
   func fire(event: PagingEvent) {
     switch event {
-    case let .DidMove(index):
+    case let .DidMove(index: index):
       handleDidMoveToIndexEvent(index)
-    case let .WillMove(index):
+    case let .WillMove(index: index):
       handleWillMoveToIndexEvent(index)
-    case let .UpdateOffset(offset):
+    case let .Update(offset: offset):
       handleUpdateOffsetEvent(offset)
-    case let .Select(index, direction):
+    case let .Select(index: index, direction: direction):
       handleSelectEvent(index, direction: direction)
     }
     
@@ -49,9 +49,15 @@ class PagingStateMachine {
   private func handleSelectEvent(index: Int, direction: PagingDirection) {
     switch direction {
     case .Reverse:
-      internalState = .Previous(state.currentIndex, index, 0)
+      internalState = .Previous(
+        index: state.currentIndex,
+        upcomingIndex: index,
+        offset: 0)
     case .Forward:
-      internalState = .Next(state.currentIndex, index, 0)
+      internalState = .Next(
+        index: state.currentIndex,
+        upcomingIndex: index,
+        offset: 0)
     default:
       break
     }
@@ -59,22 +65,35 @@ class PagingStateMachine {
   
   private func handleUpdateOffsetEvent(offset: CGFloat) {
     if offset > 0 {
-      internalState = .Next(state.currentIndex, state.upcomingIndex, offset)
+      internalState = .Next(
+        index: state.currentIndex,
+        upcomingIndex: state.upcomingIndex,
+        offset: offset)
     } else if offset < 0 {
-      internalState = .Previous(state.currentIndex, state.upcomingIndex, offset)
+      internalState = .Previous(
+        index: state.currentIndex,
+        upcomingIndex: state.upcomingIndex,
+        offset: offset)
     }
   }
   
   private func handleWillMoveToIndexEvent(index: Int) {
+    
     if index > state.currentIndex {
-      internalState = .Next(state.currentIndex, index, 0)
+      internalState = .Next(
+        index: state.currentIndex,
+        upcomingIndex: index,
+        offset: 0)
     } else if index < state.currentIndex {
-      internalState = .Previous(state.currentIndex, index, 0)
+      internalState = .Previous(
+        index: state.currentIndex,
+        upcomingIndex: index,
+        offset: 0)
     }
   }
   
   private func handleDidMoveToIndexEvent(index: Int) {
-    internalState = .Current(index)
+    internalState = .Current(index: index)
   }
   
 }

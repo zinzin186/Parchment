@@ -1,11 +1,9 @@
 import Foundation
 
-
-
 enum PagingState: Equatable {
-  case Previous(Int, Int, CGFloat)
-  case Current(Int)
-  case Next(Int, Int, CGFloat)
+  case Previous(index: Int, upcomingIndex: Int, offset: CGFloat)
+  case Current(index: Int)
+  case Next(index: Int, upcomingIndex: Int, offset: CGFloat)
 }
 
 extension PagingState {
@@ -56,7 +54,7 @@ extension PagingState {
   
   var visualSelectionIndex: Int {
     if fabs(offset) > 0.5 {
-      return targetIndex ?? currentIndex
+      return targetIndex
     } else {
       return currentIndex
     }

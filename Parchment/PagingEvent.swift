@@ -1,8 +1,8 @@
 import Foundation
 
 enum PagingEvent {
-  case UpdateOffset(CGFloat)
-  case WillMove(Int)
-  case DidMove(Int)
-  case Select(Int, PagingDirection)
+  case Update(offset: CGFloat)
+  case WillMove(index: Int)
+  case DidMove(index: Int)
+  case Select(index: Int, direction: PagingDirection)
 }

@@ -102,11 +102,16 @@ public class PagingViewController: UIViewController {
 
 extension PagingViewController: UICollectionViewDelegateFlowLayout {
   
-  public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    stateMachine.fire(.Select(indexPath.row, stateMachine.directionForIndex(indexPath.row)))
+  public func collectionView(collectionView: UICollectionView,
+    didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    stateMachine.fire(.Select(
+      index: indexPath.row,
+      direction: stateMachine.directionForIndex(indexPath.row)))
   }
   
-  public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+  public func collectionView(collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
     var width: CGFloat {
       switch options.cellSize {
       case let .SizeToFit(minWidth):
@@ -123,15 +128,17 @@ extension PagingViewController: UICollectionViewDelegateFlowLayout {
 extension PagingViewController: PagingContentViewControllerDelegate {
   
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset offset: CGFloat) {
-    stateMachine.fire(.UpdateOffset(offset))
+    stateMachine.fire(.Update(offset: offset))
   }
   
-  func pagingContentViewController(pagingContentViewController: PagingContentViewController, willMoveToIndex index: Int) {
-    stateMachine.fire(.WillMove(index))
+  func pagingContentViewController(pagingContentViewController: PagingContentViewController,
+    willMoveToIndex index: Int) {
+    stateMachine.fire(.WillMove(index: index))
   }
   
-  func pagingContentViewController(pagingContentViewController: PagingContentViewController, didMoveToIndex index: Int) {
-    stateMachine.fire(.DidMove(index))
+  func pagingContentViewController(pagingContentViewController: PagingContentViewController,
+    didMoveToIndex index: Int) {
+    stateMachine.fire(.DidMove(index: index))
   }
   
 }
