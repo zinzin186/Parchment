@@ -7,12 +7,12 @@ public enum PagingCellSize {
 
 public enum PagingIndicatorOptions {
   case Hidden
-  case Visible(height: CGFloat, insets: UIEdgeInsets)
+  case Visible(height: CGFloat, zIndex: Int, insets: UIEdgeInsets)
 }
 
 public enum PagingBorderOptions {
   case Hidden
-  case Visible(height: CGFloat, insets: UIEdgeInsets)
+  case Visible(height: CGFloat, zIndex: Int, insets: UIEdgeInsets)
 }
 
 public protocol PagingTheme {
