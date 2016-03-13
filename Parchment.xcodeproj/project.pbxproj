@@ -18,7 +18,6 @@
 		3E40909C1C88BCC900800E22 /* PagingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090981C88BCC900800E22 /* PagingOptions.swift */; };
 		3E40909D1C88BCC900800E22 /* PagingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090991C88BCC900800E22 /* PagingState.swift */; };
 		3E4090A21C88BD0A00800E22 /* PagingIndicatorMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090A11C88BD0A00800E22 /* PagingIndicatorMetric.swift */; };
-		3E4090A71C88BD5A00800E22 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E4090A51C88BD5A00800E22 /* Info.plist */; };
 		3E4090AE1C88BDD100800E22 /* PagingBorderLayoutAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090A91C88BDD100800E22 /* PagingBorderLayoutAttributes.swift */; };
 		3E4090AF1C88BDD100800E22 /* PagingCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090AA1C88BDD100800E22 /* PagingCollectionViewLayout.swift */; };
 		3E4090B01C88BDD100800E22 /* DefaultPagingDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090AB1C88BDD100800E22 /* DefaultPagingDataSource.swift */; };
@@ -96,7 +95,6 @@
 		3E4090981C88BCC900800E22 /* PagingOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingOptions.swift; sourceTree = "<group>"; };
 		3E4090991C88BCC900800E22 /* PagingState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingState.swift; sourceTree = "<group>"; };
 		3E4090A11C88BD0A00800E22 /* PagingIndicatorMetric.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorMetric.swift; sourceTree = "<group>"; };
-		3E4090A51C88BD5A00800E22 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		3E4090A91C88BDD100800E22 /* PagingBorderLayoutAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingBorderLayoutAttributes.swift; sourceTree = "<group>"; };
 		3E4090AA1C88BDD100800E22 /* PagingCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingCollectionViewLayout.swift; sourceTree = "<group>"; };
 		3E4090AB1C88BDD100800E22 /* DefaultPagingDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultPagingDataSource.swift; sourceTree = "<group>"; };
@@ -129,6 +127,7 @@
 		3EA04A661C53BFF40054E5E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3EA04A681C53BFF40054E5E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3EA04A821C53C3860054E5E0 /* Cartography.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cartography.framework; path = Carthage/Build/iOS/Cartography.framework; sourceTree = "<group>"; };
+		3EC0184C1C95F993005421AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorLayoutAttributesSpec.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -305,7 +304,7 @@
 		3EA04A851C53C3E80054E5E0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3E4090A51C88BD5A00800E22 /* Info.plist */,
+				3EC0184C1C95F993005421AD /* Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -437,7 +436,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E4090A71C88BD5A00800E22 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

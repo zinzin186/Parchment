@@ -28,7 +28,7 @@ class PagingView: UIView {
     addSubview(pagingContentView)
     
     constrain(self, collectionView, pagingContentView) { view, collectionView, pagingContentView in
-      collectionView.height == options.headerHeight
+      collectionView.height == options.menuItemSize.height
       collectionView.left == view.left
       collectionView.right == view.right
       collectionView.top == view.top

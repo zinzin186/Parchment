@@ -87,7 +87,7 @@ class PagingCollectionViewLayout: UICollectionViewFlowLayout {
   // MARK: Private
   
   private func indicatorInsetsForIndex(index: Int) -> PagingIndicatorMetric.Inset {
-    if case let .Visible(_, _, insets) = options.indicatorOptions {
+    if case let .Visible(_, _, insets, _) = options.indicatorOptions {
       if index == range.startIndex {
         return .Left(insets.left)
       } else if index >= range.endIndex {

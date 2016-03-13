@@ -1,18 +1,33 @@
 import UIKit
 
-public enum PagingCellSize {
-  case FixedWidth(width: CGFloat)
-  case SizeToFit(minWidth: CGFloat)
+public enum PagingMenuItemSize {
+  case Fixed(width: CGFloat, height: CGFloat)
+  case SizeToFit(minWidth: CGFloat, height: CGFloat)
+  
+  var height: CGFloat {
+    switch self {
+    case let .Fixed(_, height): return height
+    case let .SizeToFit(_, height): return height
+    }
+  }
 }
 
-public enum PagingIndicator {
+public enum PagingIndicatorOptions {
   case Hidden
-  case Visible(height: CGFloat, zIndex: Int, insets: UIEdgeInsets)
+  case Visible(
+    height: CGFloat,
+    zIndex: Int,
+    insets: UIEdgeInsets,
+    backgroundColor: UIColor)
 }
 
-public enum PagingBorder {
+public enum PagingBorderOptions {
   case Hidden
-  case Visible(height: CGFloat, zIndex: Int, insets: UIEdgeInsets)
+  case Visible(
+    height: CGFloat,
+    zIndex: Int,
+    insets: UIEdgeInsets,
+    backgroundColor: UIColor)
 }
 
 public enum PagingSelectedScrollPosition {
@@ -39,15 +54,12 @@ public protocol PagingTheme {
   var selectedTextColor: UIColor { get }
   var backgroundColor: UIColor { get }
   var headerBackgroundColor: UIColor { get }
-  var indicatorBackgroundColor: UIColor { get }
-  var borderBackgroundColor: UIColor { get }
 }
 
 public protocol PagingOptions {
-  var headerHeight: CGFloat { get }
-  var selectedScrollPosition: PagingSelectedScrollPosition { get }
-  var cellSize: PagingCellSize { get }
   var theme: PagingTheme { get }
-  var borderOptions: PagingBorder { get }
-  var indicatorOptions: PagingIndicator { get }
+  var menuItemSize: PagingMenuItemSize { get }
+  var borderOptions: PagingBorderOptions { get }
+  var indicatorOptions: PagingIndicatorOptions { get }
+  var selectedScrollPosition: PagingSelectedScrollPosition { get }
 }

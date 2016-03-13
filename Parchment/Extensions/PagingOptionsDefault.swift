@@ -22,24 +22,12 @@ public extension PagingTheme {
     return UIColor.whiteColor()
   }
   
-  var indicatorBackgroundColor: UIColor {
-    return UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)
-  }
-  
-  var borderBackgroundColor: UIColor {
-    return UIColor(white: 0.9, alpha: 1)
-  }
-  
 }
 
 public extension PagingOptions {
   
-  var headerHeight: CGFloat {
-    return 40
-  }
-  
-  var cellSize: PagingCellSize {
-    return .SizeToFit(minWidth: 150)
+  var menuItemSize: PagingMenuItemSize {
+    return .SizeToFit(minWidth: 150, height: 40)
   }
   
   var selectedScrollPosition: PagingSelectedScrollPosition {
@@ -50,12 +38,20 @@ public extension PagingOptions {
     return DefaultPagingTheme()
   }
   
-  var indicatorOptions: PagingIndicator {
-    return .Visible(height: 4, zIndex: Int.max, insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
+  var indicatorOptions: PagingIndicatorOptions {
+    return .Visible(
+      height: 4,
+      zIndex: Int.max,
+      insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8),
+      backgroundColor: UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1))
   }
   
-  var borderOptions: PagingBorder {
-    return .Visible(height: 1, zIndex: Int.max - 1, insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
+  var borderOptions: PagingBorderOptions {
+    return .Visible(
+      height: 1,
+      zIndex: Int.max - 1,
+      insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8),
+      backgroundColor: UIColor(white: 0.9, alpha: 1))
   }
   
 }

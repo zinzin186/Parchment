@@ -117,15 +117,13 @@ extension PagingViewController: UICollectionViewDelegateFlowLayout {
   public func collectionView(collectionView: UICollectionView,
     layout collectionViewLayout: UICollectionViewLayout,
     sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-    var width: CGFloat {
-      switch options.cellSize {
-      case let .SizeToFit(minWidth):
-        return max(minWidth, collectionView.bounds.width / CGFloat(collectionView.numberOfItemsInSection(0)))
-      case let .FixedWidth(width):
-        return width
-      }
+    switch options.menuItemSize {
+    case let .SizeToFit(minWidth, height):
+      let width = max(minWidth, collectionView.bounds.width / CGFloat(collectionView.numberOfItemsInSection(0)))
+      return CGSize(width: width, height: height)
+    case let .Fixed(width, height):
+      return CGSize(width: width, height: height)
     }
-    return CGSize(width: width, height: options.headerHeight)
   }
   
   public func collectionView(collectionView: UICollectionView,
