@@ -43,7 +43,7 @@ public extension PagingOptions {
   }
   
   var selectedScrollPosition: PagingSelectedScrollPosition {
-    return .AlwaysCentered
+    return .PreferCentered
   }
   
   var theme: PagingTheme {

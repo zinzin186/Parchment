@@ -28,7 +28,7 @@ public enum PagingSelectedScrollPosition {
     case .Right:
       return .Right
     case .AlwaysCentered, .PreferCentered:
-      return .CenteredVertically
+      return .CenteredHorizontally
     }
   }
 }
