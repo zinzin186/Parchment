@@ -21,12 +21,13 @@
 		3E4090A71C88BD5A00800E22 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E4090A51C88BD5A00800E22 /* Info.plist */; };
 		3E4090AE1C88BDD100800E22 /* PagingBorderLayoutAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090A91C88BDD100800E22 /* PagingBorderLayoutAttributes.swift */; };
 		3E4090AF1C88BDD100800E22 /* PagingCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090AA1C88BDD100800E22 /* PagingCollectionViewLayout.swift */; };
-		3E4090B01C88BDD100800E22 /* PagingDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090AB1C88BDD100800E22 /* PagingDataSource.swift */; };
+		3E4090B01C88BDD100800E22 /* DefaultPagingDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090AB1C88BDD100800E22 /* DefaultPagingDataSource.swift */; };
 		3E4090B11C88BDD100800E22 /* PagingIndicatorLayoutAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090AC1C88BDD100800E22 /* PagingIndicatorLayoutAttributes.swift */; };
 		3E4090B21C88BDD100800E22 /* PagingStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090AD1C88BDD100800E22 /* PagingStateMachine.swift */; };
 		3E4090B51C88BDDC00800E22 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090B31C88BDDC00800E22 /* Error.swift */; };
 		3E4090B61C88BDDC00800E22 /* Tween.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090B41C88BDDC00800E22 /* Tween.swift */; };
 		3E41891F1C957322001E0284 /* PagingOptionsDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E41891E1C957322001E0284 /* PagingOptionsDefault.swift */; };
+		3E4189211C9573FA001E0284 /* PagingViewControllerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4189201C9573FA001E0284 /* PagingViewControllerDataSource.swift */; };
 		3E49C71E1C8F5ABD006269DD /* Parchment.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E49C71D1C8F5ABD006269DD /* Parchment.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3E49C7251C8F5C13006269DD /* PagingBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E49C71F1C8F5C13006269DD /* PagingBorderView.swift */; };
 		3E49C7261C8F5C13006269DD /* PagingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E49C7201C8F5C13006269DD /* PagingCell.swift */; };
@@ -98,12 +99,13 @@
 		3E4090A51C88BD5A00800E22 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		3E4090A91C88BDD100800E22 /* PagingBorderLayoutAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingBorderLayoutAttributes.swift; sourceTree = "<group>"; };
 		3E4090AA1C88BDD100800E22 /* PagingCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingCollectionViewLayout.swift; sourceTree = "<group>"; };
-		3E4090AB1C88BDD100800E22 /* PagingDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingDataSource.swift; sourceTree = "<group>"; };
+		3E4090AB1C88BDD100800E22 /* DefaultPagingDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultPagingDataSource.swift; sourceTree = "<group>"; };
 		3E4090AC1C88BDD100800E22 /* PagingIndicatorLayoutAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorLayoutAttributes.swift; sourceTree = "<group>"; };
 		3E4090AD1C88BDD100800E22 /* PagingStateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingStateMachine.swift; sourceTree = "<group>"; };
 		3E4090B31C88BDDC00800E22 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		3E4090B41C88BDDC00800E22 /* Tween.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tween.swift; sourceTree = "<group>"; };
 		3E41891E1C957322001E0284 /* PagingOptionsDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingOptionsDefault.swift; sourceTree = "<group>"; };
+		3E4189201C9573FA001E0284 /* PagingViewControllerDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingViewControllerDataSource.swift; sourceTree = "<group>"; };
 		3E49C71D1C8F5ABD006269DD /* Parchment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parchment.h; sourceTree = "<group>"; };
 		3E49C71F1C8F5C13006269DD /* PagingBorderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingBorderView.swift; sourceTree = "<group>"; };
 		3E49C7201C8F5C13006269DD /* PagingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingCell.swift; sourceTree = "<group>"; };
@@ -184,12 +186,12 @@
 		3E4090A31C88BD1700800E22 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				3E4090AB1C88BDD100800E22 /* DefaultPagingDataSource.swift */,
 				3E4090A91C88BDD100800E22 /* PagingBorderLayoutAttributes.swift */,
 				3E49C71F1C8F5C13006269DD /* PagingBorderView.swift */,
 				3E49C7201C8F5C13006269DD /* PagingCell.swift */,
 				3E4090AA1C88BDD100800E22 /* PagingCollectionViewLayout.swift */,
 				3E49C7211C8F5C13006269DD /* PagingContentViewController.swift */,
-				3E4090AB1C88BDD100800E22 /* PagingDataSource.swift */,
 				3E4090AC1C88BDD100800E22 /* PagingIndicatorLayoutAttributes.swift */,
 				3E49C7221C8F5C13006269DD /* PagingIndicatorView.swift */,
 				3E4090AD1C88BDD100800E22 /* PagingStateMachine.swift */,
@@ -285,6 +287,7 @@
 			children = (
 				3E4090801C88BBCF00800E22 /* ArithmeticType.swift */,
 				3E4090811C88BBCF00800E22 /* ReusableView.swift */,
+				3E4189201C9573FA001E0284 /* PagingViewControllerDataSource.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -510,7 +513,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E4090B01C88BDD100800E22 /* PagingDataSource.swift in Sources */,
+				3E4090B01C88BDD100800E22 /* DefaultPagingDataSource.swift in Sources */,
 				3E4090821C88BBCF00800E22 /* ArithmeticType.swift in Sources */,
 				3E40909B1C88BCC900800E22 /* PagingEvent.swift in Sources */,
 				3E40909D1C88BCC900800E22 /* PagingState.swift in Sources */,
@@ -526,6 +529,7 @@
 				3E49C7291C8F5C13006269DD /* PagingView.swift in Sources */,
 				3E4090AF1C88BDD100800E22 /* PagingCollectionViewLayout.swift in Sources */,
 				3E4090A21C88BD0A00800E22 /* PagingIndicatorMetric.swift in Sources */,
+				3E4189211C9573FA001E0284 /* PagingViewControllerDataSource.swift in Sources */,
 				3E40907D1C88BA7F00800E22 /* UIViewController.swift in Sources */,
 				3E40909C1C88BCC900800E22 /* PagingOptions.swift in Sources */,
 				3E4090B11C88BDD100800E22 /* PagingIndicatorLayoutAttributes.swift in Sources */,

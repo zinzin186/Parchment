@@ -10,13 +10,13 @@ class PagingContentViewController: UIViewController {
   
   var state: PagingState
   weak var delegate: PagingContentViewControllerDelegate?
-  private let dataSource: PagingDataSource
+  private let dataSource: PagingViewControllerDataSource
   private let pageViewController: UIPageViewController
   
   private var pendingViewController: UIViewController?
   private var upcomingViewController: UIViewController?
   
-  init(dataSource: PagingDataSource, state: PagingState) {
+  init(dataSource: PagingViewControllerDataSource, state: PagingState) {
     
     self.state = state
     self.dataSource = dataSource
@@ -27,7 +27,7 @@ class PagingContentViewController: UIViewController {
     
     super.init(nibName: nil, bundle: nil)
     
-    pageViewController.dataSource = dataSource
+    pageViewController.dataSource = self
     pageViewController.delegate = self
     pageViewController.view.subviews.forEach {
       if let scrollView = $0 as? UIScrollView {
@@ -49,7 +49,7 @@ class PagingContentViewController: UIViewController {
   }
   
   func setViewControllerForIndex(index: Int, direction: PagingDirection, animated: Bool) {
-    let viewController = dataSource.viewControllers[index]
+    guard let viewController = dataSource.viewControllerAtIndex(index) else { return }
     pageViewController.setViewControllers([viewController],
       direction: direction.pageViewControllerNavigationDirection,
       animated: animated,
@@ -81,14 +81,34 @@ extension PagingContentViewController: UIPageViewControllerDelegate {
   
   func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
     guard
-      let viewController = self.pendingViewController,
-      let index = dataSource.viewControllers.indexOf(viewController) else { return }
+      let viewController = pendingViewController,
+      let index = dataSource.indexOfViewController(viewController) else { return }
     
     if completed {
       delegate?.pagingContentViewController(self, didMoveToIndex: index)
     }
     
     pendingViewController = nil
+  }
+  
+}
+
+extension PagingContentViewController: UIPageViewControllerDataSource {
+  
+  func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
+    guard let index = dataSource.indexOfViewController(viewController) else { return nil }
+    if index > 0 {
+      return dataSource.viewControllerAtIndex(index - 1)
+    }
+    return nil
+  }
+  
+  func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
+    guard let index = dataSource.indexOfViewController(viewController) else { return nil }
+    if index < dataSource.numberOfItems() - 1 {
+      return dataSource.viewControllerAtIndex(index + 1)
+    }
+    return nil
   }
   
 }

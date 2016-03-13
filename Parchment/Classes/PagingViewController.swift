@@ -2,14 +2,19 @@ import UIKit
 
 public class PagingViewController: UIViewController {
   
-  private let dataSource: PagingDataSource
+  private let dataSource: PagingViewControllerDataSource
   private let options: PagingOptions
   private let stateMachine: PagingStateMachine = PagingStateMachine()
   
-  public init(viewControllers: [UIViewController], options: PagingOptions = DefaultPagingOptions()) {
-    self.dataSource = PagingDataSource(viewControllers: viewControllers, options: options)
+  public init(dataSource: PagingViewControllerDataSource, options: PagingOptions = DefaultPagingOptions()) {
+    self.dataSource = dataSource
     self.options = options
     super.init(nibName: nil, bundle: nil)
+  }
+  
+  public convenience init(viewControllers: [UIViewController], options: PagingOptions = DefaultPagingOptions()) {
+    let dataSource = DefaultPagingDataSource(viewControllers: viewControllers)
+    self.init(dataSource: dataSource, options: options)
   }
 
   required public init?(coder: NSCoder) {
@@ -85,7 +90,7 @@ public class PagingViewController: UIViewController {
       frame: .zero,
       collectionViewLayout: self.collectionViewLayout)
     collectionView.register(PagingCell.self)
-    collectionView.dataSource = self.dataSource
+    collectionView.dataSource = self
     collectionView.delegate = self
     collectionView.backgroundColor = UIColor.whiteColor()
     collectionView.scrollEnabled = false
@@ -149,6 +154,25 @@ extension PagingViewController: PagingContentViewControllerDelegate {
   func pagingContentViewController(pagingContentViewController: PagingContentViewController,
     didMoveToIndex index: Int) {
     stateMachine.fire(.DidMove(index: index))
+  }
+  
+}
+
+extension PagingViewController: UICollectionViewDataSource {
+  
+  public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    
+    let cell: PagingCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
+    
+    cell.viewModel = PagingCellViewModel(
+      title: dataSource.titleForIndex(indexPath.row),
+      theme: options.theme)
+    
+    return cell
+  }
+  
+  public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    return dataSource.numberOfItems()
   }
   
 }
