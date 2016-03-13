@@ -13,7 +13,7 @@ public class PagingViewController: UIViewController {
   }
 
   required public init?(coder: NSCoder) {
-    fatalError(Error.InitCoder.rawValue)
+    fatalError(InitCoderError)
   }
   
   public override func loadView() {
@@ -42,7 +42,8 @@ public class PagingViewController: UIViewController {
   // MARK: Private
   
   private func handleEventUpdate(event: PagingEvent) {
-    if case let .Select(index, direction) = event {
+    if case let .Select(index) = event {
+      let direction = stateMachine.directionForIndex(index)
       pagingContentViewController.setViewControllerForIndex(index,
         direction: direction,
         animated: true)
@@ -56,10 +57,11 @@ public class PagingViewController: UIViewController {
     
     switch state {
     case let .Current(index):
+      let scrollPosition = options.selectedScrollPosition.collectionViewScrollPosition()
       let indexPath = NSIndexPath(forItem: index, inSection: 0)
       collectionView.selectItemAtIndexPath(indexPath,
         animated: true,
-        scrollPosition: options.selectedScrollPosition)
+        scrollPosition: scrollPosition)
       
     case .Next, .Previous:
       let indexPath = NSIndexPath(forItem: state.visualSelectionIndex, inSection: 0)
@@ -104,9 +106,7 @@ extension PagingViewController: UICollectionViewDelegateFlowLayout {
   
   public func collectionView(collectionView: UICollectionView,
     didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    stateMachine.fire(.Select(
-      index: indexPath.row,
-      direction: stateMachine.directionForIndex(indexPath.row)))
+    stateMachine.fire(.Select(index: indexPath.row))
   }
   
   public func collectionView(collectionView: UICollectionView,
@@ -123,17 +123,27 @@ extension PagingViewController: UICollectionViewDelegateFlowLayout {
     return CGSize(width: width, height: options.headerHeight)
   }
   
+  public func collectionView(collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+    if case .AlwaysCentered = options.selectedScrollPosition {
+      let indexPath = NSIndexPath(forItem: 0, inSection: 0)
+      let layoutAttributes = collectionViewLayout.layoutAttributesForItemAtIndexPath(indexPath)
+      
+      if let layoutAttributes = layoutAttributes {
+        let left = collectionView.bounds.midX - layoutAttributes.bounds.midX
+        return UIEdgeInsets(hortizontal: left)
+      }
+    }
+    return UIEdgeInsets()
+  }
+  
 }
 
 extension PagingViewController: PagingContentViewControllerDelegate {
   
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset offset: CGFloat) {
     stateMachine.fire(.Update(offset: offset))
-  }
-  
-  func pagingContentViewController(pagingContentViewController: PagingContentViewController,
-    willMoveToIndex index: Int) {
-    stateMachine.fire(.WillMove(index: index))
   }
   
   func pagingContentViewController(pagingContentViewController: PagingContentViewController,

@@ -19,7 +19,7 @@ class PagingView: UIView {
   }
   
   required init?(coder: NSCoder) {
-    fatalError(Error.InitCoder.rawValue)
+    fatalError(InitCoderError)
   }
   
   private func configure() {

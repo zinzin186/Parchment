@@ -4,7 +4,6 @@ import Cartography
 protocol PagingContentViewControllerDelegate: class {
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset: CGFloat)
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didMoveToIndex: Int)
-  func pagingContentViewController(pagingContentViewController: PagingContentViewController, willMoveToIndex: Int)
 }
 
 class PagingContentViewController: UIViewController {
@@ -38,7 +37,7 @@ class PagingContentViewController: UIViewController {
   }
 
   required init?(coder: NSCoder) {
-    fatalError(Error.InitCoder.rawValue)
+    fatalError(InitCoderError)
   }
   
   override func viewDidLoad() {
@@ -50,14 +49,7 @@ class PagingContentViewController: UIViewController {
   }
   
   func setViewControllerForIndex(index: Int, direction: PagingDirection, animated: Bool) {
-    
     let viewController = dataSource.viewControllers[index]
-    guard let upcomingIndex = dataSource.viewControllers.indexOf(viewController) else {
-      return
-    }
-    
-    delegate?.pagingContentViewController(self, willMoveToIndex: upcomingIndex)
-    
     pageViewController.setViewControllers([viewController],
       direction: direction.pageViewControllerNavigationDirection,
       animated: animated,

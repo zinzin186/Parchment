@@ -23,12 +23,10 @@ class PagingStateMachine {
     switch event {
     case let .DidMove(index: index):
       handleDidMoveToIndexEvent(index)
-    case let .WillMove(index: index):
-      handleWillMoveToIndexEvent(index)
     case let .Update(offset: offset):
       handleUpdateOffsetEvent(offset)
-    case let .Select(index: index, direction: direction):
-      handleSelectEvent(index, direction: direction)
+    case let .Select(index: index):
+      handleSelectEvent(index)
     }
     
     for observer in self.eventObservers {
@@ -46,7 +44,8 @@ class PagingStateMachine {
     }
   }
   
-  private func handleSelectEvent(index: Int, direction: PagingDirection) {
+  private func handleSelectEvent(index: Int) {
+    let direction = directionForIndex(index)
     switch direction {
     case .Reverse:
       internalState = .Previous(
@@ -74,21 +73,6 @@ class PagingStateMachine {
         index: state.currentIndex,
         upcomingIndex: state.upcomingIndex,
         offset: offset)
-    }
-  }
-  
-  private func handleWillMoveToIndexEvent(index: Int) {
-    
-    if index > state.currentIndex {
-      internalState = .Next(
-        index: state.currentIndex,
-        upcomingIndex: index,
-        offset: 0)
-    } else if index < state.currentIndex {
-      internalState = .Previous(
-        index: state.currentIndex,
-        upcomingIndex: index,
-        offset: 0)
     }
   }
   

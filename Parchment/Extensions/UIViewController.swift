@@ -8,4 +8,10 @@ extension UIViewController {
     viewController.didMoveToParentViewController(self)
   }
   
+  func removeViewController(viewController: UIViewController) {
+    viewController.removeFromParentViewController()
+    viewController.view.removeFromSuperview()
+    viewController.didMoveToParentViewController(nil)
+  }
+  
 }

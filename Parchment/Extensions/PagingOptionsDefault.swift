@@ -1,6 +1,5 @@
 import UIKit
 
-
 public extension PagingTheme {
   
   var font: UIFont {
@@ -13,6 +12,10 @@ public extension PagingTheme {
   
   var selectedTextColor: UIColor {
     return UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)
+  }
+  
+  var backgroundColor: UIColor {
+    return UIColor.whiteColor()
   }
   
   var headerBackgroundColor: UIColor {
@@ -39,19 +42,19 @@ public extension PagingOptions {
     return .SizeToFit(minWidth: 150)
   }
   
-  var selectedScrollPosition: UICollectionViewScrollPosition {
-    return .CenteredHorizontally
+  var selectedScrollPosition: PagingSelectedScrollPosition {
+    return .AlwaysCentered
   }
   
   var theme: PagingTheme {
     return DefaultPagingTheme()
   }
   
-  var indicatorOptions: PagingIndicatorOptions {
+  var indicatorOptions: PagingIndicator {
     return .Visible(height: 4, zIndex: Int.max, insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
   }
   
-  var borderOptions: PagingBorderOptions {
+  var borderOptions: PagingBorder {
     return .Visible(height: 1, zIndex: Int.max - 1, insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
   }
   
