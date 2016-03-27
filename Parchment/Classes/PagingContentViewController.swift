@@ -3,31 +3,25 @@ import Cartography
 
 protocol PagingContentViewControllerDelegate: class {
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset: CGFloat)
-  func pagingContentViewController(pagingContentViewController: PagingContentViewController, didMoveToIndex: Int)
+  func pagingContentViewControllerDidCompleteTransition(pagingContentViewController: PagingContentViewController)
+  func pagingContentViewController(pagingContentViewController: PagingContentViewController, didBeginDraggingInDirection: PagingDirection)
+  
 }
 
 class PagingContentViewController: UIViewController {
   
-  var state: PagingState
   weak var delegate: PagingContentViewControllerDelegate?
-  private let dataSource: PagingViewControllerDataSource
-  private let pageViewController: UIPageViewController
+  let pageViewController: UIPageViewController
   
-  private var pendingViewController: UIViewController?
-  private var upcomingViewController: UIViewController?
-  
-  init(dataSource: PagingViewControllerDataSource, state: PagingState) {
+  init() {
     
-    self.state = state
-    self.dataSource = dataSource
-    self.pageViewController = UIPageViewController(
+    pageViewController = UIPageViewController(
       transitionStyle: .Scroll,
       navigationOrientation: .Horizontal,
       options: nil)
     
     super.init(nibName: nil, bundle: nil)
     
-    pageViewController.dataSource = self
     pageViewController.delegate = self
     pageViewController.view.subviews.forEach {
       if let scrollView = $0 as? UIScrollView {
@@ -48,14 +42,13 @@ class PagingContentViewController: UIViewController {
     }
   }
   
-  func setViewControllerForIndex(index: Int, direction: PagingDirection, animated: Bool) {
-    guard let viewController = dataSource.viewControllerAtIndex(index) else { return }
+  func setViewController(viewController: UIViewController, direction: PagingDirection, animated: Bool) {
     pageViewController.setViewControllers([viewController],
       direction: direction.pageViewControllerNavigationDirection,
       animated: animated,
       completion: { completed in
         if completed {
-          self.delegate?.pagingContentViewController(self, didMoveToIndex: index)
+          self.delegate?.pagingContentViewControllerDidCompleteTransition(self)
         }
     })
   }
@@ -63,6 +56,17 @@ class PagingContentViewController: UIViewController {
 }
 
 extension PagingContentViewController: UIScrollViewDelegate {
+  
+  func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+    let velocity = scrollView.panGestureRecognizer.velocityInView(view)
+    if velocity.x < 0 {
+      delegate?.pagingContentViewController(self, didBeginDraggingInDirection: .Forward)
+    } else if velocity.x > 0 {
+      delegate?.pagingContentViewController(self, didBeginDraggingInDirection: .Reverse)
+    } else {
+      delegate?.pagingContentViewController(self, didBeginDraggingInDirection: .None)
+    }
+  }
   
   func scrollViewDidScroll(scrollView: UIScrollView) {
     let offset = CGFloat(scrollView.contentOffset.x / scrollView.bounds.width) - 1
@@ -72,43 +76,11 @@ extension PagingContentViewController: UIScrollViewDelegate {
 }
 
 extension PagingContentViewController: UIPageViewControllerDelegate {
- 
-  func pageViewController(pageViewController: UIPageViewController, willTransitionToViewControllers pendingViewControllers: [UIViewController]) {
-    if let viewController = pendingViewControllers.first {
-      pendingViewController = viewController
-    }
-  }
   
   func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-    guard
-      let viewController = pendingViewController,
-      let index = dataSource.indexOfViewController(viewController) else { return }
-    
     if completed {
-      delegate?.pagingContentViewController(self, didMoveToIndex: index)
+      delegate?.pagingContentViewControllerDidCompleteTransition(self)
     }
-    
-    pendingViewController = nil
-  }
-  
-}
-
-extension PagingContentViewController: UIPageViewControllerDataSource {
-  
-  func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
-    guard let index = dataSource.indexOfViewController(viewController) else { return nil }
-    if index > 0 {
-      return dataSource.viewControllerAtIndex(index - 1)
-    }
-    return nil
-  }
-  
-  func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
-    guard let index = dataSource.indexOfViewController(viewController) else { return nil }
-    if index < dataSource.numberOfItems() - 1 {
-      return dataSource.viewControllerAtIndex(index + 1)
-    }
-    return nil
   }
   
 }

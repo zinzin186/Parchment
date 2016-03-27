@@ -4,6 +4,13 @@ public enum PagingMenuItemSize {
   case Fixed(width: CGFloat, height: CGFloat)
   case SizeToFit(minWidth: CGFloat, height: CGFloat)
   
+  var width: CGFloat {
+    switch self {
+    case let .Fixed(width, _): return width
+    case let .SizeToFit(minWidth, _): return minWidth
+    }
+  }
+  
   var height: CGFloat {
     switch self {
     case let .Fixed(_, height): return height
@@ -62,4 +69,5 @@ public protocol PagingOptions {
   var borderOptions: PagingBorderOptions { get }
   var indicatorOptions: PagingIndicatorOptions { get }
   var selectedScrollPosition: PagingSelectedScrollPosition { get }
+  var menuItemClass: PagingCell.Type { get }
 }

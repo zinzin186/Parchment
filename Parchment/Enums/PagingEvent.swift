@@ -1,7 +1,8 @@
 import Foundation
 
-enum PagingEvent {
+enum PagingEvent<T: PagingItem where T: Equatable> {
+  case DidBeginDragging(upcomingPagingItem: T?, direction: PagingDirection)
   case Update(offset: CGFloat)
-  case DidMove(index: Int)
-  case Select(index: Int)
+  case DidMove(pagingItem: T)
+  case Select(pagingItem: T, direction: PagingDirection)
 }

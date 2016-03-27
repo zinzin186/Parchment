@@ -54,6 +54,10 @@ public extension PagingOptions {
       backgroundColor: UIColor(white: 0.9, alpha: 1))
   }
   
+  var menuItemClass: PagingCell.Type {
+    return DefaultPagingCell.self
+  }
+
 }
 
 struct DefaultPagingTheme: PagingTheme {}

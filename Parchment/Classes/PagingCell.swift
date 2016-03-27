@@ -1,29 +1,36 @@
 import UIKit
 import Cartography
 
-class PagingCell: UICollectionViewCell {
-  
+public class PagingCell: UICollectionViewCell {
+  func setPagingItem(pagingItem: PagingItem, theme: PagingTheme) {}
+}
+
+public class DefaultPagingCell: PagingCell {
+
+  private var viewModel: PagingCellViewModel?
   private let titleLabel = UILabel(frame: .zero)
   
-  var viewModel: PagingCellViewModel? {
+  public override var selected: Bool {
     didSet {
       configureTitleLabel()
     }
   }
   
-  override var selected: Bool {
-    didSet {
-      configureTitleLabel()
-    }
-  }
-  
-  override init(frame: CGRect) {
+  public override init(frame: CGRect) {
     super.init(frame: frame)
     configure()
   }
   
-  required init?(coder: NSCoder) {
-    fatalError(InitCoderError)
+  public required init?(coder: NSCoder) {
+    super.init(coder: coder)
+    configure()
+  }
+
+  public override func setPagingItem(pagingItem: PagingItem, theme: PagingTheme) {
+    if let titleItem = pagingItem as? PagingTitleItem {
+      viewModel = PagingCellViewModel(title: titleItem.title, theme: theme)
+    }
+    configureTitleLabel()
   }
   
   private func configure() {

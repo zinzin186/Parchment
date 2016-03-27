@@ -7,7 +7,7 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let pagingViewController = PagingViewController(viewControllers: (0...10).map {
+    let pagingViewController = DefaultPagingViewController(viewControllers: (0...10).map {
       return ExampleViewController(index: $0)
     })
     

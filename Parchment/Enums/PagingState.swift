@@ -1,9 +1,22 @@
 import Foundation
 
-enum PagingState: Equatable {
-  case Previous(index: Int, upcomingIndex: Int, offset: CGFloat)
-  case Current(index: Int)
-  case Next(index: Int, upcomingIndex: Int, offset: CGFloat)
+enum PagingState<T: PagingItem where T: Equatable>: Equatable, CustomStringConvertible {
+  
+  case Previous(pagingItem: T, upcomingPagingItem: T?, offset: CGFloat)
+  case Current(pagingItem: T)
+  case Next(pagingItem: T, upcomingPagingItem: T?, offset: CGFloat)
+  
+  var description: String {
+    switch self {
+    case let .Previous(_, _, offset):
+      return "PagingState: .Previous(offset: \(offset)"
+    case let .Next(_, _, offset):
+      return "PagingState: .Next(offset: \(offset)"
+    case .Current:
+      return "PagingState: .Current"
+    }
+  }
+  
 }
 
 extension PagingState {
@@ -12,62 +25,65 @@ extension PagingState {
     switch self {
     case let .Previous(_, _, offset):
       return offset
-    case let .Next(_, _,offset):
+    case let .Next(_, _, offset):
       return offset
     case .Current:
       return 0
     }
   }
   
-  var currentIndex: Int {
+  var currentPagingItem: T {
     switch self {
-    case let .Previous(index, _, _):
-      return index
-    case let .Next(index, _, _):
-      return index
-    case let .Current(index):
-      return index
+    case let .Previous(pagingItem, _, _):
+      return pagingItem
+    case let .Next(pagingItem, _, _):
+      return pagingItem
+    case let .Current(pagingItem):
+      return pagingItem
     }
   }
   
-  var upcomingIndex: Int {
+  var upcomingPagingItem: T? {
     switch self {
-    case let .Previous(_, upcomingIndex, _):
-      return upcomingIndex
-    case let .Next(_, upcomingIndex, _):
-      return upcomingIndex
-    case let .Current(index):
-      return index
+    case let .Previous(_, upcomingPagingItem, _):
+      return upcomingPagingItem
+    case let .Next(_, upcomingPagingItem, _):
+      return upcomingPagingItem
+    case let .Current(pagingItem):
+      return pagingItem
     }
   }
   
-  var targetIndex: Int {
-    switch self {
-    case .Previous:
-      return upcomingIndex != currentIndex ? upcomingIndex : currentIndex - 1
-    case .Next:
-      return upcomingIndex != currentIndex ? upcomingIndex : currentIndex + 1
-    case .Current:
-      return currentIndex
-    }
-  }
-  
-  var visualSelectionIndex: Int {
+  var visualSelectionPagingItem: T {
     if fabs(offset) > 0.5 {
-      return targetIndex
+      return upcomingPagingItem ?? currentPagingItem
     } else {
-      return currentIndex
+      return currentPagingItem
     }
   }
   
 }
 
-func ==(lhs: PagingState, rhs: PagingState) -> Bool {
+func ==<T: PagingItem where T: Equatable>(lhs: PagingState<T>, rhs: PagingState<T>) -> Bool {
   switch (lhs, rhs) {
-  case (let .Previous(x, y, z), let .Previous(a, b, c)) where x == a && y == b && z == c:
-    return true
-  case (let .Next(x, y, z), let .Next(a, b, c)) where x == a && y == b && z == c:
-    return true
+  case (let .Previous(x, y, z), let .Previous(a, b, c)):
+    if x == a && z == c {
+      if let y = y, b = b where y == b {
+        return true
+      } else if y == nil && b == nil {
+        return true
+      }
+    }
+    return false
+  case (let .Next(x, y, z), let .Next(a, b, c)):
+    if x == a && z == c {
+      if let y = y, b = b where y == b {
+        return true
+      } else if y == nil && b == nil {
+        return true
+      }
+    }
+    return false
   case (let .Current(x), let .Current(a)) where x == a:
     return true
   default:

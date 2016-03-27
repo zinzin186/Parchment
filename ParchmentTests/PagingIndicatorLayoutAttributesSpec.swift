@@ -7,7 +7,7 @@ struct CustomPagingTheme: PagingTheme {
   let font: UIFont = UIFont.systemFontOfSize(15)
   let textColor: UIColor = .blueColor()
   let selectedTextColor: UIColor = .redColor()
-  let indicatorBackgroundColor: UIColor = .greenColor()
+  let indicatorColor: UIColor = .greenColor()
 }
 
 struct CustomPagingOptions: PagingOptions {
