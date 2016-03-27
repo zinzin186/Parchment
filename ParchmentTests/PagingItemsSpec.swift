@@ -7,7 +7,7 @@ struct Options: PagingOptions {
   let menuItemSize: PagingMenuItemSize = .Fixed(width: 50, height: 50)
 }
 
-class DataSource: PagingDataSource {
+class DataSource: PagingViewControllerDataSource {
   
   let items: [IndexPagingItem] = [
     IndexPagingItem(index: 0),

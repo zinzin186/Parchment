@@ -27,7 +27,7 @@ public class DefaultPagingViewController: PagingViewController<DefaultPagingItem
   
 }
 
-extension DefaultPagingViewController: PagingDataSource {
+extension DefaultPagingViewController: PagingViewControllerDataSource {
   
   public func initialPagingItem() -> PagingItem? {
     return items.first

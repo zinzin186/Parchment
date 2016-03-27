@@ -8,7 +8,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   private var stateMachine: PagingStateMachine<T>?
   private var dataStructure: PagingDataStructure<T>?
   
-  public weak var dataSource: PagingDataSource? {
+  public weak var dataSource: PagingViewControllerDataSource? {
     didSet {
       handleDataSourceUpdate()
     }

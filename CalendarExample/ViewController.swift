@@ -54,15 +54,15 @@ class ViewController: UIViewController {
   
 }
 
-// We need to conform to the PagingDataSource in order
-// to implement our custom data source. We set the
+// We need to conform to PagingViewControllerDataSource
+// in order to implement our custom data source. We set the
 // initial item to be the current date, and every time
 // pagingItemBeforePagingItem: or pagingItemAfterPagingItem:
 // is called, we either subtract or append the time
 // interval equal to one day. This means our paging view
 // controller will show one menu item for each day.
 
-extension ViewController: PagingDataSource {
+extension ViewController: PagingViewControllerDataSource {
   
   func initialPagingItem() -> PagingItem? {
     return CalendarItem(date: NSDate())

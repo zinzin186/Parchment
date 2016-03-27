@@ -1,6 +1,6 @@
 import Foundation
 
-func visibleItems<T: PagingItem where T: Equatable>(pagingItem: T, width: CGFloat, dataSource: PagingDataSource, options: PagingOptions) -> [T] {
+func visibleItems<T: PagingItem where T: Equatable>(pagingItem: T, width: CGFloat, dataSource: PagingViewControllerDataSource, options: PagingOptions) -> [T] {
   
   let before = itemsBefore([pagingItem],
                            width: width,
@@ -15,7 +15,7 @@ func visibleItems<T: PagingItem where T: Equatable>(pagingItem: T, width: CGFloa
   return before + [pagingItem] + after
 }
 
-func itemsBefore<T: PagingItem where T: Equatable>(items: [T], width: CGFloat, dataSource: PagingDataSource, options: PagingOptions) -> [T] {
+func itemsBefore<T: PagingItem where T: Equatable>(items: [T], width: CGFloat, dataSource: PagingViewControllerDataSource, options: PagingOptions) -> [T] {
   if let first = items.first, item = dataSource.pagingItemBeforePagingItem(first) as? T where width > 0 {
     return itemsBefore([item] + items,
                        width: width - options.menuItemSize.width,
@@ -25,7 +25,7 @@ func itemsBefore<T: PagingItem where T: Equatable>(items: [T], width: CGFloat, d
   return Array(items.dropLast())
 }
 
-func itemsAfter<T: PagingItem where T: Equatable>(items: [T], width: CGFloat, dataSource: PagingDataSource, options: PagingOptions) -> [T] {
+func itemsAfter<T: PagingItem where T: Equatable>(items: [T], width: CGFloat, dataSource: PagingViewControllerDataSource, options: PagingOptions) -> [T] {
   if let last = items.last, item = dataSource.pagingItemAfterPagingItem(last) as? T where width > 0 {
     return itemsAfter(items + [item],
                       width: width - options.menuItemSize.width,
@@ -35,7 +35,7 @@ func itemsAfter<T: PagingItem where T: Equatable>(items: [T], width: CGFloat, da
   return Array(items.dropFirst())
 }
 
-func diffWidth<T: PagingItem where T: Equatable>(from from: PagingDataStructure<T>, to: PagingDataStructure<T>, dataSource: PagingDataSource, options: PagingOptions) -> CGFloat {
+func diffWidth<T: PagingItem where T: Equatable>(from from: PagingDataStructure<T>, to: PagingDataStructure<T>, dataSource: PagingViewControllerDataSource, options: PagingOptions) -> CGFloat {
   
   let added = widthFromItem(to.visibleItems.first,
                             dataStructure: from,
