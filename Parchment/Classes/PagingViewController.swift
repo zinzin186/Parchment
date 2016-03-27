@@ -50,11 +50,13 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   
   public override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
-    guard
-      let stateMachine = stateMachine,
-      let dataStructure = dataStructure else { return }
+    
+    guard let stateMachine = stateMachine else { return }
     
     reloadVisibleItems(stateMachine.state.currentPagingItem)
+    
+    guard let dataStructure = dataStructure else { return }
+    
     let scrollPosition = options.selectedScrollPosition.collectionViewScrollPosition()
     let indexPath = dataStructure.indexPathForPagingItem(stateMachine.state.currentPagingItem)
     

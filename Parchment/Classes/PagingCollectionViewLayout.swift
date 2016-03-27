@@ -114,7 +114,7 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
   }
   
   private func indicatorInsetsForIndex(index: Int) -> PagingIndicatorMetric.Inset {
-    if case let .Visible(_, _, insets, _) = options.indicatorOptions {
+    if case let .Visible(_, _, insets) = options.indicatorOptions {
       if index == range.startIndex {
         return .Left(insets.left)
       } else if index >= range.endIndex {

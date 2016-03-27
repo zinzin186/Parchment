@@ -24,8 +24,7 @@ public enum PagingIndicatorOptions {
   case Visible(
     height: CGFloat,
     zIndex: Int,
-    insets: UIEdgeInsets,
-    backgroundColor: UIColor)
+    insets: UIEdgeInsets)
 }
 
 public enum PagingBorderOptions {
@@ -33,8 +32,7 @@ public enum PagingBorderOptions {
   case Visible(
     height: CGFloat,
     zIndex: Int,
-    insets: UIEdgeInsets,
-    backgroundColor: UIColor)
+    insets: UIEdgeInsets)
 }
 
 public enum PagingSelectedScrollPosition {
@@ -61,6 +59,8 @@ public protocol PagingTheme {
   var selectedTextColor: UIColor { get }
   var backgroundColor: UIColor { get }
   var headerBackgroundColor: UIColor { get }
+  var borderColor: UIColor { get }
+  var indicatorColor: UIColor { get }
 }
 
 public protocol PagingOptions {

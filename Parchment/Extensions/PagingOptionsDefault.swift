@@ -22,6 +22,14 @@ public extension PagingTheme {
     return UIColor.whiteColor()
   }
   
+  var indicatorColor: UIColor {
+    return UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)
+  }
+  
+  var borderColor: UIColor {
+    return UIColor(white: 0.9, alpha: 1)
+  }
+  
 }
 
 public extension PagingOptions {
@@ -42,16 +50,14 @@ public extension PagingOptions {
     return .Visible(
       height: 4,
       zIndex: Int.max,
-      insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8),
-      backgroundColor: UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1))
+      insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
   }
   
   var borderOptions: PagingBorderOptions {
     return .Visible(
       height: 1,
       zIndex: Int.max - 1,
-      insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8),
-      backgroundColor: UIColor(white: 0.9, alpha: 1))
+      insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
   }
   
   var menuItemClass: PagingCell.Type {
