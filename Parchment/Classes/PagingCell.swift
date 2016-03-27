@@ -1,8 +1,7 @@
 import UIKit
-import Cartography
 
 public class PagingCell: UICollectionViewCell {
-  func setPagingItem(pagingItem: PagingItem, theme: PagingTheme) {}
+  public func setPagingItem(pagingItem: PagingItem, theme: PagingTheme) {}
 }
 
 public class DefaultPagingCell: PagingCell {
@@ -35,10 +34,7 @@ public class DefaultPagingCell: PagingCell {
   
   private func configure() {
     contentView.addSubview(titleLabel)
-    constrain(contentView, titleLabel) { contentView, titleLabel in
-      titleLabel.centerX == contentView.centerX
-      titleLabel.centerY == contentView.centerY
-    }
+    contentView.addConstraintsForCenteredSubview(titleLabel)
   }
   
   private func configureTitleLabel() {

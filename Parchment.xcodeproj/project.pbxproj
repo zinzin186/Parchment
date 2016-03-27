@@ -8,6 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		3E187DF71C9F7691000388FF /* PagingItemsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E187DF61C9F7691000388FF /* PagingItemsSpec.swift */; };
+		3E2AAD081CA81D490044AAA5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD071CA81D490044AAA5 /* AppDelegate.swift */; };
+		3E2AAD0A1CA81D490044AAA5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD091CA81D490044AAA5 /* ViewController.swift */; };
+		3E2AAD0D1CA81D490044AAA5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E2AAD0B1CA81D490044AAA5 /* Main.storyboard */; };
+		3E2AAD0F1CA81D490044AAA5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E2AAD0E1CA81D490044AAA5 /* Assets.xcassets */; };
+		3E2AAD121CA81D490044AAA5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E2AAD101CA81D490044AAA5 /* LaunchScreen.storyboard */; };
+		3E2AAD191CA81DAB0044AAA5 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
+		3E2AAD1C1CA81DCD0044AAA5 /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3E2AAD1E1CA81E240044AAA5 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD1D1CA81E240044AAA5 /* UIView.swift */; };
+		3E2AAD201CA81EA20044AAA5 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD1F1CA81EA20044AAA5 /* ExampleViewController.swift */; };
+		3E2AAD221CA81EB00044AAA5 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD211CA81EB00044AAA5 /* CalendarViewController.swift */; };
+		3E2AAD241CA823DA0044AAA5 /* CalendarPagingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD231CA823DA0044AAA5 /* CalendarPagingCell.swift */; };
+		3E2AAD261CA828060044AAA5 /* DateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD251CA828060044AAA5 /* DateFormatters.swift */; };
+		3E2AAD281CA831AB0044AAA5 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD271CA831AB0044AAA5 /* UIView.swift */; };
+		3E2AAD2A1CA8331B0044AAA5 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD291CA8331B0044AAA5 /* UIView.swift */; };
 		3E3C8C8D1C9DD709005C2C89 /* PagingContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3C8C8C1C9DD709005C2C89 /* PagingContentViewController.swift */; };
 		3E4090781C88BA7000800E22 /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090761C88BA7000800E22 /* UICollectionView.swift */; };
 		3E4090791C88BA7000800E22 /* UICollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4090771C88BA7000800E22 /* UICollectionViewLayout.swift */; };
@@ -41,7 +55,6 @@
 		3E504ED21C7466CD00AE1CE3 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E504ED01C7466CD00AE1CE3 /* Nimble.framework */; };
 		3E504ED31C7466CD00AE1CE3 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E504ED11C7466CD00AE1CE3 /* Quick.framework */; };
 		3E5EED2B1C9E00D800786B9A /* PagingItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5EED2A1C9E00D800786B9A /* PagingItems.swift */; };
-		3E9E8D0D1C70CEA600F265A4 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9E8D0C1C70CEA600F265A4 /* ExampleViewController.swift */; };
 		3E9E8D141C70FDF900F265A4 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
 		3E9E8D151C70FDF900F265A4 /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3EA04A5D1C53BFF40054E5E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA04A5C1C53BFF40054E5E0 /* AppDelegate.swift */; };
@@ -49,13 +62,18 @@
 		3EA04A621C53BFF40054E5E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A601C53BFF40054E5E0 /* Main.storyboard */; };
 		3EA04A641C53BFF40054E5E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A631C53BFF40054E5E0 /* Assets.xcassets */; };
 		3EA04A671C53BFF40054E5E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A651C53BFF40054E5E0 /* LaunchScreen.storyboard */; };
-		3EA04A831C53C3860054E5E0 /* Cartography.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A821C53C3860054E5E0 /* Cartography.framework */; };
-		3EA04A871C53C48E0054E5E0 /* Cartography.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A821C53C3860054E5E0 /* Cartography.framework */; };
 		3EF3C1E31CA0870E00CDFE26 /* DefaultPagingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF3C1E21CA0870E00CDFE26 /* DefaultPagingViewController.swift */; };
 		3EFEFBF71C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3E2AAD171CA81DA70044AAA5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3EA04A421C53BFE40054E5E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3EA04A4A1C53BFE40054E5E0;
+			remoteInfo = Parchment;
+		};
 		3E504ECA1C7465B000AE1CE3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3EA04A421C53BFE40054E5E0 /* Project object */;
@@ -73,6 +91,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		3E2AAD1B1CA81DC20044AAA5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3E2AAD1C1CA81DCD0044AAA5 /* Parchment.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3E9E8D161C70FDF900F265A4 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -88,6 +117,20 @@
 
 /* Begin PBXFileReference section */
 		3E187DF61C9F7691000388FF /* PagingItemsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingItemsSpec.swift; sourceTree = "<group>"; };
+		3E2AAD051CA81D480044AAA5 /* CalendarExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CalendarExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E2AAD071CA81D490044AAA5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3E2AAD091CA81D490044AAA5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3E2AAD0C1CA81D490044AAA5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3E2AAD0E1CA81D490044AAA5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3E2AAD111CA81D490044AAA5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3E2AAD131CA81D490044AAA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3E2AAD1D1CA81E240044AAA5 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		3E2AAD1F1CA81EA20044AAA5 /* ExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
+		3E2AAD211CA81EB00044AAA5 /* CalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
+		3E2AAD231CA823DA0044AAA5 /* CalendarPagingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarPagingCell.swift; sourceTree = "<group>"; };
+		3E2AAD251CA828060044AAA5 /* DateFormatters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatters.swift; sourceTree = "<group>"; };
+		3E2AAD271CA831AB0044AAA5 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		3E2AAD291CA8331B0044AAA5 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		3E3C8C8C1C9DD709005C2C89 /* PagingContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingContentViewController.swift; sourceTree = "<group>"; };
 		3E4090761C88BA7000800E22 /* UICollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionView.swift; sourceTree = "<group>"; };
 		3E4090771C88BA7000800E22 /* UICollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewLayout.swift; sourceTree = "<group>"; };
@@ -123,7 +166,6 @@
 		3E504ED11C7466CD00AE1CE3 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		3E5EED2A1C9E00D800786B9A /* PagingItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingItems.swift; sourceTree = "<group>"; };
 		3E73A8131C9A0AE40083C720 /* libInsightfulPager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libInsightfulPager.a; path = ../../../Desktop/libInsightfulPager.a; sourceTree = "<group>"; };
-		3E9E8D0C1C70CEA600F265A4 /* ExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Parchment.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA04A5A1C53BFF40054E5E0 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA04A5C1C53BFF40054E5E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -139,6 +181,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3E2AAD021CA81D480044AAA5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E2AAD191CA81DAB0044AAA5 /* Parchment.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3E504EC11C7465B000AE1CE3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -153,7 +203,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3EA04A831C53C3860054E5E0 /* Cartography.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,7 +210,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3EA04A871C53C48E0054E5E0 /* Cartography.framework in Frameworks */,
 				3E9E8D141C70FDF900F265A4 /* Parchment.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -169,6 +217,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3E2AAD061CA81D490044AAA5 /* CalendarExample */ = {
+			isa = PBXGroup;
+			children = (
+				3E2AAD071CA81D490044AAA5 /* AppDelegate.swift */,
+				3E2AAD091CA81D490044AAA5 /* ViewController.swift */,
+				3E2AAD231CA823DA0044AAA5 /* CalendarPagingCell.swift */,
+				3E2AAD211CA81EB00044AAA5 /* CalendarViewController.swift */,
+				3E2AAD251CA828060044AAA5 /* DateFormatters.swift */,
+				3E2AAD1D1CA81E240044AAA5 /* UIView.swift */,
+				3E2AAD0B1CA81D490044AAA5 /* Main.storyboard */,
+				3E2AAD0E1CA81D490044AAA5 /* Assets.xcassets */,
+				3E2AAD101CA81D490044AAA5 /* LaunchScreen.storyboard */,
+				3E2AAD131CA81D490044AAA5 /* Info.plist */,
+			);
+			path = CalendarExample;
+			sourceTree = "<group>";
+		};
 		3E4090951C88BC9100800E22 /* Enums */ = {
 			isa = PBXGroup;
 			children = (
@@ -233,8 +298,9 @@
 			isa = PBXGroup;
 			children = (
 				3EA04A4D1C53BFE40054E5E0 /* Parchment */,
-				3EA04A5B1C53BFF40054E5E0 /* Example */,
 				3E504EC51C7465B000AE1CE3 /* ParchmentTests */,
+				3EA04A5B1C53BFF40054E5E0 /* Example */,
+				3E2AAD061CA81D490044AAA5 /* CalendarExample */,
 				3EA04A841C53C3960054E5E0 /* Frameworks */,
 				3EA04A4C1C53BFE40054E5E0 /* Products */,
 			);
@@ -246,6 +312,7 @@
 				3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */,
 				3EA04A5A1C53BFF40054E5E0 /* Example.app */,
 				3E504EC41C7465B000AE1CE3 /* ParchmentTests.xctest */,
+				3E2AAD051CA81D480044AAA5 /* CalendarExample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -270,7 +337,8 @@
 			children = (
 				3EA04A5C1C53BFF40054E5E0 /* AppDelegate.swift */,
 				3EA04A5E1C53BFF40054E5E0 /* ViewController.swift */,
-				3E9E8D0C1C70CEA600F265A4 /* ExampleViewController.swift */,
+				3E2AAD1F1CA81EA20044AAA5 /* ExampleViewController.swift */,
+				3E2AAD291CA8331B0044AAA5 /* UIView.swift */,
 				3EA04A601C53BFF40054E5E0 /* Main.storyboard */,
 				3EA04A631C53BFF40054E5E0 /* Assets.xcassets */,
 				3EA04A651C53BFF40054E5E0 /* LaunchScreen.storyboard */,
@@ -282,11 +350,12 @@
 		3EA04A701C53C0640054E5E0 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				3E41891E1C957322001E0284 /* PagingOptionsDefault.swift */,
 				3E4090761C88BA7000800E22 /* UICollectionView.swift */,
 				3E4090771C88BA7000800E22 /* UICollectionViewLayout.swift */,
 				3E40907A1C88BA7F00800E22 /* UIEdgeInsets.swift */,
+				3E2AAD271CA831AB0044AAA5 /* UIView.swift */,
 				3E40907B1C88BA7F00800E22 /* UIViewController.swift */,
-				3E41891E1C957322001E0284 /* PagingOptionsDefault.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -334,6 +403,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		3E2AAD041CA81D480044AAA5 /* CalendarExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3E2AAD161CA81D490044AAA5 /* Build configuration list for PBXNativeTarget "CalendarExample" */;
+			buildPhases = (
+				3E2AAD011CA81D480044AAA5 /* Sources */,
+				3E2AAD021CA81D480044AAA5 /* Frameworks */,
+				3E2AAD031CA81D480044AAA5 /* Resources */,
+				3E2AAD1B1CA81DC20044AAA5 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3E2AAD181CA81DA70044AAA5 /* PBXTargetDependency */,
+			);
+			name = CalendarExample;
+			productName = CalendarExample;
+			productReference = 3E2AAD051CA81D480044AAA5 /* CalendarExample.app */;
+			productType = "com.apple.product-type.application";
+		};
 		3E504EC31C7465B000AE1CE3 /* ParchmentTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3E504ECE1C7465B000AE1CE3 /* Build configuration list for PBXNativeTarget "ParchmentTests" */;
@@ -361,7 +449,6 @@
 				3EA04A471C53BFE40054E5E0 /* Frameworks */,
 				3EA04A481C53BFE40054E5E0 /* Headers */,
 				3EA04A491C53BFE40054E5E0 /* Resources */,
-				3EA04A7D1C53C31E0054E5E0 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -379,7 +466,6 @@
 				3EA04A561C53BFF40054E5E0 /* Sources */,
 				3EA04A571C53BFF40054E5E0 /* Frameworks */,
 				3EA04A581C53BFF40054E5E0 /* Resources */,
-				3EA04A861C53C4770054E5E0 /* ShellScript */,
 				3E9E8D161C70FDF900F265A4 /* Embed Frameworks */,
 			);
 			buildRules = (
@@ -398,10 +484,13 @@
 		3EA04A421C53BFE40054E5E0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0720;
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Martin Rechsteiner";
 				TargetAttributes = {
+					3E2AAD041CA81D480044AAA5 = {
+						CreatedOnToolsVersion = 7.3;
+					};
 					3E504EC31C7465B000AE1CE3 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
@@ -429,13 +518,24 @@
 			projectRoot = "";
 			targets = (
 				3EA04A4A1C53BFE40054E5E0 /* Parchment */,
-				3EA04A591C53BFF40054E5E0 /* Example */,
 				3E504EC31C7465B000AE1CE3 /* ParchmentTests */,
+				3EA04A591C53BFF40054E5E0 /* Example */,
+				3E2AAD041CA81D480044AAA5 /* CalendarExample */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3E2AAD031CA81D480044AAA5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E2AAD121CA81D490044AAA5 /* LaunchScreen.storyboard in Resources */,
+				3E2AAD0F1CA81D490044AAA5 /* Assets.xcassets in Resources */,
+				3E2AAD0D1CA81D490044AAA5 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3E504EC21C7465B000AE1CE3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -478,37 +578,22 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
-		3EA04A7D1C53C31E0054E5E0 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/Cartography.framework",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-		3EA04A861C53C4770054E5E0 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/Cartography.framework",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3E2AAD011CA81D480044AAA5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E2AAD261CA828060044AAA5 /* DateFormatters.swift in Sources */,
+				3E2AAD221CA81EB00044AAA5 /* CalendarViewController.swift in Sources */,
+				3E2AAD0A1CA81D490044AAA5 /* ViewController.swift in Sources */,
+				3E2AAD1E1CA81E240044AAA5 /* UIView.swift in Sources */,
+				3E2AAD081CA81D490044AAA5 /* AppDelegate.swift in Sources */,
+				3E2AAD241CA823DA0044AAA5 /* CalendarPagingCell.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3E504EC01C7465B000AE1CE3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -533,6 +618,7 @@
 				3E4090831C88BBCF00800E22 /* ReusableView.swift in Sources */,
 				3E4090791C88BA7000800E22 /* UICollectionViewLayout.swift in Sources */,
 				3E41891F1C957322001E0284 /* PagingOptionsDefault.swift in Sources */,
+				3E2AAD281CA831AB0044AAA5 /* UIView.swift in Sources */,
 				3E49C7251C8F5C13006269DD /* PagingBorderView.swift in Sources */,
 				3E5EED2B1C9E00D800786B9A /* PagingItems.swift in Sources */,
 				3E40907C1C88BA7F00800E22 /* UIEdgeInsets.swift in Sources */,
@@ -559,15 +645,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E2AAD2A1CA8331B0044AAA5 /* UIView.swift in Sources */,
 				3EA04A5F1C53BFF40054E5E0 /* ViewController.swift in Sources */,
 				3EA04A5D1C53BFF40054E5E0 /* AppDelegate.swift in Sources */,
-				3E9E8D0D1C70CEA600F265A4 /* ExampleViewController.swift in Sources */,
+				3E2AAD201CA81EA20044AAA5 /* ExampleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3E2AAD181CA81DA70044AAA5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3EA04A4A1C53BFE40054E5E0 /* Parchment */;
+			targetProxy = 3E2AAD171CA81DA70044AAA5 /* PBXContainerItemProxy */;
+		};
 		3E504ECB1C7465B000AE1CE3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3EA04A4A1C53BFE40054E5E0 /* Parchment */;
@@ -581,6 +673,22 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		3E2AAD0B1CA81D490044AAA5 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E2AAD0C1CA81D490044AAA5 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		3E2AAD101CA81D490044AAA5 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E2AAD111CA81D490044AAA5 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
 		3EA04A601C53BFF40054E5E0 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -600,6 +708,32 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		3E2AAD141CA81D490044AAA5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				INFOPLIST_FILE = CalendarExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.CalendarExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3E2AAD151CA81D490044AAA5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				INFOPLIST_FILE = CalendarExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.CalendarExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		3E504ECC1C7465B000AE1CE3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -799,6 +933,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3E2AAD161CA81D490044AAA5 /* Build configuration list for PBXNativeTarget "CalendarExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3E2AAD141CA81D490044AAA5 /* Debug */,
+				3E2AAD151CA81D490044AAA5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		3E504ECE1C7465B000AE1CE3 /* Build configuration list for PBXNativeTarget "ParchmentTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

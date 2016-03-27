@@ -1,30 +1,23 @@
 import UIKit
-import Cartography
 
 class ExampleViewController: UIViewController {
   
   init(index: Int) {
     super.init(nibName: nil, bundle: nil)
     title = "View \(index)"
+    
+    let label = UILabel(frame: .zero)
+    label.font = UIFont.systemFontOfSize(70, weight: UIFontWeightThin)
+    label.textColor = .lightGrayColor()
     label.text = "\(index)"
     label.sizeToFit()
     view.addSubview(label)
-    view.backgroundColor = UIColor.whiteColor()
-    constrain(view, label) { view, label in
-      label.centerX == view.centerX
-      label.centerY == view.centerY
-    }
+    view.backgroundColor = .whiteColor()
+    view.addConstraintsForCenteredSubview(label)
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-  private lazy var label: UILabel = {
-    let label = UILabel(frame: .zero)
-    label.font = UIFont(name: "HelveticaNeue-Thin", size: 70)
-    label.textColor = UIColor.lightGrayColor()
-    return label
-  }()
   
 }

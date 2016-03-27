@@ -1,6 +1,5 @@
 import UIKit
 import Parchment
-import Cartography
 
 class ViewController: UIViewController {
   
@@ -13,14 +12,8 @@ class ViewController: UIViewController {
     
     addChildViewController(pagingViewController)
     view.addSubview(pagingViewController.view)
+    view.addConstraintsForFullscreenSubview(pagingViewController.view)
     pagingViewController.didMoveToParentViewController(self)
-    
-    constrain(view, pagingViewController.view) { view, pagingView in
-      pagingView.top == view.top + 20
-      pagingView.left == view.left
-      pagingView.right == view.right
-      pagingView.bottom == view.bottom
-    }
   }
   
 }

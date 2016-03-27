@@ -1,5 +1,4 @@
 import UIKit
-import Cartography
 
 class PagingView: UIView {
   
@@ -23,21 +22,43 @@ class PagingView: UIView {
   }
   
   private func configure() {
-    
     addSubview(collectionView)
     addSubview(pagingContentView)
+    setupConstraints()
+  }
+  
+  private func setupConstraints() {
+    collectionView.translatesAutoresizingMaskIntoConstraints = false
+    pagingContentView.translatesAutoresizingMaskIntoConstraints = false
     
-    constrain(self, collectionView, pagingContentView) { view, collectionView, pagingContentView in
-      collectionView.height == options.menuItemSize.height
-      collectionView.left == view.left
-      collectionView.right == view.right
-      collectionView.top == view.top
-      
-      pagingContentView.top == collectionView.bottom
-      pagingContentView.left == view.left
-      pagingContentView.right == view.right
-      pagingContentView.bottom == view.bottom
-    }
+    let metrics = [
+      "height": options.menuItemSize.height]
+    
+    let views = [
+      "collectionView": collectionView,
+      "pagingContentView": pagingContentView]
+    
+    let horizontalCollectionViewContraints = NSLayoutConstraint.constraintsWithVisualFormat(
+      "H:|[collectionView]|",
+      options: .DirectionLeadingToTrailing,
+      metrics: metrics,
+      views: views)
+    
+    let horizontalPagingContentViewContraints = NSLayoutConstraint.constraintsWithVisualFormat(
+      "H:|[pagingContentView]|",
+      options: .DirectionLeadingToTrailing,
+      metrics: metrics,
+      views: views)
+    
+    let verticalContraints = NSLayoutConstraint.constraintsWithVisualFormat(
+      "V:|[collectionView(==height)][pagingContentView]|",
+      options: .DirectionLeadingToTrailing,
+      metrics: metrics,
+      views: views)
+    
+    addConstraints(horizontalCollectionViewContraints)
+    addConstraints(horizontalPagingContentViewContraints)
+    addConstraints(verticalContraints)
   }
   
 }

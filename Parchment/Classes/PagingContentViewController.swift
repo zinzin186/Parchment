@@ -1,5 +1,4 @@
 import UIKit
-import Cartography
 
 protocol PagingContentViewControllerDelegate: class {
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset: CGFloat)
@@ -37,9 +36,7 @@ class PagingContentViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     addViewController(pageViewController)
-    constrain(pageViewController.view, view) { pageView, view in
-      pageView.edges == view.edges
-    }
+    view.addConstraintsForFullscreenSubview(pageViewController.view)
   }
   
   func setViewController(viewController: UIViewController, direction: PagingDirection, animated: Bool) {
