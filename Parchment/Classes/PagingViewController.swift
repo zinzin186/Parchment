@@ -2,26 +2,46 @@ import UIKit
 
 private let PagingCellReuseIdentifier = "PagingCellReuseIdentifier"
 
-public class PagingViewController<T: PagingItem where T: Equatable>: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDataSource {
+class PagingDelegate: PagingViewControllerDelegate {
   
-  private let options: PagingOptions
-  private var stateMachine: PagingStateMachine<T>?
-  private var dataStructure: PagingDataStructure<T>?
+  let collectionView: UICollectionView
+  let options: PagingOptions
   
-  public weak var dataSource: PagingViewControllerDataSource? {
-    didSet {
-      handleDataSourceUpdate()
+  init(options: PagingOptions, collectionView: UICollectionView) {
+    self.options = options
+    self.collectionView = collectionView
+  }
+  
+  func widthForPagingItem(pagingItem: PagingItem) -> CGFloat {
+    switch options.menuItemSize {
+    case let .SizeToFit(minWidth, _):
+      return max(minWidth, collectionView.bounds.width / CGFloat(collectionView.numberOfItemsInSection(0)))
+    case let .Fixed(width, _):
+      return width
     }
   }
+  
+}
+
+public class PagingViewController<T: PagingItem where T: Equatable>: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDataSource {
+  
+  public let options: PagingOptions
+  public weak var delegate: PagingViewControllerDelegate?
+  public weak var dataSource: PagingViewControllerDataSource?
+  
+  private var stateMachine: PagingStateMachine<T>?
+  private var dataStructure: PagingDataStructure<T>?
   
   public init(options: PagingOptions = DefaultPagingOptions()) {
     self.options = options
     super.init(nibName: nil, bundle: nil)
+    delegate = defaultDelegate
   }
 
   required public init?(coder: NSCoder) {
     self.options = DefaultPagingOptions()
     super.init(coder: coder)
+    delegate = defaultDelegate
   }
   
   public override func loadView() {
@@ -33,59 +53,56 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   
   public override func viewDidLoad() {
     super.viewDidLoad()
-    
     addViewController(pagingContentViewController)
-    
-    stateMachine?.stateObservers.append { [weak self] (stateMachine, oldState) in
-      self?.handleStateUpdate(stateMachine.state)
-    }
-    
-    stateMachine?.eventObservers.append { [weak self] (stateMachine, event) in
-      self?.handleEventUpdate(event)
-    }
-
     collectionView.registerClass(options.menuItemClass,
       forCellWithReuseIdentifier: PagingCellReuseIdentifier)
   }
   
   public override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
-    
-    guard let stateMachine = stateMachine else { return }
-    
-    reloadVisibleItems(stateMachine.state.currentPagingItem)
-    
-    guard let dataStructure = dataStructure else { return }
-    
-    let scrollPosition = options.selectedScrollPosition.collectionViewScrollPosition()
-    let indexPath = dataStructure.indexPathForPagingItem(stateMachine.state.currentPagingItem)
-    
-    collectionView.selectItemAtIndexPath(indexPath,
-      animated: false,
-      scrollPosition: scrollPosition)
+    reloadData()
   }
   
-  // MARK: Private
-  
-  private func handleDataSourceUpdate() {
+  public func reloadData() {
     guard
+      let delegate = delegate,
       let dataSource = dataSource,
       let initialPagingItem = dataSource.initialPagingItem() as? T else { return }
     
-    stateMachine = PagingStateMachine(initialPagingItem: initialPagingItem)
+    let stateMachine = PagingStateMachine(initialPagingItem: initialPagingItem)
     
-    dataStructure = PagingDataStructure(visibleItems: visibleItems(initialPagingItem,
+    stateMachine.stateObservers.append { [weak self] (stateMachine, oldState) in
+      self?.handleStateUpdate(stateMachine.state)
+    }
+    
+    stateMachine.eventObservers.append { [weak self] (stateMachine, event) in
+      self?.handleEventUpdate(event)
+    }
+    
+    let dataStructure = PagingDataStructure(visibleItems: visibleItems(initialPagingItem,
       width: collectionView.bounds.width,
       dataSource: dataSource,
-      options: options))
+      delegate: delegate))
     
-    reloadVisibleItems(initialPagingItem)
+    self.dataStructure = dataStructure
+    self.stateMachine = stateMachine
     
     let viewController = dataSource.viewControllerForPagingItem(initialPagingItem)
+    let scrollPosition = options.selectedScrollPosition.collectionViewScrollPosition()
+    let indexPath = dataStructure.indexPathForPagingItem(stateMachine.state.currentPagingItem)
+    
     pagingContentViewController.setViewController(viewController,
-      direction: .None,
-      animated: false)
+                                                  direction: .None,
+                                                  animated: false)
+    
+    collectionViewLayout.dataStructure = dataStructure
+    collectionView.reloadData()
+    collectionView.selectItemAtIndexPath(indexPath,
+                                         animated: false,
+                                         scrollPosition: scrollPosition)
   }
+  
+  // MARK: Private
   
   private func handleEventUpdate(event: PagingEvent<T>) {
     guard let dataSource = dataSource else { return }
@@ -129,21 +146,21 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   }
   
   private func reloadVisibleItems(pagingItem: T) {
-    
     guard
+      let delegate = delegate,
       let dataStructure = dataStructure,
       let dataSource = dataSource else { return }
     
     let to = PagingDataStructure(visibleItems: visibleItems(pagingItem,
       width: collectionView.bounds.width,
       dataSource: dataSource,
-      options: options))
+      delegate: delegate))
     
     let itemsWidth = diffWidth(
       from: dataStructure,
       to: to,
       dataSource: dataSource,
-      options: options)
+      delegate: delegate)
     
     let contentOffset: CGPoint = collectionView.contentOffset
     
@@ -157,6 +174,10 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   }
 
   // MARK: Lazy Getters
+  
+  private lazy var defaultDelegate: PagingDelegate = {
+    return PagingDelegate(options: self.options, collectionView: self.collectionView)
+  }()
   
   private lazy var collectionViewLayout: PagingCollectionViewLayout<T> = {
     return PagingCollectionViewLayout(options: self.options)
@@ -181,17 +202,13 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     return pagingContentViewController
   }()
   
-
   // MARK: UICollectionViewDelegateFlowLayout
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-    switch options.menuItemSize {
-    case let .SizeToFit(minWidth, height):
-      let width = max(minWidth, collectionView.bounds.width / CGFloat(collectionView.numberOfItemsInSection(0)))
-      return CGSize(width: width, height: height)
-    case let .Fixed(width, height):
-      return CGSize(width: width, height: height)
-    }
+    guard let dataStructure = dataStructure else { return .zero }
+    let pagingItem = dataStructure.pagingItemForIndexPath(indexPath)
+    let width = delegate?.widthForPagingItem(pagingItem) ?? 0
+    return CGSize(width: width, height: 40)
   }
   
   public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
@@ -292,4 +309,3 @@ extension PagingViewController: PagingContentViewControllerDelegate {
   }
   
 }
-

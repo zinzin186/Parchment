@@ -5,15 +5,10 @@ import Nimble
 
 struct IndexPagingItem: PagingItem, Equatable {
   let index: Int
-  
-  func isEqual(pagingItem: PagingItem) -> Bool {
-    let indexPagingItem = pagingItem as! IndexPagingItem
-    return index == indexPagingItem.index
-  }
 }
 
 func ==(lhs: IndexPagingItem, rhs: IndexPagingItem) -> Bool {
-  return lhs.isEqual(rhs)
+  return lhs.index == rhs.index
 }
 
 class PagingStateMachineSpec: QuickSpec {

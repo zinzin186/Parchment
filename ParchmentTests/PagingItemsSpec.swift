@@ -3,22 +3,38 @@ import Quick
 import Nimble
 @testable import Parchment
 
-struct Options: PagingOptions {
-  let menuItemSize: PagingMenuItemSize = .Fixed(width: 50, height: 50)
+private struct Item: PagingItem, Equatable {
+  let index: Int
+  let width: CGFloat
+}
+
+private func ==(lhs: Item, rhs: Item) -> Bool {
+  return lhs.index == rhs.index && lhs.width == rhs.width
+}
+
+class Delegate: PagingViewControllerDelegate {
+  
+  func widthForPagingItem(pagingItem: PagingItem) -> CGFloat {
+    if let item = pagingItem as? Item {
+      return item.width
+    }
+    return 0
+  }
+  
 }
 
 class DataSource: PagingViewControllerDataSource {
   
-  let items: [IndexPagingItem] = [
-    IndexPagingItem(index: 0),
-    IndexPagingItem(index: 1),
-    IndexPagingItem(index: 2),
-    IndexPagingItem(index: 3),
-    IndexPagingItem(index: 4),
-    IndexPagingItem(index: 5),
-    IndexPagingItem(index: 6),
-    IndexPagingItem(index: 7),
-    IndexPagingItem(index: 8)
+  private let items: [Item] = [
+    Item(index: 0, width: 50),
+    Item(index: 1, width: 100),
+    Item(index: 2, width: 50),
+    Item(index: 3, width: 100),
+    Item(index: 4, width: 50),
+    Item(index: 5, width: 100),
+    Item(index: 6, width: 50),
+    Item(index: 7, width: 100),
+    Item(index: 8, width: 50)
   ]
   
   func initialPagingItem() -> PagingItem? {
@@ -26,7 +42,7 @@ class DataSource: PagingViewControllerDataSource {
   }
   
   func pagingItemBeforePagingItem(pagingItem: PagingItem) -> PagingItem? {
-    guard let index = items.indexOf({ $0.isEqual(pagingItem) }) else { return nil }
+    guard let index = items.indexOf(pagingItem as! Item) else { return nil }
     if index > 0 {
       return items[index - 1]
     }
@@ -34,7 +50,7 @@ class DataSource: PagingViewControllerDataSource {
   }
   
   func pagingItemAfterPagingItem(pagingItem: PagingItem) -> PagingItem? {
-    guard let index = items.indexOf({ $0.isEqual(pagingItem) }) else { return nil }
+    guard let index = items.indexOf(pagingItem as! Item) else { return nil }
     if index < items.count - 1 {
       return items[index + 1]
     }
@@ -51,87 +67,87 @@ class PagingItemsSpec: QuickSpec {
   
   override func spec() {
     
-    let options = Options()
     let dataSource = DataSource()
+    let delegate = Delegate()
     
     describe("PagingItems") {
       
       describe("itemsBefore:") {
         
-        it("returns no items before the last item") {
-          let items = itemsBefore([IndexPagingItem(index: 0)],
+        it("returns no items before the first item") {
+          let items = itemsBefore([Item(index: 0, width: 50)],
                                   width: 150,
                                   dataSource: dataSource,
-                                  options: options)
+                                  delegate: delegate)
           expect(items.isEmpty).to(beTrue())
         }
         
         it("returns no items if the width is zero") {
-          let items = itemsBefore([IndexPagingItem(index: 4)],
+          let items = itemsBefore([Item(index: 4, width: 50)],
                                   width: 0,
                                   dataSource: dataSource,
-                                  options: options)
+                                  delegate: delegate)
           expect(items.isEmpty).to(beTrue())
         }
         
         it("only returns the items that can fit within the provided width") {
-          let items: [IndexPagingItem] = itemsBefore([IndexPagingItem(index: 4)],
-                                                     width: 150,
-                                                     dataSource: dataSource,
-                                                     options: options)
+          let items = itemsBefore([Item(index: 4, width: 50)],
+                                  width: 200,
+                                  dataSource: dataSource,
+                                  delegate: delegate)
           expect(items.count).to(equal(3))
-          expect(items[0]).to(equal(IndexPagingItem(index: 1)))
-          expect(items[1]).to(equal(IndexPagingItem(index: 2)))
-          expect(items[2]).to(equal(IndexPagingItem(index: 3)))
+          expect(items[0]).to(equal(Item(index: 1, width: 100)))
+          expect(items[1]).to(equal(Item(index: 2, width: 50)))
+          expect(items[2]).to(equal(Item(index: 3, width: 100)))
         }
         
         it("stops when the data source returns nil") {
-          let items: [IndexPagingItem] = itemsBefore([IndexPagingItem(index: 1)],
-                                                     width: 500,
-                                                     dataSource: dataSource,
-                                                     options: options)
+          let items = itemsBefore([Item(index: 1, width: 100)],
+                                  width: 500,
+                                  dataSource: dataSource,
+                                  delegate: delegate)
           expect(items.count).to(equal(1))
-          expect(items[0]).to(equal(IndexPagingItem(index: 0)))
+          expect(items[0]).to(equal(Item(index: 0, width: 50)))
         }
         
       }
       
       describe("itemsAfter:") {
         
-        it("returns no items after the first item") {
-          let items = itemsAfter([IndexPagingItem(index: 8)],
+        it("returns no items after the last item") {
+          let items = itemsAfter([Item(index: 8, width: 50)],
                                  width: 150,
                                  dataSource: dataSource,
-                                 options: options)
+                                 delegate: delegate)
           expect(items.isEmpty).to(beTrue())
         }
         
         it("returns no items if the width is zero") {
-          let items = itemsAfter([IndexPagingItem(index: 4)],
+          let items = itemsAfter([Item(index: 4, width: 50)],
                                   width: 0,
                                   dataSource: dataSource,
-                                  options: options)
+                                  delegate: delegate)
           expect(items.isEmpty).to(beTrue())
         }
         
         it("only returns the items that can fit within the provided width") {
-          let items: [IndexPagingItem] = itemsAfter([IndexPagingItem(index: 4)],
-                                                     width: 150,
-                                                     dataSource: dataSource,
-                                                     options: options)
+          let items = itemsAfter([Item(index: 4, width: 50)],
+                                 width: 200,
+                                 dataSource: dataSource,
+                                 delegate: delegate)
           expect(items.count).to(equal(3))
-          expect(items[0]).to(equal(IndexPagingItem(index: 5)))
-          expect(items[1]).to(equal(IndexPagingItem(index: 6)))
-          expect(items[2]).to(equal(IndexPagingItem(index: 7)))
+          expect(items[0]).to(equal(Item(index: 5, width: 100)))
+          expect(items[1]).to(equal(Item(index: 6, width: 50)))
+          expect(items[2]).to(equal(Item(index: 7, width: 100)))
         }
         
         it("stops when the data source returns nil") {
-          let items: [IndexPagingItem] = itemsAfter([IndexPagingItem(index: 7)],
-                                                     width: 500,
-                                                     dataSource: dataSource,
-                                                     options: options)
+          let items = itemsAfter([Item(index: 7, width: 100)],
+                                 width: 500,
+                                 dataSource: dataSource,
+                                 delegate: delegate)
           expect(items.count).to(equal(1))
-          expect(items[0]).to(equal(IndexPagingItem(index: 8)))
+          expect(items[0]).to(equal(Item(index: 8, width: 50)))
         }
         
       }
@@ -139,14 +155,14 @@ class PagingItemsSpec: QuickSpec {
       describe("visibleItems:") {
         
         it("includes items before and after + the initial item") {
-          let items: [IndexPagingItem] = visibleItems(IndexPagingItem(index: 4),
-                                                      width: 50,
-                                                      dataSource: dataSource,
-                                                      options: options)
+          let items = visibleItems(Item(index: 4, width: 50),
+                                   width: 50,
+                                   dataSource: dataSource,
+                                   delegate: delegate)
           expect(items.count).to(equal(3))
-          expect(items[0]).to(equal(IndexPagingItem(index: 3)))
-          expect(items[1]).to(equal(IndexPagingItem(index: 4)))
-          expect(items[2]).to(equal(IndexPagingItem(index: 5)))
+          expect(items[0]).to(equal(Item(index: 3, width: 100)))
+          expect(items[1]).to(equal(Item(index: 4, width: 50)))
+          expect(items[2]).to(equal(Item(index: 5, width: 100)))
         }
         
       }
@@ -154,28 +170,28 @@ class PagingItemsSpec: QuickSpec {
       describe("widthFromPagingItem:") {
         
         it("accumulates the correct width") {
-          let items = [IndexPagingItem(index: 3)]
-          let dataStructure = PagingDataStructure<IndexPagingItem>(visibleItems: items)
-          let width = widthFromItem(IndexPagingItem(index: 0),
+          let items = [Item(index: 3, width: 100)]
+          let dataStructure = PagingDataStructure<Item>(visibleItems: items)
+          let width = widthFromItem(Item(index: 0, width: 50),
                                     dataStructure: dataStructure,
                                     dataSource: dataSource,
-                                    options: options)
-          expect(width).to(equal(150))
+                                    delegate: delegate)
+          expect(width).to(equal(200))
         }
         
         it("returns zero for items already in data structure") {
-          let items = [IndexPagingItem(index: 1), IndexPagingItem(index: 2)]
-          let dataStructure = PagingDataStructure<IndexPagingItem>(visibleItems: items)
+          let items = [Item(index: 1, width: 100), Item(index: 2, width: 50)]
+          let dataStructure = PagingDataStructure<Item>(visibleItems: items)
           
-          let firstItemWidth = widthFromItem(IndexPagingItem(index: 1),
+          let firstItemWidth = widthFromItem(Item(index: 1, width: 100),
                                              dataStructure: dataStructure,
                                              dataSource: dataSource,
-                                             options: options)
+                                             delegate: delegate)
           
-          let lastItemWidth = widthFromItem(IndexPagingItem(index: 2),
+          let lastItemWidth = widthFromItem(Item(index: 1, width: 100),
                                             dataStructure: dataStructure,
                                             dataSource: dataSource,
-                                            options: options)
+                                            delegate: delegate)
           
           expect(firstItemWidth).to(equal(0))
           expect(lastItemWidth).to(equal(0))
@@ -188,19 +204,19 @@ class PagingItemsSpec: QuickSpec {
         it("returns correct width for removed items") {
           
           let from = PagingDataStructure(visibleItems: [
-            IndexPagingItem(index: 0),
-            IndexPagingItem(index: 1)
+            Item(index: 0, width: 50),
+            Item(index: 1, width: 100)
           ])
           
           let to = PagingDataStructure(visibleItems: [
-            IndexPagingItem(index: 1),
+            Item(index: 1, width: 100),
           ])
           
           let width = diffWidth(
             from: from,
             to: to,
             dataSource: dataSource,
-            options: options)
+            delegate: delegate)
           
           expect(width).to(equal(-50))
         }
@@ -208,19 +224,19 @@ class PagingItemsSpec: QuickSpec {
         it("returns correct width for added items") {
           
           let from = PagingDataStructure(visibleItems: [
-            IndexPagingItem(index: 1)
+            Item(index: 1, width: 100)
           ])
           
           let to = PagingDataStructure(visibleItems: [
-            IndexPagingItem(index: 0),
-            IndexPagingItem(index: 1)
+            Item(index: 0, width: 50),
+            Item(index: 1, width: 100)
           ])
           
           let width = diffWidth(
             from: from,
             to: to,
             dataSource: dataSource,
-            options: options)
+            delegate: delegate)
           
           expect(width).to(equal(50))
         }
