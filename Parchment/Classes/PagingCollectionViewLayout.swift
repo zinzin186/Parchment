@@ -10,7 +10,8 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
   private let borderLayoutAttributes: PagingBorderLayoutAttributes
   
   private var range: Range<Int> {
-    return 0..<(collection.numberOfItemsInSection(0) - 1)
+    guard let collectionView = collectionView else { return 0...0 }
+    return 0..<(collectionView.numberOfItemsInSection(0) - 1)
   }
   
   init(options: PagingOptions) {
