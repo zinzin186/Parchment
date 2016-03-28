@@ -34,13 +34,14 @@ public class DefaultPagingCell: PagingCell {
   
   private func configure() {
     contentView.addSubview(titleLabel)
-    contentView.addConstraintsForCenteredSubview(titleLabel)
+    contentView.addConstraintsForFullscreenSubview(titleLabel)
   }
   
   private func configureTitleLabel() {
     guard let viewModel = viewModel else { return }
     titleLabel.text = viewModel.title
     titleLabel.font = viewModel.font
+    titleLabel.textAlignment = .Center
     
     if selected {
       titleLabel.textColor = viewModel.selectedTextColor
