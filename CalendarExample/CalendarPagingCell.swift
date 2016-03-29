@@ -3,6 +3,8 @@ import Parchment
 
 class CalendarPagingCell: PagingCell {
   
+  private var theme: PagingTheme?
+  
   lazy var dateLabel: UILabel = {
     let dateLabel = UILabel(frame: .zero)
     dateLabel.font = UIFont.systemFontOfSize(20)
@@ -23,6 +25,12 @@ class CalendarPagingCell: PagingCell {
   required init?(coder: NSCoder) {
     super.init(coder: coder)
     configure()
+  }
+  
+  override var selected: Bool {
+    didSet {
+      updateSelectedState()
+    }
   }
   
   private func configure() {
@@ -76,12 +84,8 @@ class CalendarPagingCell: PagingCell {
     ])
   }
   
-  override func setPagingItem(pagingItem: PagingItem, theme: PagingTheme) {
-    let calendarItem = pagingItem as! CalendarItem
-    
-    dateLabel.text = DateFormatters.dateFormatter.stringFromDate(calendarItem.date)
-    weekdayLabel.text = DateFormatters.weekdayFormatter.stringFromDate(calendarItem.date)
-    
+  private func updateSelectedState() {
+    guard let theme = theme else { return }
     if selected {
       dateLabel.textColor = theme.selectedTextColor
       weekdayLabel.textColor = theme.selectedTextColor
@@ -89,6 +93,15 @@ class CalendarPagingCell: PagingCell {
       dateLabel.textColor = theme.textColor
       weekdayLabel.textColor = theme.textColor
     }
+  }
+  
+  override func setPagingItem(pagingItem: PagingItem, theme: PagingTheme) {
+    let calendarItem = pagingItem as! CalendarItem
+    dateLabel.text = DateFormatters.dateFormatter.stringFromDate(calendarItem.date)
+    weekdayLabel.text = DateFormatters.weekdayFormatter.stringFromDate(calendarItem.date)
+    
+    self.theme = theme
+    updateSelectedState()
   }
   
 }
