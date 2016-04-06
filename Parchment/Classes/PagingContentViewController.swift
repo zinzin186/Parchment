@@ -35,7 +35,7 @@ public class PagingContentViewController: UIViewController {
   public override func viewDidLoad() {
     super.viewDidLoad()
     addViewController(pageViewController)
-    view.addConstraintsForFullscreenSubview(pageViewController.view)
+    view.constrainToEdges(pageViewController.view)
   }
   
   func setViewController(viewController: UIViewController, direction: PagingDirection, animated: Bool) {

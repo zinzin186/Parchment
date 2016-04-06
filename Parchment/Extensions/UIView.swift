@@ -2,71 +2,51 @@ import UIKit
 
 extension UIView {
   
-  func addConstraintsForCenteredSubview(subview: UIView) {
+  func constrainToEdges(subview: UIView) {
     
     subview.translatesAutoresizingMaskIntoConstraints = false
     
-    let verticalContraint = NSLayoutConstraint(
+    let topContraint = NSLayoutConstraint(
       item: subview,
-      attribute: .CenterY,
+      attribute: .Top,
       relatedBy: .Equal,
       toItem: self,
-      attribute: .CenterY,
+      attribute: .Top,
       multiplier: 1.0,
       constant: 0)
     
-    let horizontalContraint = NSLayoutConstraint(
+    let bottomConstraint = NSLayoutConstraint(
       item: subview,
-      attribute: .CenterX,
+      attribute: .Bottom,
       relatedBy: .Equal,
       toItem: self,
-      attribute: .CenterX,
+      attribute: .Bottom,
       multiplier: 1.0,
       constant: 0)
     
-    let heightContraint = NSLayoutConstraint(
+    let leadingContraint = NSLayoutConstraint(
       item: subview,
-      attribute: .Height,
+      attribute: .Leading,
       relatedBy: .Equal,
-      toItem: nil,
-      attribute: .NotAnAttribute,
+      toItem: self,
+      attribute: .Leading,
       multiplier: 1.0,
-      constant: subview.frame.height)
+      constant: 0)
     
-    let widthContraint = NSLayoutConstraint(
+    let trailingContraint = NSLayoutConstraint(
       item: subview,
-      attribute: .Width,
+      attribute: .Trailing,
       relatedBy: .Equal,
-      toItem: nil,
-      attribute: .NotAnAttribute,
+      toItem: self,
+      attribute: .Trailing,
       multiplier: 1.0,
-      constant: subview.frame.width)
+      constant: 0)
     
     addConstraints([
-      horizontalContraint,
-      verticalContraint,
-      heightContraint,
-      widthContraint])
-    
-  }
-  
-  func addConstraintsForFullscreenSubview(subview: UIView) {
-    subview.translatesAutoresizingMaskIntoConstraints = false
-    
-    let horizontalContraint = NSLayoutConstraint.constraintsWithVisualFormat(
-      "H:|-0-[subview]-0-|",
-      options: .DirectionLeadingToTrailing,
-      metrics: nil,
-      views: ["subview" : subview])
-    
-    let verticalContraint = NSLayoutConstraint.constraintsWithVisualFormat(
-      "V:|-0-[subview]-0-|",
-      options: .DirectionLeadingToTrailing,
-      metrics: nil,
-      views: ["subview" : subview])
-    
-    addConstraints(horizontalContraint)
-    addConstraints(verticalContraint)
+      topContraint,
+      bottomConstraint,
+      leadingContraint,
+      trailingContraint])
   }
   
 }

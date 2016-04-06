@@ -13,7 +13,7 @@ class ExampleViewController: UIViewController {
     label.sizeToFit()
     view.addSubview(label)
     view.backgroundColor = .whiteColor()
-    view.addConstraintsForCenteredSubview(label)
+    view.constrainCentered(label)
   }
   
   required init?(coder: NSCoder) {

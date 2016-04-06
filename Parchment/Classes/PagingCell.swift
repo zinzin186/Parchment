@@ -36,7 +36,7 @@ public class DefaultPagingCell: PagingCell {
   
   private func configure() {
     contentView.addSubview(titleLabel)
-    contentView.addConstraintsForFullscreenSubview(titleLabel)
+    contentView.constrainToEdges(titleLabel)
   }
   
   private func configureTitleLabel() {

@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     
     addChildViewController(pagingViewController)
     view.addSubview(pagingViewController.view)
-    view.addConstraintsForFullscreenSubview(pagingViewController.view)
+    view.constrainToEdges(pagingViewController.view)
     pagingViewController.didMoveToParentViewController(self)
   }
   

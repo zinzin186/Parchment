@@ -12,7 +12,7 @@ class CalendarViewController: UIViewController {
     label.sizeToFit()
     
     view.addSubview(label)
-    view.addConstraintsForCenteredSubview(label)
+    view.constrainCentered(label)
     view.backgroundColor = .whiteColor()
   }
   
