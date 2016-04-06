@@ -4,10 +4,9 @@ protocol PagingContentViewControllerDelegate: class {
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset: CGFloat)
   func pagingContentViewControllerDidCompleteTransition(pagingContentViewController: PagingContentViewController)
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didBeginDraggingInDirection: PagingDirection)
-  
 }
 
-class PagingContentViewController: UIViewController {
+public class PagingContentViewController: UIViewController {
   
   weak var delegate: PagingContentViewControllerDelegate?
   let pageViewController: UIPageViewController
@@ -29,11 +28,11 @@ class PagingContentViewController: UIViewController {
     }
   }
 
-  required init?(coder: NSCoder) {
+  public required init?(coder: NSCoder) {
     fatalError(InitCoderError)
   }
   
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     addViewController(pageViewController)
     view.addConstraintsForFullscreenSubview(pageViewController.view)
@@ -54,7 +53,7 @@ class PagingContentViewController: UIViewController {
 
 extension PagingContentViewController: UIScrollViewDelegate {
   
-  func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+  public func scrollViewWillBeginDragging(scrollView: UIScrollView) {
     let velocity = scrollView.panGestureRecognizer.velocityInView(view)
     if velocity.x < 0 {
       delegate?.pagingContentViewController(self, didBeginDraggingInDirection: .Forward)
@@ -65,7 +64,7 @@ extension PagingContentViewController: UIScrollViewDelegate {
     }
   }
   
-  func scrollViewDidScroll(scrollView: UIScrollView) {
+  public func scrollViewDidScroll(scrollView: UIScrollView) {
     let offset = CGFloat(scrollView.contentOffset.x / scrollView.bounds.width) - 1
     delegate?.pagingContentViewController(self, didChangeOffset: offset)
   }
@@ -74,7 +73,7 @@ extension PagingContentViewController: UIScrollViewDelegate {
 
 extension PagingContentViewController: UIPageViewControllerDelegate {
   
-  func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+  public func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
     if completed {
       delegate?.pagingContentViewControllerDidCompleteTransition(self)
     }

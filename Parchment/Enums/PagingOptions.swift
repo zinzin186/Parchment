@@ -6,7 +6,9 @@ public enum PagingMenuItemSize {
   case Dynamic(height: CGFloat)
 }
 
-  public var width: CGFloat {
+extension PagingMenuItemSize {
+  
+  var width: CGFloat {
     switch self {
     case let .Fixed(width, _): return width
     case let .SizeToFit(minWidth, _): return minWidth
@@ -14,13 +16,14 @@ public enum PagingMenuItemSize {
     }
   }
   
-  public var height: CGFloat {
+  var height: CGFloat {
     switch self {
     case let .Fixed(_, height): return height
     case let .SizeToFit(_, height): return height
     case let .Dynamic(height): return height
     }
   }
+  
 }
 
 public enum PagingIndicatorOptions {

@@ -22,6 +22,20 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     return PagingOptionsDelegate(options: self.options, collectionView: self.collectionView)
   }()
   
+  public lazy var collectionViewLayout: PagingCollectionViewLayout<T> = {
+    return PagingCollectionViewLayout(options: self.options, dataStructure: self.dataStructure)
+  }()
+  
+  public lazy var collectionView: UICollectionView = {
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
+    collectionView.backgroundColor = .whiteColor()
+    collectionView.scrollEnabled = false
+    return collectionView
+  }()
+  
+  public lazy var pagingContentViewController: PagingContentViewController = {
+    return PagingContentViewController()
+  }()
   
   public init(options: PagingOptions = DefaultPagingOptions()) {
     self.options = options
@@ -49,6 +63,12 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   public override func viewDidLoad() {
     super.viewDidLoad()
     addViewController(pagingContentViewController)
+    
+    collectionView.delegate = self
+    collectionView.dataSource = self
+    pagingContentViewController.delegate = self
+    pagingContentViewController.pageViewController.dataSource = self
+    
     collectionView.registerClass(options.menuItemClass,
       forCellWithReuseIdentifier: PagingCell.reuseIdentifier)
   }
@@ -153,23 +173,6 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
       x: contentOffset.x + itemsWidth,
       y: collectionView.contentOffset.y)
   }
-
-  // MARK: Lazy Getters
-  
-  private lazy var collectionViewLayout: PagingCollectionViewLayout<T> = {
-    return PagingCollectionViewLayout(options: self.options)
-  }()
-  
-  private lazy var collectionView: UICollectionView = {
-    let collectionView = UICollectionView(
-      frame: .zero,
-      collectionViewLayout: self.collectionViewLayout)
-    collectionView.dataSource = self
-    collectionView.delegate = self
-    collectionView.backgroundColor = UIColor.whiteColor()
-    collectionView.scrollEnabled = false
-    return collectionView
-  }()
   
   private func selectViewController(pagingItem: T, direction: PagingDirection, animated: Bool = true) {
     guard let dataSource = dataSource else { return }
@@ -179,12 +182,6 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
                                                   animated: animated)
   }
   
-  private lazy var pagingContentViewController: PagingContentViewController = {
-    let pagingContentViewController = PagingContentViewController()
-    pagingContentViewController.delegate = self
-    pagingContentViewController.pageViewController.dataSource = self
-    return pagingContentViewController
-  }()
   private func selectCollectionViewCell(pagingItem: T, scrollPosition: UICollectionViewScrollPosition, animated: Bool = false) {
     let indexPath = dataStructure.indexPathForPagingItem(pagingItem)
     collectionView.selectItemAtIndexPath(indexPath,

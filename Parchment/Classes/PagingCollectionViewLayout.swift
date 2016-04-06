@@ -1,6 +1,6 @@
 import UIKit
 
-class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollectionViewFlowLayout {
+public class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollectionViewFlowLayout {
   
   var state: PagingState<T>?
   var dataStructure: PagingDataStructure<T>
@@ -32,7 +32,7 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
     configure()
   }
   
-  required init?(coder: NSCoder) {
+  public required init?(coder: NSCoder) {
     fatalError(InitCoderError)
   }
   
@@ -46,11 +46,11 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
     borderLayoutAttributes.configure(options)
   }
   
-  override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
+  public override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
     return true
   }
   
-  override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+  public override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
     var layoutAttributes = super.layoutAttributesForElementsInRect(rect)!
     
     let indicatorAttributes = layoutAttributesForDecorationViewOfKind(PagingIndicatorView.reuseIdentifier,
@@ -67,7 +67,7 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
     return layoutAttributes
   }
   
-  override func layoutAttributesForDecorationViewOfKind(elementKind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
+  public override func layoutAttributesForDecorationViewOfKind(elementKind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
     guard
       let state = state,
       let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem) else { return nil }
