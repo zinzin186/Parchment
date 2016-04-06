@@ -1,7 +1,5 @@
 import UIKit
 
-private let PagingCellReuseIdentifier = "PagingCellReuseIdentifier"
-
 class PagingDelegate: PagingViewControllerDelegate {
   
   let collectionView: UICollectionView
@@ -55,7 +53,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     super.viewDidLoad()
     addViewController(pagingContentViewController)
     collectionView.registerClass(options.menuItemClass,
-      forCellWithReuseIdentifier: PagingCellReuseIdentifier)
+      forCellWithReuseIdentifier: PagingCell.reuseIdentifier)
   }
   
   public override func viewDidAppear(animated: Bool) {
@@ -240,11 +238,11 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   // MARK: UICollectionViewDataSource
   
   public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PagingCellReuseIdentifier,
       forIndexPath: indexPath) as! PagingCell
     if let dataStructure = dataStructure {
       cell.setPagingItem(dataStructure.visibleItems[indexPath.item], theme: options.theme)
     }
+    let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PagingCell.reuseIdentifier, forIndexPath: indexPath) as! PagingCell
     return cell
   }
   

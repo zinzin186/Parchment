@@ -19,11 +19,11 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
     self.options = options
     
     indicatorLayoutAttributes = PagingIndicatorLayoutAttributes(
-      forDecorationViewOfKind: PagingIndicatorView.defaultReuseIdentifier,
+      forDecorationViewOfKind: PagingIndicatorView.reuseIdentifier,
       withIndexPath: NSIndexPath(forItem: 0, inSection: 0))
     
     borderLayoutAttributes = PagingBorderLayoutAttributes(
-      forDecorationViewOfKind: PagingBorderView.defaultReuseIdentifier,
+      forDecorationViewOfKind: PagingBorderView.reuseIdentifier,
       withIndexPath: NSIndexPath(forItem: 1, inSection: 0))
     
     super.init()
@@ -39,8 +39,8 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
     minimumLineSpacing = 0
     minimumInteritemSpacing = 0
     scrollDirection = .Horizontal
-    register(PagingIndicatorView.self)
-    register(PagingBorderView.self)
+    registerDecorationView(PagingIndicatorView.self)
+    registerDecorationView(PagingBorderView.self)
     indicatorLayoutAttributes.configure(options)
     borderLayoutAttributes.configure(options)
   }
@@ -52,10 +52,10 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
   override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
     var layoutAttributes = super.layoutAttributesForElementsInRect(rect)!
     
-    let indicatorAttributes = layoutAttributesForDecorationViewOfKind(PagingIndicatorView.defaultReuseIdentifier,
+    let indicatorAttributes = layoutAttributesForDecorationViewOfKind(PagingIndicatorView.reuseIdentifier,
       atIndexPath: NSIndexPath(forItem: 0, inSection: 0))
     
-    let borderAttributes = layoutAttributesForDecorationViewOfKind(PagingBorderView.defaultReuseIdentifier,
+    let borderAttributes = layoutAttributesForDecorationViewOfKind(PagingBorderView.reuseIdentifier,
       atIndexPath: NSIndexPath(forItem: 1, inSection: 0))
     
     if let indicatorAttributes = indicatorAttributes, borderAttributes = borderAttributes {
@@ -74,7 +74,7 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
     
     let upcomingIndexPath = upcomingIndexPathForIndexPath(currentIndexPath)
     
-    if elementKind == PagingIndicatorView.defaultReuseIdentifier {
+    if elementKind == PagingIndicatorView.reuseIdentifier {
       
       let from = PagingIndicatorMetric(
         frame: indicatorFrameForIndex(currentIndexPath.item),
@@ -88,7 +88,7 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
       return indicatorLayoutAttributes
     }
     
-    if elementKind == PagingBorderView.defaultReuseIdentifier {
+    if elementKind == PagingBorderView.reuseIdentifier {
       borderLayoutAttributes.update(width: collectionViewContentSize().width)
       return borderLayoutAttributes
     }
