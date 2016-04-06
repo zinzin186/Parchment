@@ -1,28 +1,5 @@
 import UIKit
 
-class PagingDelegate: PagingViewControllerDelegate {
-  
-  let collectionView: UICollectionView
-  let options: PagingOptions
-  
-  init(options: PagingOptions, collectionView: UICollectionView) {
-    self.options = options
-    self.collectionView = collectionView
-  }
-  
-  func widthForPagingItem(pagingItem: PagingItem) -> CGFloat {
-    switch options.menuItemSize {
-    case let .SizeToFit(minWidth, _):
-      return max(minWidth, collectionView.bounds.width / CGFloat(collectionView.numberOfItemsInSection(0)))
-    case let .Fixed(width, _):
-      return width
-    case .Dynamic:
-      return 0
-    }
-  }
-  
-}
-
 public class PagingViewController<T: PagingItem where T: Equatable>: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDataSource {
   
   public let options: PagingOptions
@@ -40,6 +17,10 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
       handleDataStructureUpdate(oldValue)
     }
   }
+  
+  private lazy var defaultDelegate: PagingOptionsDelegate = {
+    return PagingOptionsDelegate(options: self.options, collectionView: self.collectionView)
+  }()
   
   
   public init(options: PagingOptions = DefaultPagingOptions()) {
@@ -174,10 +155,6 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   }
 
   // MARK: Lazy Getters
-  
-  private lazy var defaultDelegate: PagingDelegate = {
-    return PagingDelegate(options: self.options, collectionView: self.collectionView)
-  }()
   
   private lazy var collectionViewLayout: PagingCollectionViewLayout<T> = {
     return PagingCollectionViewLayout(options: self.options)
