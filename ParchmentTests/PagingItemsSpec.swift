@@ -167,7 +167,7 @@ class PagingItemsSpec: QuickSpec {
         
       }
       
-      describe("widthFromPagingItem:") {
+      describe("widthFromItem:") {
         
         it("accumulates the correct width") {
           let items = [Item(index: 3, width: 100)]
@@ -196,6 +196,16 @@ class PagingItemsSpec: QuickSpec {
           expect(firstItemWidth).to(equal(0))
           expect(lastItemWidth).to(equal(0))
         }
+        
+        it("returns zero when there no visible items") {
+          let dataStructure = PagingDataStructure<Item>(visibleItems: [])
+          let width = widthFromItem(Item(index: 0, width: 50),
+                                    dataStructure: dataStructure,
+                                    dataSource: dataSource,
+                                    delegate: delegate)
+          expect(width).to(equal(0))
+        }
+        
         
       }
      

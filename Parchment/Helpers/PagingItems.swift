@@ -76,13 +76,15 @@ func widthFromItem<T: PagingItem where T: Equatable>(
   dataSource: PagingViewControllerDataSource,
   delegate: PagingViewControllerDelegate,
   width: CGFloat = 0) -> CGFloat {
-  
-  if let item = item where dataStructure.visibleItems.contains(item) == false {
-    return widthFromItem(dataSource.pagingItemAfterPagingItem(item) as? T,
-                         dataStructure: dataStructure,
-                         dataSource: dataSource,
-                         delegate: delegate,
-                         width: width + delegate.widthForPagingItem(item))
+  if dataStructure.visibleItems.isEmpty == false {
+    if let item = item where dataStructure.visibleItems.contains(item) == false {
+      return widthFromItem(dataSource.pagingItemAfterPagingItem(item) as? T,
+                           dataStructure: dataStructure,
+                           dataSource: dataSource,
+                           delegate: delegate,
+                           width: width + delegate.widthForPagingItem(item))
+    }
+    return width
   }
-  return width
+  return 0
 }
