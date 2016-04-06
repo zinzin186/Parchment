@@ -16,6 +16,8 @@ class PagingDelegate: PagingViewControllerDelegate {
       return max(minWidth, collectionView.bounds.width / CGFloat(collectionView.numberOfItemsInSection(0)))
     case let .Fixed(width, _):
       return width
+    case .Dynamic:
+      return 0
     }
   }
   
@@ -218,7 +220,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
     let pagingItem = dataStructure.pagingItemForIndexPath(indexPath)
     let width = delegate?.widthForPagingItem(pagingItem) ?? 0
-    return CGSize(width: width, height: 40)
+    return CGSize(width: width, height: options.menuItemSize.height)
   }
   
   public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
