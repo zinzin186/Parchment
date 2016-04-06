@@ -3,7 +3,7 @@ import UIKit
 class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollectionViewFlowLayout {
   
   var state: PagingState<T>?
-  var dataStructure: PagingDataStructure<T>?
+  var dataStructure: PagingDataStructure<T>
   
   private let options: PagingOptions
   private let indicatorLayoutAttributes: PagingIndicatorLayoutAttributes
@@ -14,9 +14,10 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
     return 0..<(collectionView.numberOfItemsInSection(0) - 1)
   }
   
-  init(options: PagingOptions) {
+  init(options: PagingOptions, dataStructure: PagingDataStructure<T>) {
     
     self.options = options
+    self.dataStructure = dataStructure
     
     indicatorLayoutAttributes = PagingIndicatorLayoutAttributes(
       forDecorationViewOfKind: PagingIndicatorView.reuseIdentifier,
@@ -69,7 +70,6 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
   override func layoutAttributesForDecorationViewOfKind(elementKind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
     guard
       let state = state,
-      let dataStructure = dataStructure,
       let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem) else { return nil }
     
     let upcomingIndexPath = upcomingIndexPathForIndexPath(currentIndexPath)
@@ -99,10 +99,8 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
   // MARK: Private
   
   private func upcomingIndexPathForIndexPath(indexPath: NSIndexPath) -> NSIndexPath {
-    
     guard
-      let state = state,
-      let dataStructure = dataStructure else { return indexPath }
+      let state = state else { return indexPath }
     
     if let upcomingPagingItem = state.upcomingPagingItem, upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem) {
       return upcomingIndexPath
@@ -126,10 +124,8 @@ class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollection
   }
   
   private func indicatorFrameForIndex(index: Int) -> CGRect {
-    
     guard
       let state = state,
-      let dataStructure = dataStructure,
       let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem) else { return .zero }
     
     if index < range.startIndex {

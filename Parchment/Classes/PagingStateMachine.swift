@@ -35,6 +35,8 @@ class PagingStateMachine<T: PagingItem where T: Equatable> {
       handleSelectEvent(pagingItem, direction: direction)
     case let .DidBeginDragging(upcomingPagingItem, direction):
       handleDidBeginDraggingEvent(upcomingPagingItem, direction: direction)
+    default:
+      break
     }
     
     notifyEventObservers(event)

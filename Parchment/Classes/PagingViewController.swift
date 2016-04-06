@@ -27,18 +27,32 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   public weak var delegate: PagingViewControllerDelegate?
   public weak var dataSource: PagingViewControllerDataSource?
   
-  private var stateMachine: PagingStateMachine<T>?
-  private var dataStructure: PagingDataStructure<T>?
+  private var stateMachine: PagingStateMachine<T>? {
+    didSet {
+      handleStateMachineUpdate(oldValue)
+    }
+  }
+  
+  private var dataStructure: PagingDataStructure<T> {
+    didSet {
+      handleDataStructureUpdate(oldValue)
+    }
+  }
+  
   
   public init(options: PagingOptions = DefaultPagingOptions()) {
     self.options = options
+    self.dataStructure = PagingDataStructure(visibleItems: [])
     super.init(nibName: nil, bundle: nil)
+
     delegate = defaultDelegate
   }
 
   required public init?(coder: NSCoder) {
     self.options = DefaultPagingOptions()
+    self.dataStructure = PagingDataStructure(visibleItems: [])
     super.init(coder: coder)
+    
     delegate = defaultDelegate
   }
   
@@ -67,103 +81,89 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
       let dataSource = dataSource,
       let initialPagingItem = dataSource.initialPagingItem() as? T else { return }
     
-    let stateMachine = PagingStateMachine(initialPagingItem: initialPagingItem)
+    stateMachine = PagingStateMachine(initialPagingItem: initialPagingItem)
     
-    stateMachine.stateObservers.append { [weak self] (stateMachine, oldState) in
-      self?.handleStateUpdate(stateMachine.state)
-    }
-    
-    stateMachine.eventObservers.append { [weak self] (stateMachine, event) in
-      self?.handleEventUpdate(event)
-    }
-    
-    let dataStructure = PagingDataStructure(visibleItems: visibleItems(initialPagingItem,
+    dataStructure = PagingDataStructure(visibleItems: visibleItems(initialPagingItem,
       width: collectionView.bounds.width,
       dataSource: dataSource,
       delegate: delegate))
     
-    self.dataStructure = dataStructure
-    self.stateMachine = stateMachine
+    selectViewController(initialPagingItem,
+                         direction: .None,
+                         animated: false)
     
-    let viewController = dataSource.viewControllerForPagingItem(initialPagingItem)
-    let scrollPosition = options.selectedScrollPosition.collectionViewScrollPosition()
-    let indexPath = dataStructure.indexPathForPagingItem(stateMachine.state.currentPagingItem)
-    
-    pagingContentViewController.setViewController(viewController,
-                                                  direction: .None,
-                                                  animated: false)
-    
-    collectionViewLayout.dataStructure = dataStructure
-    collectionView.reloadData()
-    collectionView.selectItemAtIndexPath(indexPath,
-                                         animated: false,
-                                         scrollPosition: scrollPosition)
+    selectCollectionViewCell(initialPagingItem,
+                             scrollPosition: options.scrollPosition)
   }
   
   // MARK: Private
   
   private func handleEventUpdate(event: PagingEvent<T>) {
-    guard let dataSource = dataSource else { return }
     switch event {
     case let .Select(pagingItem, direction):
-      let viewController = dataSource.viewControllerForPagingItem(pagingItem)
-      pagingContentViewController.setViewController(viewController,
-        direction: direction,
-        animated: true)
+      handleSelectEvent(pagingItem, direction: direction)
+    case let .Reload(pagingItem, size):
+      handleReloadEvent(pagingItem, size: size)
     default:
       break
     }
   }
 
   private func handleStateUpdate(state: PagingState<T>) {
-    
     collectionViewLayout.state = state
-    
     switch state {
     case let .Current(pagingItem):
-      
-      reloadVisibleItems(pagingItem)
-      
-      guard let dataStructure = dataStructure else { return }
-      
-      let scrollPosition = options.selectedScrollPosition.collectionViewScrollPosition()
-      let indexPath = dataStructure.indexPathForPagingItem(pagingItem)
-      
-      collectionView.selectItemAtIndexPath(indexPath,
-        animated: true,
-        scrollPosition: scrollPosition)
-
+      stateMachine?.fire(.Reload(
+        pagingItem: pagingItem,
+        size: collectionView.bounds.size))
+      selectCollectionViewCell(pagingItem,
+                               scrollPosition: options.scrollPosition,
+                               animated: true)
     case .Next, .Previous:
-      guard let dataStructure = dataStructure else { return }
-      let indexPath = dataStructure.indexPathForPagingItem(state.visualSelectionPagingItem)
       collectionViewLayout.invalidateLayout()
-      collectionView.selectItemAtIndexPath(indexPath,
-        animated: false,
-        scrollPosition: .None)
+      selectCollectionViewCell(state.visualSelectionPagingItem, scrollPosition: .None)
     }
   }
   
-  private func reloadVisibleItems(pagingItem: T) {
+  private func handleSelectEvent(pagingItem: T, direction: PagingDirection) {
+    selectViewController(pagingItem, direction: direction)
+  }
+  
+  private func handleReloadEvent(pagingItem: T, size: CGSize) {
     guard
       let delegate = delegate,
-      let dataStructure = dataStructure,
       let dataSource = dataSource else { return }
     
-    let to = PagingDataStructure(visibleItems: visibleItems(pagingItem,
-      width: collectionView.bounds.width,
+    dataStructure = PagingDataStructure(visibleItems: visibleItems(pagingItem,
+      width: size.width,
       dataSource: dataSource,
       delegate: delegate))
+  }
+  
+  private func handleStateMachineUpdate(oldValue: PagingStateMachine<T>?) {
+    stateMachine?.stateObservers.append { [weak self] (stateMachine, oldState) in
+      self?.handleStateUpdate(stateMachine.state)
+    }
+    
+    stateMachine?.eventObservers.append { [weak self] (stateMachine, event) in
+      self?.handleEventUpdate(event)
+    }
+  }
+  
+  private func handleDataStructureUpdate(oldValue: PagingDataStructure<T>) {
+    guard
+      let delegate = delegate,
+      let dataSource = dataSource else { return }
     
     let itemsWidth = diffWidth(
-      from: dataStructure,
-      to: to,
+      from: oldValue,
+      to: dataStructure,
       dataSource: dataSource,
       delegate: delegate)
     
     let contentOffset: CGPoint = collectionView.contentOffset
     
-    self.dataStructure = to
-    collectionViewLayout.dataStructure = to
+    collectionViewLayout.dataStructure = dataStructure
     collectionView.reloadData()
     
     collectionView.contentOffset = CGPoint(
@@ -192,6 +192,13 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     return collectionView
   }()
   
+  private func selectViewController(pagingItem: T, direction: PagingDirection, animated: Bool = true) {
+    guard let dataSource = dataSource else { return }
+    let viewController = dataSource.viewControllerForPagingItem(pagingItem)
+    pagingContentViewController.setViewController(viewController,
+                                                  direction: direction,
+                                                  animated: animated)
+  }
   
   private lazy var pagingContentViewController: PagingContentViewController = {
     let pagingContentViewController = PagingContentViewController()
@@ -199,25 +206,31 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     pagingContentViewController.pageViewController.dataSource = self
     return pagingContentViewController
   }()
+  private func selectCollectionViewCell(pagingItem: T, scrollPosition: UICollectionViewScrollPosition, animated: Bool = false) {
+    let indexPath = dataStructure.indexPathForPagingItem(pagingItem)
+    collectionView.selectItemAtIndexPath(indexPath,
+                                         animated: animated,
+                                         scrollPosition: scrollPosition)
+  }
   
   // MARK: UICollectionViewDelegateFlowLayout
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-    guard let dataStructure = dataStructure else { return .zero }
     let pagingItem = dataStructure.pagingItemForIndexPath(indexPath)
     let width = delegate?.widthForPagingItem(pagingItem) ?? 0
     return CGSize(width: width, height: 40)
   }
   
   public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    guard
-      let stateMachine = stateMachine,
-      let dataStructure = dataStructure else { return }
+    guard let stateMachine = stateMachine else { return }
     
+    let currentPagingItem = stateMachine.state.currentPagingItem
     let upcomingPagingItem = dataStructure.pagingItemForIndexPath(indexPath)
-    let direction = dataStructure.directionForIndexPath(indexPath,
-      currentPagingItem: stateMachine.state.currentPagingItem)
-    stateMachine.fire(.Select(pagingItem: upcomingPagingItem, direction: direction))
+    let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: currentPagingItem)
+    
+    stateMachine.fire(.Select(
+      pagingItem: upcomingPagingItem,
+      direction: direction))
   }
   
   public func collectionView(collectionView: UICollectionView,
@@ -234,20 +247,16 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     }
     return UIEdgeInsets()
   }
- 
+  
   // MARK: UICollectionViewDataSource
   
   public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-      forIndexPath: indexPath) as! PagingCell
-    if let dataStructure = dataStructure {
-      cell.setPagingItem(dataStructure.visibleItems[indexPath.item], theme: options.theme)
-    }
     let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PagingCell.reuseIdentifier, forIndexPath: indexPath) as! PagingCell
+    cell.setPagingItem(dataStructure.visibleItems[indexPath.item], theme: options.theme)
     return cell
   }
   
   public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    guard let dataStructure = dataStructure else { return 0 }
     return dataStructure.visibleItems.count
   }
   
@@ -255,18 +264,18 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   
   public func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
     guard
-      let stateMachine = stateMachine,
       let dataSource = dataSource,
-      let pagingItem = dataSource.pagingItemBeforePagingItem(stateMachine.state.currentPagingItem) else { return nil }
+      let state = stateMachine?.state.currentPagingItem,
+      let pagingItem = dataSource.pagingItemBeforePagingItem(state) else { return nil }
     
     return dataSource.viewControllerForPagingItem(pagingItem)
   }
   
   public func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
     guard
-      let stateMachine = stateMachine,
       let dataSource = dataSource,
-      let pagingItem = dataSource.pagingItemAfterPagingItem(stateMachine.state.currentPagingItem) else { return nil }
+      let state = stateMachine?.state.currentPagingItem,
+      let pagingItem = dataSource.pagingItemAfterPagingItem(state) else { return nil }
     
     return dataSource.viewControllerForPagingItem(pagingItem)
   }
@@ -275,8 +284,9 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
 
 extension PagingViewController: PagingContentViewControllerDelegate {
   
+  // MARK: PagingContentViewControllerDelegate
+  
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didBeginDraggingInDirection direction: PagingDirection) {
-    
     guard
       let stateMachine = stateMachine,
       let dataSource = dataSource else { return }

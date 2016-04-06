@@ -40,17 +40,6 @@ public enum PagingSelectedScrollPosition {
   case Right
   case AlwaysCentered
   case PreferCentered
-  
-  public func collectionViewScrollPosition() -> UICollectionViewScrollPosition {
-    switch self {
-    case .Left:
-      return .Left
-    case .Right:
-      return .Right
-    case .AlwaysCentered, .PreferCentered:
-      return .CenteredHorizontally
-    }
-  }
 }
 
 public protocol PagingTheme {
@@ -70,4 +59,19 @@ public protocol PagingOptions {
   var selectedScrollPosition: PagingSelectedScrollPosition { get }
   var menuItemSize: PagingMenuItemSize { get }
   var menuItemClass: PagingCell.Type { get }
+}
+
+extension PagingOptions {
+  
+  var scrollPosition: UICollectionViewScrollPosition {
+    switch selectedScrollPosition {
+    case .Left:
+      return .Left
+    case .Right:
+      return .Right
+    case .AlwaysCentered, .PreferCentered:
+      return .CenteredHorizontally
+    }
+  }
+  
 }
