@@ -1,6 +1,6 @@
 import UIKit
 
-public class PagingViewController<T: PagingItem where T: Equatable>: UIViewController,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDataSource, PagingItemPresentable {
+public class PagingViewController<T: PagingItem where T: Equatable>: UIViewController,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDataSource, PagingItemsPresentable {
   
   public let options: PagingOptions
   public weak var delegate: PagingViewControllerDelegate?
@@ -77,10 +77,8 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     
     stateMachine = PagingStateMachine(initialPagingItem: initialPagingItem)
     
-    dataStructure = PagingDataStructure(visibleItems: visibleItems(initialPagingItem,
-      width: collectionView.bounds.width,
-      dataSource: dataSource,
-      presentable: self))
+    let items = visibleItems(initialPagingItem, width: collectionView.bounds.width)
+    dataStructure = PagingDataStructure(visibleItems: items)
     
     selectViewController(initialPagingItem,
                          direction: .None,
@@ -124,12 +122,8 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   }
   
   private func handleReloadEvent(pagingItem: T, size: CGSize) {
-    guard let dataSource = dataSource else { return }
-    
-    dataStructure = PagingDataStructure(visibleItems: visibleItems(pagingItem,
-      width: size.width,
-      dataSource: dataSource,
-      presentable: self))
+    let items = visibleItems(pagingItem, width: size.width)
+    dataStructure = PagingDataStructure(visibleItems: items)
   }
   
   private func handleStateMachineUpdate(oldValue: PagingStateMachine<T>?) {
@@ -143,14 +137,8 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   }
   
   private func handleDataStructureUpdate(oldValue: PagingDataStructure<T>) {
-    guard let dataSource = dataSource else { return }
-    
-    let itemsWidth = diffWidth(
-      from: oldValue,
-      to: dataStructure,
-      dataSource: dataSource,
-      presentable: self)
-    
+  
+    let itemsWidth = diffWidth(from: oldValue, to: dataStructure)
     let contentOffset: CGPoint = collectionView.contentOffset
     
     collectionViewLayout.dataStructure = dataStructure
@@ -243,7 +231,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     return dataSource.viewControllerForPagingItem(pagingItem)
   }
   
-  // MARK: PagingItemPresentable
+  // MARK: PagingItemsPresentable
   
   func widthForPagingItem<U: PagingItem>(pagingItem: U) -> CGFloat {
     guard let pagingItem = pagingItem as? T else { return 0 }
@@ -257,6 +245,14 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     }
   }
   
+  func pagingItemAfterPagingItem<T : PagingItem>(pagingItem: T) -> T? {
+    return dataSource?.pagingItemAfterPagingItem(pagingItem) as? T
+  }
+  
+  func pagingItemBeforePagingItem<T : PagingItem>(pagingItem: T) -> T? {
+    return dataSource?.pagingItemBeforePagingItem(pagingItem) as? T
+  }
+  
 }
 
 extension PagingViewController: PagingContentViewControllerDelegate {
@@ -264,18 +260,16 @@ extension PagingViewController: PagingContentViewControllerDelegate {
   // MARK: PagingContentViewControllerDelegate
   
   func pagingContentViewController(pagingContentViewController: PagingContentViewController, didBeginDraggingInDirection direction: PagingDirection) {
-    guard
-      let stateMachine = stateMachine,
-      let dataSource = dataSource else { return }
+    guard let stateMachine = stateMachine else { return }
     
     switch direction {
     case .Forward:
       stateMachine.fire(.DidBeginDragging(
-        upcomingPagingItem: dataSource.pagingItemAfterPagingItem(stateMachine.state.currentPagingItem) as? T,
+        upcomingPagingItem: pagingItemAfterPagingItem(stateMachine.state.currentPagingItem),
         direction: direction))
     case .Reverse:
       stateMachine.fire(.DidBeginDragging(
-        upcomingPagingItem: dataSource.pagingItemBeforePagingItem(stateMachine.state.currentPagingItem) as? T,
+        upcomingPagingItem: pagingItemBeforePagingItem(stateMachine.state.currentPagingItem),
         direction: direction))
     default:
       break
