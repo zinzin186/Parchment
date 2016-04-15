@@ -72,7 +72,7 @@
 		3EA04A621C53BFF40054E5E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A601C53BFF40054E5E0 /* Main.storyboard */; };
 		3EA04A641C53BFF40054E5E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A631C53BFF40054E5E0 /* Assets.xcassets */; };
 		3EA04A671C53BFF40054E5E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A651C53BFF40054E5E0 /* LaunchScreen.storyboard */; };
-		3EEA42F11CAAC268004AAD95 /* PagingOptionsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEA42F01CAAC268004AAD95 /* PagingOptionsDelegate.swift */; };
+		3ED1C8D81CC1554E00B46885 /* PagingItemPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED1C8D71CC1554E00B46885 /* PagingItemPresentable.swift */; };
 		3EF3C1E31CA0870E00CDFE26 /* DefaultPagingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF3C1E21CA0870E00CDFE26 /* DefaultPagingViewController.swift */; };
 		3EFEFBF71C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift */; };
 /* End PBXBuildFile section */
@@ -215,7 +215,7 @@
 		3EA04A681C53BFF40054E5E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3EA04A821C53C3860054E5E0 /* Cartography.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cartography.framework; path = Carthage/Build/iOS/Cartography.framework; sourceTree = "<group>"; };
 		3EC0184C1C95F993005421AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
-		3EEA42F01CAAC268004AAD95 /* PagingOptionsDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingOptionsDelegate.swift; sourceTree = "<group>"; };
+		3ED1C8D71CC1554E00B46885 /* PagingItemPresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingItemPresentable.swift; sourceTree = "<group>"; };
 		3EF3C1E21CA0870E00CDFE26 /* DefaultPagingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultPagingViewController.swift; sourceTree = "<group>"; };
 		3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorLayoutAttributesSpec.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -332,7 +332,6 @@
 				3E4090AD1C88BDD100800E22 /* PagingStateMachine.swift */,
 				3E49C7231C8F5C13006269DD /* PagingView.swift */,
 				3E49C7241C8F5C13006269DD /* PagingViewController.swift */,
-				3EEA42F01CAAC268004AAD95 /* PagingOptionsDelegate.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -433,6 +432,7 @@
 				3E4189201C9573FA001E0284 /* PagingViewControllerDataSource.swift */,
 				3E2AAD2D1CA86A320044AAA5 /* PagingViewControllerDelegate.swift */,
 				3E4090811C88BBCF00800E22 /* ReusableView.swift */,
+				3ED1C8D71CC1554E00B46885 /* PagingItemPresentable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -729,13 +729,13 @@
 				3E4090B21C88BDD100800E22 /* PagingStateMachine.swift in Sources */,
 				3E4090831C88BBCF00800E22 /* ReusableView.swift in Sources */,
 				3E4090791C88BA7000800E22 /* UICollectionViewLayout.swift in Sources */,
-				3EEA42F11CAAC268004AAD95 /* PagingOptionsDelegate.swift in Sources */,
 				3E41891F1C957322001E0284 /* PagingOptionsDefault.swift in Sources */,
 				3E2AAD281CA831AB0044AAA5 /* UIView.swift in Sources */,
 				3E49C7251C8F5C13006269DD /* PagingBorderView.swift in Sources */,
 				3E5EED2B1C9E00D800786B9A /* PagingItems.swift in Sources */,
 				3E40907C1C88BA7F00800E22 /* UIEdgeInsets.swift in Sources */,
 				3E40909A1C88BCC900800E22 /* PagingDirection.swift in Sources */,
+				3ED1C8D81CC1554E00B46885 /* PagingItemPresentable.swift in Sources */,
 				3E49C7291C8F5C13006269DD /* PagingView.swift in Sources */,
 				3E4090AF1C88BDD100800E22 /* PagingCollectionViewLayout.swift in Sources */,
 				3E4090A21C88BD0A00800E22 /* PagingIndicatorMetric.swift in Sources */,

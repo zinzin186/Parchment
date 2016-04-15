@@ -12,13 +12,11 @@ private func ==(lhs: Item, rhs: Item) -> Bool {
   return lhs.index == rhs.index && lhs.width == rhs.width
 }
 
-class Delegate: PagingViewControllerDelegate {
+class Presentable: PagingItemPresentable {
   
-  func widthForPagingItem(pagingItem: PagingItem) -> CGFloat {
-    if let item = pagingItem as? Item {
-      return item.width
-    }
-    return 0
+  func widthForPagingItem<T: PagingItem>(pagingItem: T) -> CGFloat {
+    guard let item = pagingItem as? Item else { return 0 }
+    return item.width
   }
   
 }
@@ -68,7 +66,7 @@ class PagingItemsSpec: QuickSpec {
   override func spec() {
     
     let dataSource = DataSource()
-    let delegate = Delegate()
+    let presentable = Presentable()
     
     describe("PagingItems") {
       
@@ -78,7 +76,7 @@ class PagingItemsSpec: QuickSpec {
           let items = itemsBefore([Item(index: 0, width: 50)],
                                   width: 150,
                                   dataSource: dataSource,
-                                  delegate: delegate)
+                                  presentable: presentable)
           expect(items.isEmpty).to(beTrue())
         }
         
@@ -86,7 +84,7 @@ class PagingItemsSpec: QuickSpec {
           let items = itemsBefore([Item(index: 4, width: 50)],
                                   width: 0,
                                   dataSource: dataSource,
-                                  delegate: delegate)
+                                  presentable: presentable)
           expect(items.isEmpty).to(beTrue())
         }
         
@@ -94,7 +92,7 @@ class PagingItemsSpec: QuickSpec {
           let items = itemsBefore([Item(index: 4, width: 50)],
                                   width: 200,
                                   dataSource: dataSource,
-                                  delegate: delegate)
+                                  presentable: presentable)
           expect(items.count).to(equal(3))
           expect(items[0]).to(equal(Item(index: 1, width: 100)))
           expect(items[1]).to(equal(Item(index: 2, width: 50)))
@@ -105,7 +103,7 @@ class PagingItemsSpec: QuickSpec {
           let items = itemsBefore([Item(index: 1, width: 100)],
                                   width: 500,
                                   dataSource: dataSource,
-                                  delegate: delegate)
+                                  presentable: presentable)
           expect(items.count).to(equal(1))
           expect(items[0]).to(equal(Item(index: 0, width: 50)))
         }
@@ -118,7 +116,7 @@ class PagingItemsSpec: QuickSpec {
           let items = itemsAfter([Item(index: 8, width: 50)],
                                  width: 150,
                                  dataSource: dataSource,
-                                 delegate: delegate)
+                                 presentable: presentable)
           expect(items.isEmpty).to(beTrue())
         }
         
@@ -126,7 +124,7 @@ class PagingItemsSpec: QuickSpec {
           let items = itemsAfter([Item(index: 4, width: 50)],
                                   width: 0,
                                   dataSource: dataSource,
-                                  delegate: delegate)
+                                  presentable: presentable)
           expect(items.isEmpty).to(beTrue())
         }
         
@@ -134,7 +132,7 @@ class PagingItemsSpec: QuickSpec {
           let items = itemsAfter([Item(index: 4, width: 50)],
                                  width: 200,
                                  dataSource: dataSource,
-                                 delegate: delegate)
+                                 presentable: presentable)
           expect(items.count).to(equal(3))
           expect(items[0]).to(equal(Item(index: 5, width: 100)))
           expect(items[1]).to(equal(Item(index: 6, width: 50)))
@@ -145,7 +143,7 @@ class PagingItemsSpec: QuickSpec {
           let items = itemsAfter([Item(index: 7, width: 100)],
                                  width: 500,
                                  dataSource: dataSource,
-                                 delegate: delegate)
+                                 presentable: presentable)
           expect(items.count).to(equal(1))
           expect(items[0]).to(equal(Item(index: 8, width: 50)))
         }
@@ -158,7 +156,7 @@ class PagingItemsSpec: QuickSpec {
           let items = visibleItems(Item(index: 4, width: 50),
                                    width: 50,
                                    dataSource: dataSource,
-                                   delegate: delegate)
+                                   presentable: presentable)
           expect(items.count).to(equal(3))
           expect(items[0]).to(equal(Item(index: 3, width: 100)))
           expect(items[1]).to(equal(Item(index: 4, width: 50)))
@@ -175,7 +173,7 @@ class PagingItemsSpec: QuickSpec {
           let width = widthFromItem(Item(index: 0, width: 50),
                                     dataStructure: dataStructure,
                                     dataSource: dataSource,
-                                    delegate: delegate)
+                                    presentable: presentable)
           expect(width).to(equal(200))
         }
         
@@ -186,12 +184,12 @@ class PagingItemsSpec: QuickSpec {
           let firstItemWidth = widthFromItem(Item(index: 1, width: 100),
                                              dataStructure: dataStructure,
                                              dataSource: dataSource,
-                                             delegate: delegate)
+                                             presentable: presentable)
           
           let lastItemWidth = widthFromItem(Item(index: 1, width: 100),
                                             dataStructure: dataStructure,
                                             dataSource: dataSource,
-                                            delegate: delegate)
+                                            presentable: presentable)
           
           expect(firstItemWidth).to(equal(0))
           expect(lastItemWidth).to(equal(0))
@@ -202,7 +200,7 @@ class PagingItemsSpec: QuickSpec {
           let width = widthFromItem(Item(index: 0, width: 50),
                                     dataStructure: dataStructure,
                                     dataSource: dataSource,
-                                    delegate: delegate)
+                                    presentable: presentable)
           expect(width).to(equal(0))
         }
         
@@ -226,7 +224,7 @@ class PagingItemsSpec: QuickSpec {
             from: from,
             to: to,
             dataSource: dataSource,
-            delegate: delegate)
+            presentable: presentable)
           
           expect(width).to(equal(-50))
         }
@@ -246,7 +244,7 @@ class PagingItemsSpec: QuickSpec {
             from: from,
             to: to,
             dataSource: dataSource,
-            delegate: delegate)
+            presentable: presentable)
           
           expect(width).to(equal(50))
         }

@@ -46,7 +46,7 @@ class ViewController: UIViewController {
 
 extension ViewController: PagingViewControllerDelegate {
   
-  func widthForPagingItem(pagingItem: PagingItem) -> CGFloat {
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>, widthForPagingItem pagingItem: T) -> CGFloat {
     guard let item = pagingItem as? PagingTitleItem else { return 0 }
     
     let insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
