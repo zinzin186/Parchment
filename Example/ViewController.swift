@@ -6,10 +6,9 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let pagingViewController = DefaultPagingViewController(viewControllers: (0...10).map {
-      return ExampleViewController(index: $0)
-    })
-    
+    let viewControllers = (0...10).map { ExampleViewController(index: $0) }
+    let pagingViewController = DefaultPagingViewController(viewControllers: viewControllers)
+
     addChildViewController(pagingViewController)
     view.addSubview(pagingViewController.view)
     view.constrainToEdges(pagingViewController.view)
