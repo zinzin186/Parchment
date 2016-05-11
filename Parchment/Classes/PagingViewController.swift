@@ -1,6 +1,6 @@
 import UIKit
 
-public class PagingViewController<T: PagingItem where T: Equatable>: UIViewController,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDataSource, PagingItemsPresentable {
+public class PagingViewController<T: PagingItem where T: Equatable>: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EMPageViewControllerDataSource, EMPageViewControllerDelegate, PagingItemsPresentable {
   
   public let options: PagingOptions
   public weak var delegate: PagingViewControllerDelegate?
@@ -29,8 +29,8 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     return collectionView
   }()
   
-  public let pagingContentViewController: PagingContentViewController = {
-    return PagingContentViewController()
+  public let pageViewController: EMPageViewController = {
+    return EMPageViewController(navigationOrientation: .Horizontal)
   }()
   
   public init(options: PagingOptions = DefaultPagingOptions()) {
@@ -47,19 +47,19 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   
   public override func loadView() {
     view = PagingView(
-      pagingContentView: pagingContentViewController.view,
+      pagingContentView: pageViewController.view,
       collectionView: collectionView,
       options: options)
   }
   
   public override func viewDidLoad() {
     super.viewDidLoad()
-    addViewController(pagingContentViewController)
+    addViewController(pageViewController)
     
     collectionView.delegate = self
     collectionView.dataSource = self
-    pagingContentViewController.delegate = self
-    pagingContentViewController.pageViewController.dataSource = self
+    pageViewController.delegate = self
+    pageViewController.dataSource = self
     
     collectionView.registerClass(options.menuItemClass,
       forCellWithReuseIdentifier: PagingCell.reuseIdentifier)
@@ -152,9 +152,10 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   private func selectViewController(pagingItem: T, direction: PagingDirection, animated: Bool = true) {
     guard let dataSource = dataSource else { return }
     let viewController = dataSource.viewControllerForPagingItem(pagingItem)
-    pagingContentViewController.setViewController(viewController,
-                                                  direction: direction,
-                                                  animated: animated)
+    pageViewController.selectViewController(viewController,
+                                            direction: direction.pageViewControllerNavigationDirection,
+                                            animated: animated,
+                                            completion: nil)
   }
   
   private func selectCollectionViewCell(pagingItem: T, scrollPosition: UICollectionViewScrollPosition, animated: Bool = false) {
@@ -211,9 +212,9 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     return dataStructure.visibleItems.count
   }
   
-  // MARK: UIPageViewControllerDataSource
+  // MARK: EMPageViewControllerDataSource
   
-  public func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
+  public func em_pageViewController(pageViewController: EMPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
     guard
       let dataSource = dataSource,
       let state = stateMachine?.state.currentPagingItem,
@@ -222,7 +223,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     return dataSource.viewControllerForPagingItem(pagingItem)
   }
   
-  public func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
+  public func em_pageViewController(pageViewController: EMPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
     guard
       let dataSource = dataSource,
       let state = stateMachine?.state.currentPagingItem,
@@ -253,38 +254,33 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     return dataSource?.pagingItemBeforePagingItem(pagingItem) as? T
   }
   
-}
-
-extension PagingViewController: PagingContentViewControllerDelegate {
+  // MARK: EMPageViewControllerDelegate
   
-  // MARK: PagingContentViewControllerDelegate
-  
-  func pagingContentViewController(pagingContentViewController: PagingContentViewController, didBeginDraggingInDirection direction: PagingDirection) {
+  public func em_pageViewController(pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController, direction: EMPageViewControllerNavigationDirection) {
     guard let stateMachine = stateMachine else { return }
-    
     switch direction {
     case .Forward:
       stateMachine.fire(.DidBeginDragging(
         upcomingPagingItem: pagingItemAfterPagingItem(stateMachine.state.currentPagingItem),
-        direction: direction))
+        direction: .Forward))
     case .Reverse:
       stateMachine.fire(.DidBeginDragging(
         upcomingPagingItem: pagingItemBeforePagingItem(stateMachine.state.currentPagingItem),
-        direction: direction))
-    default:
-      break
+        direction: .Reverse))
     }
   }
   
-  func pagingContentViewController(pagingContentViewController: PagingContentViewController, didChangeOffset offset: CGFloat) {
+  public func em_pageViewController(pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
     guard let stateMachine = stateMachine else { return }
-    stateMachine.fire(.Update(offset: offset))
+    stateMachine.fire(.Update(offset: progress))
   }
   
-  func pagingContentViewControllerDidCompleteTransition(pagingContentViewController: PagingContentViewController) {
-    guard let stateMachine = stateMachine else { return }
-    let pagingItem = stateMachine.state.upcomingPagingItem ?? stateMachine.state.currentPagingItem
-    stateMachine.fire(.DidMove(pagingItem: pagingItem))
+  public func em_pageViewController(pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
+    if transitionSuccessful {
+      guard let stateMachine = stateMachine else { return }
+      let pagingItem = stateMachine.state.upcomingPagingItem ?? stateMachine.state.currentPagingItem
+      stateMachine.fire(.DidMove(pagingItem: pagingItem))
+    }
   }
   
 }

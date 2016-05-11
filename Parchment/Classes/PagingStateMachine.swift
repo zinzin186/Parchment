@@ -94,12 +94,12 @@ class PagingStateMachine<T: PagingItem where T: Equatable> {
     case .Forward:
       internalState = .Next(
         pagingItem: state.currentPagingItem,
-        upcomingPagingItem: upcomingPagingItem,
+        upcomingPagingItem: state.upcomingPagingItem ?? upcomingPagingItem,
         offset: state.offset)
     case .Reverse:
       internalState = .Previous(
         pagingItem: state.currentPagingItem,
-        upcomingPagingItem: upcomingPagingItem,
+        upcomingPagingItem: state.upcomingPagingItem ?? upcomingPagingItem,
         offset: state.offset)
     default:
       break

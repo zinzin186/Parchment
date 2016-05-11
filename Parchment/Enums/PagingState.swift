@@ -49,8 +49,8 @@ extension PagingState {
       return upcomingPagingItem
     case let .Next(_, upcomingPagingItem, _):
       return upcomingPagingItem
-    case let .Current(pagingItem):
-      return pagingItem
+    case .Current:
+      return nil
     }
   }
   

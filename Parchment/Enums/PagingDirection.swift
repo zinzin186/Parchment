@@ -8,7 +8,7 @@ enum PagingDirection {
 
 extension PagingDirection {
   
-  var pageViewControllerNavigationDirection: UIPageViewControllerNavigationDirection {
+  var pageViewControllerNavigationDirection: EMPageViewControllerNavigationDirection {
     switch self {
     case .Forward, .None:
       return .Forward
