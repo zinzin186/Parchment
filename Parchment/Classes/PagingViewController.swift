@@ -1,6 +1,13 @@
 import UIKit
 
-public class PagingViewController<T: PagingItem where T: Equatable>: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EMPageViewControllerDataSource, EMPageViewControllerDelegate, PagingItemsPresentable, PagingStateMachineDelegate {
+public class PagingViewController<T: PagingItem where T: Equatable>:
+  UIViewController,
+  UICollectionViewDataSource,
+  UICollectionViewDelegateFlowLayout,
+  EMPageViewControllerDataSource,
+  EMPageViewControllerDelegate,
+  PagingItemsPresentable,
+  PagingStateMachineDelegate {
   
   public let options: PagingOptions
   public weak var delegate: PagingViewControllerDelegate?
