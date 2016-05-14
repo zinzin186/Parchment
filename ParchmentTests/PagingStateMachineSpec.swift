@@ -30,8 +30,7 @@ class PagingStateMachineSpec: QuickSpec {
       
       it("updates the state when the offset changes") {
         let pagingItem = IndexPagingItem(index: 0)
-        let state: PagingState = .Next(pagingItem: pagingItem, upcomingPagingItem: pagingItem, offset: 0.5)
-        
+        let state: PagingState = .Next(pagingItem: pagingItem, upcomingPagingItem: nil, offset: 0.5)
         stateMachine.fire(.Update(offset: 0.5))
         expect(stateMachine.state).to(equal(state))
       }
