@@ -2,13 +2,13 @@ import UIKit
 
 class PagingView: UIView {
   
-  private let pagingContentView: UIView
+  private let pageView: UIView
   private let collectionView: UICollectionView
   private let options: PagingOptions
   
-  init(pagingContentView: UIView, collectionView: UICollectionView, options: PagingOptions) {
+  init(pageView: UIView, collectionView: UICollectionView, options: PagingOptions) {
     
-    self.pagingContentView = pagingContentView
+    self.pageView = pageView
     self.collectionView = collectionView
     self.options = options
     
@@ -23,20 +23,20 @@ class PagingView: UIView {
   
   private func configure() {
     addSubview(collectionView)
-    addSubview(pagingContentView)
+    addSubview(pageView)
     setupConstraints()
   }
   
   private func setupConstraints() {
     collectionView.translatesAutoresizingMaskIntoConstraints = false
-    pagingContentView.translatesAutoresizingMaskIntoConstraints = false
+    pageView.translatesAutoresizingMaskIntoConstraints = false
     
     let metrics = [
       "height": options.menuItemSize.height]
     
     let views = [
       "collectionView": collectionView,
-      "pagingContentView": pagingContentView]
+      "pageView": pageView]
     
     let horizontalCollectionViewContraints = NSLayoutConstraint.constraintsWithVisualFormat(
       "H:|[collectionView]|",
@@ -45,13 +45,13 @@ class PagingView: UIView {
       views: views)
     
     let horizontalPagingContentViewContraints = NSLayoutConstraint.constraintsWithVisualFormat(
-      "H:|[pagingContentView]|",
+      "H:|[pageView]|",
       options: .DirectionLeadingToTrailing,
       metrics: metrics,
       views: views)
     
     let verticalContraints = NSLayoutConstraint.constraintsWithVisualFormat(
-      "V:|[collectionView(==height)][pagingContentView]|",
+      "V:|[collectionView(==height)][pageView]|",
       options: .DirectionLeadingToTrailing,
       metrics: metrics,
       views: views)

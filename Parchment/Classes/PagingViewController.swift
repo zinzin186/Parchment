@@ -47,7 +47,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   
   public override func loadView() {
     view = PagingView(
-      pagingContentView: pageViewController.view,
+      pageView: pageViewController.view,
       collectionView: collectionView,
       options: options)
   }
