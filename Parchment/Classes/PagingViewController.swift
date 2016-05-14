@@ -77,15 +77,16 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     
     stateMachine = PagingStateMachine(initialPagingItem: initialPagingItem)
     
-    let items = visibleItems(initialPagingItem, width: collectionView.bounds.width)
-    dataStructure = PagingDataStructure(visibleItems: items)
-    
     selectViewController(initialPagingItem,
                          direction: .None,
                          animated: false)
     
     selectCollectionViewCell(initialPagingItem,
-                             scrollPosition: options.scrollPosition)
+      scrollPosition: options.scrollPosition)
+    
+    stateMachine?.fire(.Reload(
+      pagingItem: initialPagingItem,
+      size: collectionView.bounds.size))
   }
   
   // MARK: Private
