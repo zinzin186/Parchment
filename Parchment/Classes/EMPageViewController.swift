@@ -72,7 +72,7 @@ import UIKit
    - parameter startingViewController: The currently selected view controller the transition is starting from
    - parameter destinationViewController: The view controller that will be scrolled to, where the transition should end
    */
-  optional func em_pageViewController(pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController:UIViewController, direction: EMPageViewControllerNavigationDirection)
+  optional func em_pageViewController(pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController:UIViewController)
   
   /**
    Called whenever there has been a scroll position change in a page transition. This method is very useful if you need to know the exact progress of the page transition animation.
@@ -281,6 +281,10 @@ public class EMPageViewController: UIViewController, UIScrollViewDelegate {
   public override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     
+    guard !scrolling else {
+      return
+    }
+    
     self.scrollView.frame = self.view.bounds
     if self.orientationIsHorizontal {
       self.scrollView.contentSize = CGSize(width: self.view.bounds.width * 3, height: self.view.bounds.height)
@@ -465,12 +469,9 @@ public class EMPageViewController: UIViewController, UIScrollViewDelegate {
   
   // MARK: - Internal Callbacks
   
-  private func willScrollFromViewController(startingViewController: UIViewController?, destinationViewController: UIViewController, direction: EMPageViewControllerNavigationDirection) {
+  private func willScrollFromViewController(startingViewController: UIViewController?, destinationViewController: UIViewController) {
     if (startingViewController != nil) {
-      self.delegate?.em_pageViewController?(self,
-                                            willStartScrollingFrom: startingViewController!,
-                                            destinationViewController: destinationViewController,
-                                            direction: direction)
+      self.delegate?.em_pageViewController?(self, willStartScrollingFrom: startingViewController!, destinationViewController: destinationViewController)
     }
     
     destinationViewController.beginAppearanceTransition(true, animated: self.transitionAnimated)
@@ -496,13 +497,13 @@ public class EMPageViewController: UIViewController, UIScrollViewDelegate {
       if (progress > 0) {
         if (self.afterViewController != nil) {
           if !scrolling { // call willScroll once
-            self.willScrollFromViewController(self.selectedViewController, destinationViewController: self.afterViewController!, direction: .Forward)
+            self.willScrollFromViewController(self.selectedViewController, destinationViewController: self.afterViewController!)
             self.scrolling = true
           }
           
           if self.navigationDirection == .Reverse { // check if direction changed
             self.didFinishScrollingToViewController(self.selectedViewController!)
-            self.willScrollFromViewController(self.selectedViewController, destinationViewController: self.afterViewController!, direction: .Reverse)
+            self.willScrollFromViewController(self.selectedViewController, destinationViewController: self.afterViewController!)
           }
           
           self.navigationDirection = .Forward
@@ -520,15 +521,14 @@ public class EMPageViewController: UIViewController, UIScrollViewDelegate {
         // Scrolling reverse / before
       } else if (progress < 0) {
         if (self.beforeViewController != nil) {
-          
           if !scrolling { // call willScroll once
-            self.willScrollFromViewController(self.selectedViewController, destinationViewController: self.beforeViewController!, direction: .Reverse)
+            self.willScrollFromViewController(self.selectedViewController, destinationViewController: self.beforeViewController!)
             self.scrolling = true
           }
           
           if self.navigationDirection == .Forward { // check if direction changed
             self.didFinishScrollingToViewController(self.selectedViewController!)
-            self.willScrollFromViewController(self.selectedViewController, destinationViewController: self.beforeViewController!, direction: .Forward)
+            self.willScrollFromViewController(self.selectedViewController, destinationViewController: self.beforeViewController!)
           }
           
           self.navigationDirection = .Reverse
