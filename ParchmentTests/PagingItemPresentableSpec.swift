@@ -129,29 +129,21 @@ class PagingItemsSpec: QuickSpec {
         
         it("accumulates the correct width") {
           let items = [Item(index: 3, width: 100)]
-          let dataStructure = PagingDataStructure<Item>(visibleItems: items)
-          let width = presentable.widthFromItem(Item(index: 0, width: 50), dataStructure: dataStructure)
+          let width = presentable.widthFromItem(Item(index: 0, width: 50),
+                                                items: items)
           expect(width).to(equal(200))
         }
         
         it("returns zero for items already in data structure") {
           let items = [Item(index: 1, width: 100), Item(index: 2, width: 50)]
-          let dataStructure = PagingDataStructure<Item>(visibleItems: items)
-          
-          let firstItemWidth = presentable.widthFromItem(Item(index: 1, width: 100),
-                                                         dataStructure: dataStructure)
-          
-          let lastItemWidth = presentable.widthFromItem(Item(index: 1, width: 100),
-                                                        dataStructure: dataStructure)
-          
+          let firstItemWidth = presentable.widthFromItem(Item(index: 1, width: 100), items: items)
+          let lastItemWidth = presentable.widthFromItem(Item(index: 2, width: 50), items: items)
           expect(firstItemWidth).to(equal(0))
           expect(lastItemWidth).to(equal(0))
         }
         
         it("returns zero when there no visible items") {
-          let dataStructure = PagingDataStructure<Item>(visibleItems: [])
-          let width = presentable.widthFromItem(Item(index: 0, width: 50),
-                                                dataStructure: dataStructure)
+          let width = presentable.widthFromItem(Item(index: 0, width: 50), items: [])
           expect(width).to(equal(0))
         }
         
@@ -162,14 +154,14 @@ class PagingItemsSpec: QuickSpec {
         
         it("returns correct width for removed items") {
           
-          let from = PagingDataStructure(visibleItems: [
+          let from = [
             Item(index: 0, width: 50),
             Item(index: 1, width: 100)
-          ])
+          ]
           
-          let to = PagingDataStructure(visibleItems: [
+          let to = [
             Item(index: 1, width: 100),
-          ])
+          ]
           
           let width = presentable.diffWidth(from: from, to: to)
           
@@ -178,14 +170,14 @@ class PagingItemsSpec: QuickSpec {
         
         it("returns correct width for added items") {
           
-          let from = PagingDataStructure(visibleItems: [
+          let from = [
             Item(index: 1, width: 100)
-          ])
+          ]
           
-          let to = PagingDataStructure(visibleItems: [
+          let to = [
             Item(index: 0, width: 50),
             Item(index: 1, width: 100)
-          ])
+          ]
           
           let width = presentable.diffWidth(from: from, to: to)
           

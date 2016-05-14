@@ -28,17 +28,17 @@ extension PagingItemsPresentable {
     return Array(items.dropFirst())
   }
   
-  func diffWidth<T: PagingItem where T: Equatable>(from from: PagingDataStructure<T>, to: PagingDataStructure<T>) -> CGFloat {
-    let added = widthFromItem(to.visibleItems.first, dataStructure: from)
-    let removed = widthFromItem(from.visibleItems.first, dataStructure: to)
+  func diffWidth<T: PagingItem where T: Equatable>(from from: [T], to: [T]) -> CGFloat {
+    let added = widthFromItem(to.first, items: from)
+    let removed = widthFromItem(from.first, items: to)
     return added - removed
   }
   
-  func widthFromItem<T: PagingItem where T: Equatable>(item: T?, dataStructure: PagingDataStructure<T>, width: CGFloat = 0) -> CGFloat {
-    if dataStructure.visibleItems.isEmpty == false {
-      if let item = item where dataStructure.visibleItems.contains(item) == false {
+  func widthFromItem<T: PagingItem where T: Equatable>(item: T?, items: [T], width: CGFloat = 0) -> CGFloat {
+    if items.isEmpty == false {
+      if let item = item where items.contains(item) == false {
         return widthFromItem(pagingItemAfterPagingItem(item),
-                             dataStructure: dataStructure,
+                             items: items,
                              width: width + widthForPagingItem(item))
       }
       return width

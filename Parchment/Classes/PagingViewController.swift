@@ -138,16 +138,17 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   }
   
   private func handleDataStructureUpdate(oldValue: PagingDataStructure<T>) {
-  
-    let itemsWidth = diffWidth(from: oldValue, to: dataStructure)
+    
     let contentOffset: CGPoint = collectionView.contentOffset
+    let itemsWidth = diffWidth(
+      from: oldValue.visibleItems,
+      to: dataStructure.visibleItems)
     
     collectionViewLayout.dataStructure = dataStructure
     collectionView.reloadData()
-    
     collectionView.contentOffset = CGPoint(
       x: contentOffset.x + itemsWidth,
-      y: collectionView.contentOffset.y)
+      y: contentOffset.y)
   }
   
   private func selectViewController(pagingItem: T, direction: PagingDirection, animated: Bool = true) {
