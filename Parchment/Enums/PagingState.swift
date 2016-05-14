@@ -1,60 +1,40 @@
 import Foundation
 
-enum PagingState<T: PagingItem where T: Equatable>: Equatable, CustomStringConvertible {
-  
-  case Previous(pagingItem: T, upcomingPagingItem: T?, offset: CGFloat)
-  case Current(pagingItem: T)
-  case Next(pagingItem: T, upcomingPagingItem: T?, offset: CGFloat)
-  
-  var description: String {
-    switch self {
-    case let .Previous(_, _, offset):
-      return "PagingState: .Previous(offset: \(offset)"
-    case let .Next(_, _, offset):
-      return "PagingState: .Next(offset: \(offset)"
-    case .Current:
-      return "PagingState: .Current"
-    }
-  }
-  
+enum PagingState<T: PagingItem where T: Equatable>: Equatable {
+  case Selected(pagingItem: T)
+  case Scrolling(pagingItem: T, upcomingPagingItem: T?, offset: CGFloat)
 }
 
 extension PagingState {
   
-  var offset: CGFloat {
-    switch self {
-    case let .Previous(_, _, offset):
-      return offset
-    case let .Next(_, _, offset):
-      return offset
-    case .Current:
-      return 0
-    }
-  }
-  
   var currentPagingItem: T {
     switch self {
-    case let .Previous(pagingItem, _, _):
+    case let .Scrolling(pagingItem, _, _):
       return pagingItem
-    case let .Next(pagingItem, _, _):
-      return pagingItem
-    case let .Current(pagingItem):
+    case let .Selected(pagingItem):
       return pagingItem
     }
   }
   
   var upcomingPagingItem: T? {
     switch self {
-    case let .Previous(_, upcomingPagingItem, _):
+    case let .Scrolling(_, upcomingPagingItem, _):
       return upcomingPagingItem
-    case let .Next(_, upcomingPagingItem, _):
-      return upcomingPagingItem
-    case .Current:
+    case .Selected:
       return nil
     }
   }
   
-  var visualSelectionPagingItem: T {
+  var offset: CGFloat {
+    switch self {
+    case let .Scrolling(_, _, offset):
+      return offset
+    case .Selected:
+      return 0
+    }
+  }
+  
+  var visuallySelectedPagingItem: T {
     if fabs(offset) > 0.5 {
       return upcomingPagingItem ?? currentPagingItem
     } else {
@@ -66,25 +46,16 @@ extension PagingState {
 
 func ==<T: PagingItem where T: Equatable>(lhs: PagingState<T>, rhs: PagingState<T>) -> Bool {
   switch (lhs, rhs) {
-  case (let .Previous(x, y, z), let .Previous(a, b, c)):
-    if x == a && z == c {
-      if let y = y, b = b where y == b {
+  case (let .Scrolling(a, b, c), let .Scrolling(x, y, z)):
+    if a == x && c == z {
+      if let b = b, y = y where b == y {
         return true
-      } else if y == nil && b == nil {
-        return true
-      }
-    }
-    return false
-  case (let .Next(x, y, z), let .Next(a, b, c)):
-    if x == a && z == c {
-      if let y = y, b = b where y == b {
-        return true
-      } else if y == nil && b == nil {
+      } else if b == nil && y == nil {
         return true
       }
     }
     return false
-  case (let .Current(x), let .Current(a)) where x == a:
+  case (let .Selected(a), let .Selected(b)) where a == b:
     return true
   default:
     return false

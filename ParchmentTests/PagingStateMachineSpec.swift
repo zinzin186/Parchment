@@ -3,12 +3,50 @@ import Quick
 import Nimble
 @testable import Parchment
 
-struct IndexPagingItem: PagingItem, Equatable {
+private struct Item: PagingItem, Equatable {
   let index: Int
 }
 
-func ==(lhs: IndexPagingItem, rhs: IndexPagingItem) -> Bool {
+private func ==(lhs: Item, rhs: Item) -> Bool {
   return lhs.index == rhs.index
+}
+
+private func beScrolling() -> MatcherFunc<PagingState<Item>> {
+  return MatcherFunc { expression, message in
+    message.postfixMessage = "be .Scrolling)"
+    if let actual = try expression.evaluate(), case .Scrolling = actual {
+      return true
+    }
+    return false
+  }
+}
+
+private func beSelected() -> MatcherFunc<PagingState<Item>> {
+  return MatcherFunc { expression, message in
+    message.postfixMessage = "be .Selected)"
+    if let actual = try expression.evaluate(), case .Selected = actual {
+      return true
+    }
+    return false
+  }
+}
+
+private class Delegate: PagingStateMachineDelegate {
+  
+  func pagingStateMachine<T>(
+    pagingStateMachine: PagingStateMachine<T>,
+    pagingItemBeforePagingItem pagingItem: T) -> T? {
+    let item = pagingItem as! Item
+    return Item(index: item.index - 1) as? T
+  }
+  
+  func pagingStateMachine<T>(
+    pagingStateMachine: PagingStateMachine<T>,
+    pagingItemAfterPagingItem pagingItem: T) -> T? {
+    let item = pagingItem as! Item
+    return Item(index: item.index + 1) as? T
+  }
+  
 }
 
 class PagingStateMachineSpec: QuickSpec {
@@ -17,71 +55,240 @@ class PagingStateMachineSpec: QuickSpec {
     
     describe("PagingStateMachineSpec") {
       
-      var stateMachine: PagingStateMachine<IndexPagingItem>!
+      var stateMachineDelegate: Delegate!
+      var stateMachine: PagingStateMachine<Item>!
       
       beforeEach {
-        stateMachine = PagingStateMachine(initialPagingItem: IndexPagingItem(index: 0))
+        let state: PagingState = .Selected(pagingItem: Item(index: 0))
+        stateMachine = PagingStateMachine(initialState: state)
+        stateMachineDelegate = Delegate()
       }
       
-      it("has correct initial paging item") {
-        let state: PagingState = .Current(pagingItem: IndexPagingItem(index: 0))
-        expect(stateMachine.state).to(equal(state))
+      describe("finish scrolling event") {
+        
+        describe("is in the selected state") {
+          it("does not updated the state") {
+            stateMachine.fire(.FinishScrolling)
+            let expectedState: PagingState = .Selected(pagingItem: Item(index: 0))
+            expect(stateMachine.state).to(equal(expectedState))
+          }
+        }
+        
+        describe("is in the scrolling state") {
+          
+          beforeEach {
+            let state: PagingState = .Scrolling(
+              pagingItem: Item(index: 0),
+              upcomingPagingItem: Item(index: 1),
+              offset: 0.5)
+            stateMachine = PagingStateMachine(initialState: state)
+          }
+          
+          it("enters the selected state") {
+            stateMachine.fire(.FinishScrolling)
+            expect(stateMachine.state).to(beSelected())
+          }
+          
+          describe("has an upcoming paging item") {
+            it("sets the selected item to equal the upcoming paging item") {
+              stateMachine.fire(.FinishScrolling)
+              expect(stateMachine.state.currentPagingItem).to(equal(Item(index: 1)))
+            }
+          }
+          
+          describe("the upcoming paging item is nil") {
+            
+            beforeEach {
+              let state: PagingState = .Scrolling(
+                pagingItem: Item(index: 0),
+                upcomingPagingItem: nil,
+                offset: 0.5)
+              stateMachine = PagingStateMachine(initialState: state)
+            }
+            
+            it("sets the selected item to equal the current paging item") {
+              stateMachine.fire(.FinishScrolling)
+              expect(stateMachine.state.currentPagingItem).to(equal(Item(index: 0)))
+            }
+          }
+          
+        }
+        
       }
       
-      it("updates the state when the offset changes") {
-        let pagingItem = IndexPagingItem(index: 0)
-        let state: PagingState = .Next(pagingItem: pagingItem, upcomingPagingItem: nil, offset: 0.5)
-        stateMachine.fire(.Update(offset: 0.5))
-        expect(stateMachine.state).to(equal(state))
-      }
-
-      it("doesn't update the state if offset is zero") {
-        stateMachine.fire(.Update(offset: 0))
-        let state: PagingState = .Current(pagingItem: IndexPagingItem(index: 0))
-        expect(stateMachine.state).to(equal(state))
+      describe("select event") {
+        
+        describe("selected paging item is not equal current item") {
+          
+          it("enters the scrolling state") {
+            stateMachine.fire(.Select(pagingItem: Item(index: 1), direction: .None))
+            expect(stateMachine.state).to(beScrolling())
+          }
+          
+          it("sets to offset to zero") {
+            stateMachine.fire(.Select(pagingItem: Item(index: 1), direction: .None))
+            expect(stateMachine.state.offset).to(equal(0))
+          }
+          
+          it("uses the state's current paging item") {
+            stateMachine.fire(.Select(pagingItem: Item(index: 1), direction: .None))
+            expect(stateMachine.state.currentPagingItem).to(equal(Item(index: 0)))
+          }
+          
+          it("sets the upcoming paging item to the selected paging item") {
+            stateMachine.fire(.Select(pagingItem: Item(index: 1), direction: .None))
+            expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: 1)))
+          }
+          
+          describe("has a select block") {
+            
+            it("calls the select block with the selected paging item and direction") {
+              var selectedPagingItem: Item?
+              var selectedDirection: PagingDirection?
+              stateMachine.didSelectPagingItem = { pagingItem, direction in
+                selectedPagingItem = pagingItem
+                selectedDirection = direction
+              }
+              stateMachine.fire(.Select(pagingItem: Item(index: 1), direction: .Forward))
+              expect(selectedPagingItem).to(equal(Item(index: 1)))
+              expect(selectedDirection).to(equal(PagingDirection.Forward))
+            }
+            
+          }
+          
+        }
+        
+        describe("selected paging item is equal current item") {
+          
+          it("does not updated the state") {
+            stateMachine.fire(.Select(pagingItem: Item(index: 0), direction: .None))
+            let expectedState: PagingState = .Selected(pagingItem: Item(index: 0))
+            expect(stateMachine.state).to(equal(expectedState))
+          }
+          
+          describe("has a select block") {
+            
+            it("does not call the select block") {
+              var selectedPagingItem: Item?
+              stateMachine.didSelectPagingItem = { pagingItem, _ in
+                selectedPagingItem = pagingItem
+              }
+              stateMachine.fire(.Select(pagingItem: Item(index: 0), direction: .None))
+              expect(selectedPagingItem).to(beNil())
+            }
+            
+          }
+          
+        }
+        
       }
       
-      it("sets the correct state when dragging forward") {
-        stateMachine.fire(.DidBeginDragging(upcomingPagingItem: IndexPagingItem(index: 2), direction: .Forward))
-        let state: PagingState = .Next(pagingItem: IndexPagingItem(index: 0), upcomingPagingItem: IndexPagingItem(index: 2), offset: 0)
-        expect(stateMachine.state).to(equal(state))
-      }
-      
-      it("sets the correct state when dragging backwards") {
-        stateMachine = PagingStateMachine(initialPagingItem: IndexPagingItem(index: 2))
-        stateMachine.fire(.DidBeginDragging(upcomingPagingItem: IndexPagingItem(index: 0), direction: .Reverse))
-        let state: PagingState = .Previous(pagingItem: IndexPagingItem(index: 2), upcomingPagingItem: IndexPagingItem(index: 0), offset: 0)
-        expect(stateMachine.state).to(equal(state))
-      }
-      
-      it("maintains the offset when beginning to drag") {
-        stateMachine.fire(.Update(offset: 0.5))
-        stateMachine.fire(.DidBeginDragging(upcomingPagingItem: IndexPagingItem(index: 1), direction: .Forward))
-        let state: PagingState = .Next(pagingItem: IndexPagingItem(index: 0), upcomingPagingItem: IndexPagingItem(index: 1), offset: 0.5)
-        expect(stateMachine.state).to(equal(state))
-      }
-      
-      it("handles selecting an upcoming index") {
-        stateMachine.fire(.Select(pagingItem: IndexPagingItem(index: 1), direction: .Forward))
-        let state: PagingState = .Next(pagingItem: IndexPagingItem(index: 0), upcomingPagingItem: IndexPagingItem(index: 1), offset: 0)
-        expect(stateMachine.state).to(equal(state))
-      }
-      
-      it("handles selecting an previous index") {
-        stateMachine = PagingStateMachine(initialPagingItem: IndexPagingItem(index: 1))
-        stateMachine.fire(.Select(pagingItem: IndexPagingItem(index: 0), direction: .Reverse))
-        let state: PagingState = .Previous(pagingItem: IndexPagingItem(index: 1), upcomingPagingItem: IndexPagingItem(index: 0), offset: 0)
-        expect(stateMachine.state).to(equal(state))
-      }
-      
-      it("handles the did move event") {
-        stateMachine.fire(.DidMove(pagingItem: IndexPagingItem(index: 4)))
-        let state: PagingState = .Current(pagingItem: IndexPagingItem(index: 4))
-        expect(stateMachine.state).to(equal(state))
+      describe("scroll event") {
+        
+        it("uses the state's current paging item") {
+          stateMachine.fire(.Scroll(offset: 0))
+          expect(stateMachine.state.currentPagingItem).to(equal(Item(index: 0)))
+        }
+        
+        it("sets the new offset") {
+          stateMachine.fire(.Scroll(offset: 0.5))
+          expect(stateMachine.state.offset).to(equal(0.5))
+        }
+        
+        describe("is in the scrolling state") {
+          
+          describe("the sign of the offset value changed to negative") {
+            it("resets the scrolling state") {
+              let initialState: PagingState = .Scrolling(
+                pagingItem: Item(index: 0),
+                upcomingPagingItem: Item(index: 1),
+                offset: 0.1)
+              stateMachine = PagingStateMachine(initialState: initialState)
+              stateMachine.fire(.Scroll(offset: -0.1))
+              expect(stateMachine.state).to(beSelected())
+            }
+          }
+          
+          describe("the sign of the offset value changed to postive") {
+            
+            it("resets the scrolling state if the offset changes from negative to positive") {
+              let initialState: PagingState = .Scrolling(
+                pagingItem: Item(index: 0),
+                upcomingPagingItem: Item(index: 1),
+                offset: -0.1)
+              stateMachine = PagingStateMachine(initialState: initialState)
+              stateMachine.fire(.Scroll(offset: 0.1))
+              expect(stateMachine.state).to(beSelected())
+            }
+            
+          }
+          
+          describe("the sign of the offset didn't change") {
+            
+            it("resets the scrolling state if the offset is zero") {
+              let initialState: PagingState = .Scrolling(
+                pagingItem: Item(index: 0),
+                upcomingPagingItem: Item(index: 1),
+                offset: 0.5)
+              stateMachine = PagingStateMachine(initialState: initialState)
+              stateMachine.fire(.Scroll(offset: 0))
+              expect(stateMachine.state).to(beSelected())
+            }
+            
+            it("uses the state's upcoming paging item if the offset is not zero") {
+              let initialState: PagingState = .Scrolling(
+                pagingItem: Item(index: 0),
+                upcomingPagingItem: Item(index: 1),
+                offset: 0)
+              stateMachine = PagingStateMachine(initialState: initialState)
+              stateMachine.fire(.Scroll(offset: 0.1))
+              expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: 1)))
+            }
+            
+          }
+          
+        }
+        
+        describe("is in the selected state") {
+          
+          it("it does not update the state if the offset is zero") {
+            stateMachine.fire(.Scroll(offset: 0))
+            let expectedState: PagingState = .Selected(pagingItem: Item(index: 0))
+            expect(stateMachine.state).to(equal(expectedState))
+          }
+          
+          describe("has no delegate") {
+            it("sets the upcoming paging item to nil") {
+              stateMachine.fire(.Scroll(offset: 0.1))
+              expect(stateMachine.state.upcomingPagingItem).to(beNil())
+            }
+          }
+          
+          describe("has a delegate") {
+            
+            beforeEach {
+              stateMachine.delegate = stateMachineDelegate
+            }
+            
+            it("uses the leading paging item if the offset is negative") {
+              stateMachine.fire(.Scroll(offset: -0.1))
+              expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: -1)))
+            }
+            
+            
+            it("uses the trailing paging item if the offset is positive") {
+              stateMachine.fire(.Scroll(offset: 0.1))
+              expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: 1)))
+            }
+            
+          }
+          
+        }
+        
       }
       
     }
     
   }
-    
+  
 }

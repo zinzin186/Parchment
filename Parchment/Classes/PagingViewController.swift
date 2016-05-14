@@ -1,6 +1,6 @@
 import UIKit
 
-public class PagingViewController<T: PagingItem where T: Equatable>: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EMPageViewControllerDataSource, EMPageViewControllerDelegate, PagingItemsPresentable {
+public class PagingViewController<T: PagingItem where T: Equatable>: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EMPageViewControllerDataSource, EMPageViewControllerDelegate, PagingItemsPresentable, PagingStateMachineDelegate {
   
   public let options: PagingOptions
   public weak var delegate: PagingViewControllerDelegate?
@@ -8,7 +8,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   
   private var stateMachine: PagingStateMachine<T>? {
     didSet {
-      handleStateMachineUpdate(oldValue)
+      handleStateMachineUpdate()
     }
   }
   
@@ -75,7 +75,8 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
       let dataSource = dataSource,
       let initialPagingItem = dataSource.initialPagingItem() as? T else { return }
     
-    stateMachine = PagingStateMachine(initialPagingItem: initialPagingItem)
+    let initialState: PagingState = .Selected(pagingItem: initialPagingItem)
+    stateMachine = PagingStateMachine(initialState: initialState)
     
     selectViewController(initialPagingItem,
                          direction: .None,
@@ -84,57 +85,43 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     selectCollectionViewCell(initialPagingItem,
       scrollPosition: options.scrollPosition)
     
-    stateMachine?.fire(.Reload(
-      pagingItem: initialPagingItem,
-      size: collectionView.bounds.size))
+    reloadForPagingItem(initialPagingItem, size: collectionView.bounds.size)
+    handleStateUpdate(initialState)
   }
   
   // MARK: Private
   
-  private func handleEventUpdate(event: PagingEvent<T>) {
-    switch event {
-    case let .Select(pagingItem, direction):
-      handleSelectEvent(pagingItem, direction: direction)
-    case let .Reload(pagingItem, size):
-      handleReloadEvent(pagingItem, size: size)
-    default:
-      break
-    }
-  }
-
-  private func handleStateUpdate(state: PagingState<T>) {
-    collectionViewLayout.state = state
-    switch state {
-    case let .Current(pagingItem):
-      stateMachine?.fire(.Reload(
-        pagingItem: pagingItem,
-        size: collectionView.bounds.size))
-      selectCollectionViewCell(pagingItem,
-                               scrollPosition: options.scrollPosition,
-                               animated: true)
-    case .Next, .Previous:
-      collectionViewLayout.invalidateLayout()
-      selectCollectionViewCell(state.visualSelectionPagingItem, scrollPosition: .None)
-    }
-  }
-  
-  private func handleSelectEvent(pagingItem: T, direction: PagingDirection) {
-    selectViewController(pagingItem, direction: direction)
-  }
-  
-  private func handleReloadEvent(pagingItem: T, size: CGSize) {
+  private func reloadForPagingItem(pagingItem: T, size: CGSize) {
     let items = visibleItems(pagingItem, width: size.width)
     dataStructure = PagingDataStructure(visibleItems: items)
   }
   
-  private func handleStateMachineUpdate(oldValue: PagingStateMachine<T>?) {
-    stateMachine?.stateObservers.append { [weak self] (stateMachine, oldState) in
-      self?.handleStateUpdate(stateMachine.state)
+  private func handleStateUpdate(state: PagingState<T>) {
+    collectionViewLayout.state = state
+    switch state {
+    case .Selected:
+      reloadForPagingItem(state.currentPagingItem,
+                          size: collectionView.bounds.size)
+      selectCollectionViewCell(state.currentPagingItem,
+                               scrollPosition: options.scrollPosition,
+                               animated: true)
+    case .Scrolling:
+      collectionViewLayout.invalidateLayout()
+      selectCollectionViewCell(state.visuallySelectedPagingItem,
+                               scrollPosition: .None)
+    }
+  }
+  
+  private func handleStateMachineUpdate() {
+    stateMachine?.didSelectPagingItem = { [weak self] pagingItem, direction in
+      self?.selectViewController(pagingItem, direction: direction)
     }
     
-    stateMachine?.eventObservers.append { [weak self] (stateMachine, event) in
-      self?.handleEventUpdate(event)
+    stateMachine?.didChangeState = { [weak self] state in
+      self?.handleStateUpdate(state)
     }
+    
+    stateMachine?.delegate = self
   }
   
   private func handleDataStructureUpdate(oldValue: PagingDataStructure<T>) {
@@ -187,12 +174,10 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     guard let stateMachine = stateMachine else { return }
     
     let currentPagingItem = stateMachine.state.currentPagingItem
-    let upcomingPagingItem = dataStructure.pagingItemForIndexPath(indexPath)
+    let selectedPagingItem = dataStructure.pagingItemForIndexPath(indexPath)
     let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: currentPagingItem)
-    
-    stateMachine.fire(.Select(
-      pagingItem: upcomingPagingItem,
-      direction: direction))
+
+    stateMachine.fire(.Select(pagingItem: selectedPagingItem, direction: direction))
   }
   
   public func collectionView(collectionView: UICollectionView,
@@ -265,32 +250,31 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   }
   
   // MARK: EMPageViewControllerDelegate
-  
-  public func em_pageViewController(pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController, direction: EMPageViewControllerNavigationDirection) {
-    guard let stateMachine = stateMachine else { return }
-    switch direction {
-    case .Forward:
-      stateMachine.fire(.DidBeginDragging(
-        upcomingPagingItem: pagingItemAfterPagingItem(stateMachine.state.currentPagingItem),
-        direction: .Forward))
-    case .Reverse:
-      stateMachine.fire(.DidBeginDragging(
-        upcomingPagingItem: pagingItemBeforePagingItem(stateMachine.state.currentPagingItem),
-        direction: .Reverse))
-    }
-  }
-  
+
   public func em_pageViewController(pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
-    guard let stateMachine = stateMachine else { return }
-    stateMachine.fire(.Update(offset: progress))
+    stateMachine?.fire(.Scroll(offset: progress))
   }
   
   public func em_pageViewController(pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
     if transitionSuccessful {
-      guard let stateMachine = stateMachine else { return }
-      let pagingItem = stateMachine.state.upcomingPagingItem ?? stateMachine.state.currentPagingItem
-      stateMachine.fire(.DidMove(pagingItem: pagingItem))
+      stateMachine?.fire(.FinishScrolling)
     }
+  }
+  
+  // MARK: PagingStateMachineDelegate
+  
+  func pagingStateMachine<U>(
+    pagingStateMachine: PagingStateMachine<U>,
+    pagingItemBeforePagingItem pagingItem: U) -> U? {
+    guard let pagingItem = pagingItem as? T else { return nil }
+    return dataSource?.pagingItemBeforePagingItem(pagingItem) as? U
+  }
+  
+  func pagingStateMachine<U>(
+    pagingStateMachine: PagingStateMachine<U>,
+    pagingItemAfterPagingItem pagingItem: U) -> U? {
+    guard let pagingItem = pagingItem as? T else { return nil }
+    return dataSource?.pagingItemAfterPagingItem(pagingItem) as? U
   }
   
 }
