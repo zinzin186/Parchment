@@ -170,6 +170,14 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   // MARK: UICollectionViewDelegateFlowLayout
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    if case .SizeToFit = options.menuItemSize {
+      let width = dataStructure.visibleItems.reduce(0) { widthForPagingItem($0.1) + $0.0 }
+      if width < collectionView.bounds.width {
+        return CGSize(
+          width: collectionView.bounds.width / CGFloat(dataStructure.visibleItems.count),
+          height: options.menuItemSize.height)
+      }
+    }
     return CGSize(
       width: widthForPagingItem(dataStructure.pagingItemForIndexPath(indexPath)),
       height: options.menuItemSize.height)
@@ -240,7 +248,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     guard let pagingItem = pagingItem as? T else { return 0 }
     switch options.menuItemSize {
     case let .SizeToFit(minWidth, _):
-      return max(minWidth, collectionView.bounds.width / CGFloat(collectionView.numberOfItemsInSection(0)))
+      return minWidth
     case let .Fixed(width, _):
       return width
     case .Dynamic:
