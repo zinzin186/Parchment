@@ -61,8 +61,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     pageViewController.delegate = self
     pageViewController.dataSource = self
     
-    collectionView.registerClass(options.menuItemClass,
-      forCellWithReuseIdentifier: PagingCell.reuseIdentifier)
+    collectionView.registerReusableCell(options.menuItemClass)
   }
   
   public override func viewDidAppear(animated: Bool) {
@@ -198,7 +197,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   // MARK: UICollectionViewDataSource
   
   public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PagingCell.reuseIdentifier, forIndexPath: indexPath) as! PagingCell
+    let cell = collectionView.dequeueReusableCell(indexPath: indexPath, cellType: options.menuItemClass)
     cell.setPagingItem(dataStructure.visibleItems[indexPath.item], theme: options.theme)
     return cell
   }
