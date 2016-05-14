@@ -4,17 +4,17 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   
   public let options: PagingOptions
   public weak var delegate: PagingViewControllerDelegate?
-  public weak var dataSource: PagingViewControllerDataSource?
+  private var dataStructure: PagingDataStructure<T>
+  
+  public weak var dataSource: PagingViewControllerDataSource? {
+    didSet {
+      handleDataSourceUpdate()
+    }
+  }
   
   private var stateMachine: PagingStateMachine<T>? {
     didSet {
       handleStateMachineUpdate()
-    }
-  }
-  
-  private var dataStructure: PagingDataStructure<T> {
-    didSet {
-      handleDataStructureUpdate(oldValue)
     }
   }
   
@@ -66,49 +66,44 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   
   public override func viewDidAppear(animated: Bool) {
     super.viewDidAppear(animated)
-    reloadData()
-  }
-  
-  public func reloadData() {
-    guard
-      let dataSource = dataSource,
-      let initialPagingItem = dataSource.initialPagingItem() as? T else { return }
+    guard let dataSource = dataSource, pagingItem = dataSource.initialPagingItem() as? T else { return }
     
-    let initialState: PagingState = .Selected(pagingItem: initialPagingItem)
-    stateMachine = PagingStateMachine(initialState: initialState)
+    updateSelectedPagingItem(pagingItem)
     
-    selectViewController(initialPagingItem,
-                         direction: .None,
-                         animated: false)
+    selectViewController(
+      pagingItem,
+      direction: .None,
+      animated: false)
     
-    selectCollectionViewCell(initialPagingItem,
+    selectCollectionViewCell(
+      pagingItem,
       scrollPosition: options.scrollPosition)
-    
-    reloadForPagingItem(initialPagingItem, size: collectionView.bounds.size)
-    handleStateUpdate(initialState)
   }
   
   // MARK: Private
   
-  private func reloadForPagingItem(pagingItem: T, size: CGSize) {
-    let items = visibleItems(pagingItem, width: size.width)
-    dataStructure = PagingDataStructure(visibleItems: items)
-  }
-  
   private func handleStateUpdate(state: PagingState<T>) {
     collectionViewLayout.state = state
     switch state {
-    case .Selected:
-      reloadForPagingItem(state.currentPagingItem,
-                          size: collectionView.bounds.size)
-      selectCollectionViewCell(state.currentPagingItem,
-                               scrollPosition: options.scrollPosition,
-                               animated: true)
+    case let .Selected(pagingItem):
+      updateSelectedPagingItem(pagingItem)
+      selectCollectionViewCell(
+        pagingItem,
+        scrollPosition: options.scrollPosition,
+        animated: true)
     case .Scrolling:
       collectionViewLayout.invalidateLayout()
-      selectCollectionViewCell(state.visuallySelectedPagingItem,
-                               scrollPosition: .None)
+      selectCollectionViewCell(
+        state.visuallySelectedPagingItem,
+        scrollPosition: .None)
     }
+  }
+  
+  private func handleDataSourceUpdate() {
+    guard let dataSource = dataSource, pagingItem = dataSource.initialPagingItem() as? T else { return }
+    let initialState: PagingState = .Selected(pagingItem: pagingItem)
+    stateMachine = PagingStateMachine(initialState: initialState)
+    collectionViewLayout.state = initialState
   }
   
   private func handleStateMachineUpdate() {
@@ -123,13 +118,13 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     stateMachine?.delegate = self
   }
   
-  private func handleDataStructureUpdate(oldValue: PagingDataStructure<T>) {
-    
+  private func updateSelectedPagingItem(pagingItem: T) {
+    let fromItems = dataStructure.visibleItems
+    let toItems = visibleItems(pagingItem, width: collectionView.bounds.width)
     let contentOffset: CGPoint = collectionView.contentOffset
-    let itemsWidth = diffWidth(
-      from: oldValue.visibleItems,
-      to: dataStructure.visibleItems)
+    let itemsWidth = diffWidth(from: fromItems, to: toItems)
     
+    dataStructure = PagingDataStructure(visibleItems: toItems)
     collectionViewLayout.dataStructure = dataStructure
     collectionView.reloadData()
     collectionView.contentOffset = CGPoint(
@@ -139,28 +134,29 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
   
   private func selectViewController(pagingItem: T, direction: PagingDirection, animated: Bool = true) {
     guard let dataSource = dataSource else { return }
-    let viewController = dataSource.viewControllerForPagingItem(pagingItem)
-    pageViewController.selectViewController(viewController,
-                                            direction: direction.pageViewControllerNavigationDirection,
-                                            animated: animated,
-                                            completion: nil)
+    pageViewController.selectViewController(
+      dataSource.viewControllerForPagingItem(pagingItem),
+      direction: direction.pageViewControllerNavigationDirection,
+      animated: animated,
+      completion: nil)
   }
   
   private func selectCollectionViewCell(pagingItem: T, scrollPosition: UICollectionViewScrollPosition, animated: Bool = false) {
-    let indexPath = dataStructure.indexPathForPagingItem(pagingItem)
-    collectionView.selectItemAtIndexPath(indexPath,
-                                         animated: animated,
-                                         scrollPosition: scrollPosition)
+    collectionView.selectItemAtIndexPath(
+      dataStructure.indexPathForPagingItem(pagingItem),
+      animated: animated,
+      scrollPosition: scrollPosition)
   }
   
   // MARK: UICollectionViewDelegateFlowLayout
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
     if case .SizeToFit = options.menuItemSize {
-      let width = dataStructure.visibleItems.reduce(0) { widthForPagingItem($0.1) + $0.0 }
+      let items = dataStructure.visibleItems
+      let width = items.reduce(0) { widthForPagingItem($0.1) + $0.0 }
       if width < collectionView.bounds.width {
         return CGSize(
-          width: collectionView.bounds.width / CGFloat(dataStructure.visibleItems.count),
+          width: collectionView.bounds.width / CGFloat(items.count),
           height: options.menuItemSize.height)
       }
     }
@@ -176,22 +172,9 @@ public class PagingViewController<T: PagingItem where T: Equatable>: UIViewContr
     let selectedPagingItem = dataStructure.pagingItemForIndexPath(indexPath)
     let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: currentPagingItem)
 
-    stateMachine.fire(.Select(pagingItem: selectedPagingItem, direction: direction))
-  }
-  
-  public func collectionView(collectionView: UICollectionView,
-    layout collectionViewLayout: UICollectionViewLayout,
-    insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-    if case .AlwaysCentered = options.selectedScrollPosition {
-      let indexPath = NSIndexPath(forItem: 0, inSection: 0)
-      let layoutAttributes = collectionViewLayout.layoutAttributesForItemAtIndexPath(indexPath)
-      
-      if let layoutAttributes = layoutAttributes {
-        let left = collectionView.bounds.midX - layoutAttributes.bounds.midX
-        return UIEdgeInsets(hortizontal: left)
-      }
-    }
-    return UIEdgeInsets()
+    stateMachine.fire(.Select(
+      pagingItem: selectedPagingItem,
+      direction: direction))
   }
   
   // MARK: UICollectionViewDataSource
