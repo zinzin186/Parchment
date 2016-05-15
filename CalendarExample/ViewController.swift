@@ -44,12 +44,18 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    pagingViewController.dataSource = self
-    
+    // Add the paging view controller as a child view
+    // controller and contrain it to all edges
     addChildViewController(pagingViewController)
     view.addSubview(pagingViewController.view)
     view.constrainToEdges(pagingViewController.view)
     pagingViewController.didMoveToParentViewController(self)
+    
+    // Set our custom data source
+    pagingViewController.dataSource = self
+    
+    // Set the current date as the selected paging item
+    pagingViewController.selectPagingItem(CalendarItem(date: NSDate()))
   }
   
 }
@@ -63,10 +69,6 @@ class ViewController: UIViewController {
 // controller will show one menu item for each day.
 
 extension ViewController: PagingViewControllerDataSource {
-  
-  func initialPagingItem() -> PagingItem? {
-    return CalendarItem(date: NSDate())
-  }
   
   func viewControllerForPagingItem(pagingItem: PagingItem) -> UIViewController {
     let calendarItem = pagingItem as! CalendarItem

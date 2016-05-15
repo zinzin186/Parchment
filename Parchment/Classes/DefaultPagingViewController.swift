@@ -23,15 +23,15 @@ public class DefaultPagingViewController: PagingViewController<DefaultPagingItem
     items = viewControllers.map { DefaultPagingItem(viewController: $0) }
     super.init(options: options)
     dataSource = self
+    
+    if let item = items.first {
+      selectPagingItem(item)
+    }
   }
   
 }
 
 extension DefaultPagingViewController: PagingViewControllerDataSource {
-  
-  public func initialPagingItem() -> PagingItem? {
-    return items.first
-  }
   
   public func viewControllerForPagingItem(pagingItem: PagingItem) -> UIViewController {
     let index = items.indexOf(pagingItem as! DefaultPagingItem)!

@@ -11,13 +11,8 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
   
   public let options: PagingOptions
   public weak var delegate: PagingViewControllerDelegate?
+  public weak var dataSource: PagingViewControllerDataSource?
   private var dataStructure: PagingDataStructure<T>
-  
-  public weak var dataSource: PagingViewControllerDataSource? {
-    didSet {
-      handleDataSourceUpdate()
-    }
-  }
   
   private var stateMachine: PagingStateMachine<T>? {
     didSet {
@@ -71,20 +66,24 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     collectionView.registerReusableCell(options.menuItemClass)
   }
   
-  public override func viewDidAppear(animated: Bool) {
-    super.viewDidAppear(animated)
-    guard let dataSource = dataSource, pagingItem = dataSource.initialPagingItem() as? T else { return }
-    
-    updateSelectedPagingItem(pagingItem)
+  public func selectPagingItem(pagingItem: T, animated: Bool = false) {
+    let state: PagingState = .Selected(pagingItem: pagingItem)
+    stateMachine = PagingStateMachine(initialState: state)
+    collectionViewLayout.state = state
     
     selectViewController(
       pagingItem,
       direction: .None,
-      animated: false)
+      animated: animated)
     
-    selectCollectionViewCell(
-      pagingItem,
-      scrollPosition: options.scrollPosition)
+    updateSelectedPagingItem(pagingItem, animated: animated)
+  }
+  
+  public override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
+    if let pagingItem = stateMachine?.state.currentPagingItem {
+      updateSelectedPagingItem(pagingItem, animated: false)
+    }
   }
   
   // MARK: Private
@@ -93,24 +92,14 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     collectionViewLayout.state = state
     switch state {
     case let .Selected(pagingItem):
-      updateSelectedPagingItem(pagingItem)
-      selectCollectionViewCell(
-        pagingItem,
-        scrollPosition: options.scrollPosition,
-        animated: true)
+      updateSelectedPagingItem(pagingItem, animated: true)
     case .Scrolling:
       collectionViewLayout.invalidateLayout()
       selectCollectionViewCell(
         state.visuallySelectedPagingItem,
-        scrollPosition: .None)
+        scrollPosition: .None,
+        animated: false)
     }
-  }
-  
-  private func handleDataSourceUpdate() {
-    guard let dataSource = dataSource, pagingItem = dataSource.initialPagingItem() as? T else { return }
-    let initialState: PagingState = .Selected(pagingItem: pagingItem)
-    stateMachine = PagingStateMachine(initialState: initialState)
-    collectionViewLayout.state = initialState
   }
   
   private func handleStateMachineUpdate() {
@@ -125,18 +114,29 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     stateMachine?.delegate = self
   }
   
-  private func updateSelectedPagingItem(pagingItem: T) {
+  private func updateSelectedPagingItem(pagingItem: T, animated: Bool) {
+    
+    let oldContentOffset: CGPoint = collectionView.contentOffset
+    
     let fromItems = dataStructure.visibleItems
     let toItems = visibleItems(pagingItem, width: collectionView.bounds.width)
-    let contentOffset: CGPoint = collectionView.contentOffset
     let itemsWidth = diffWidth(from: fromItems, to: toItems)
     
     dataStructure = PagingDataStructure(visibleItems: toItems)
     collectionViewLayout.dataStructure = dataStructure
     collectionView.reloadData()
     collectionView.contentOffset = CGPoint(
-      x: contentOffset.x + itemsWidth,
-      y: contentOffset.y)
+      x: oldContentOffset.x + itemsWidth,
+      y: oldContentOffset.y)
+    
+    if let indexPath = dataStructure.indexPathForPagingItem(pagingItem) {
+      if 0..<collectionView.numberOfItemsInSection(0) ~= indexPath.item {
+        selectCollectionViewCell(
+          pagingItem,
+          scrollPosition: options.scrollPosition,
+          animated: animated)
+      }
+    }
   }
   
   private func selectViewController(pagingItem: T, direction: PagingDirection, animated: Bool = true) {
@@ -148,7 +148,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
       completion: nil)
   }
   
-  private func selectCollectionViewCell(pagingItem: T, scrollPosition: UICollectionViewScrollPosition, animated: Bool = false) {
+  private func selectCollectionViewCell(pagingItem: T, scrollPosition: UICollectionViewScrollPosition, animated: Bool) {
     collectionView.selectItemAtIndexPath(
       dataStructure.indexPathForPagingItem(pagingItem),
       animated: animated,
