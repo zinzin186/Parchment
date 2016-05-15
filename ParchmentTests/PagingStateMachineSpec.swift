@@ -53,7 +53,7 @@ class PagingStateMachineSpec: QuickSpec {
   
   override func spec() {
     
-    describe("PagingStateMachineSpec") {
+    describe("PagingStateMachine") {
       
       var stateMachineDelegate: Delegate!
       var stateMachine: PagingStateMachine<Item>!
