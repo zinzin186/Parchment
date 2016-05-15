@@ -16,7 +16,7 @@ struct PagingDataStructure<T: PagingItem where T: Equatable> {
   }
   
   func indexPathForPagingItem(pagingItem: T) -> NSIndexPath? {
-    guard let index = visibleItems.indexOf(pagingItem) else { return nil}
+    guard let index = visibleItems.indexOf(pagingItem) else { return nil }
     return NSIndexPath(forItem: index, inSection: 0)
   }
   

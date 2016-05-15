@@ -64,6 +64,7 @@
 		3E504ED31C7466CD00AE1CE3 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E504ED11C7466CD00AE1CE3 /* Quick.framework */; };
 		3E562ACE1CE7CD8C007623B3 /* DefaultPagingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E562ACD1CE7CD8C007623B3 /* DefaultPagingCell.swift */; };
 		3E5E93E31CE7D899000762A1 /* PagingStateSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E93E21CE7D899000762A1 /* PagingStateSpec.swift */; };
+		3E5E93E91CE7E093000762A1 /* PagingDataStructureSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E93E81CE7E093000762A1 /* PagingDataStructureSpec.swift */; };
 		3E9E8D141C70FDF900F265A4 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
 		3E9E8D151C70FDF900F265A4 /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3EA04A5D1C53BFF40054E5E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA04A5C1C53BFF40054E5E0 /* AppDelegate.swift */; };
@@ -203,6 +204,7 @@
 		3E504ED11C7466CD00AE1CE3 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		3E562ACD1CE7CD8C007623B3 /* DefaultPagingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultPagingCell.swift; sourceTree = "<group>"; };
 		3E5E93E21CE7D899000762A1 /* PagingStateSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingStateSpec.swift; sourceTree = "<group>"; };
+		3E5E93E81CE7E093000762A1 /* PagingDataStructureSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingDataStructureSpec.swift; sourceTree = "<group>"; };
 		3E73A8131C9A0AE40083C720 /* libInsightfulPager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libInsightfulPager.a; path = ../../../Desktop/libInsightfulPager.a; sourceTree = "<group>"; };
 		3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Parchment.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA04A5A1C53BFF40054E5E0 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -350,9 +352,10 @@
 			isa = PBXGroup;
 			children = (
 				3E504EC81C7465B000AE1CE3 /* Info.plist */,
-				3E504EC61C7465B000AE1CE3 /* PagingStateMachineSpec.swift */,
+				3E5E93E81CE7E093000762A1 /* PagingDataStructureSpec.swift */,
 				3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift */,
 				3E187DF61C9F7691000388FF /* PagingItemPresentableSpec.swift */,
+				3E504EC61C7465B000AE1CE3 /* PagingStateMachineSpec.swift */,
 				3E5E93E21CE7D899000762A1 /* PagingStateSpec.swift */,
 			);
 			path = ParchmentTests;
@@ -713,6 +716,7 @@
 			files = (
 				3E504EC71C7465B000AE1CE3 /* PagingStateMachineSpec.swift in Sources */,
 				3E187DF71C9F7691000388FF /* PagingItemPresentableSpec.swift in Sources */,
+				3E5E93E91CE7E093000762A1 /* PagingDataStructureSpec.swift in Sources */,
 				3E5E93E31CE7D899000762A1 /* PagingStateSpec.swift in Sources */,
 				3EFEFBF71C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift in Sources */,
 			);
