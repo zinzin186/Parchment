@@ -15,7 +15,7 @@
 		3E2AAD121CA81D490044AAA5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E2AAD101CA81D490044AAA5 /* LaunchScreen.storyboard */; };
 		3E2AAD191CA81DAB0044AAA5 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
 		3E2AAD1C1CA81DCD0044AAA5 /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3E2AAD1E1CA81E240044AAA5 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD1D1CA81E240044AAA5 /* UIView.swift */; };
+		3E2AAD1E1CA81E240044AAA5 /* UIView+constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD1D1CA81E240044AAA5 /* UIView+constraints.swift */; };
 		3E2AAD201CA81EA20044AAA5 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD1F1CA81EA20044AAA5 /* ExampleViewController.swift */; };
 		3E2AAD221CA81EB00044AAA5 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD211CA81EB00044AAA5 /* CalendarViewController.swift */; };
 		3E2AAD241CA823DA0044AAA5 /* CalendarPagingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD231CA823DA0044AAA5 /* CalendarPagingCell.swift */; };
@@ -184,7 +184,7 @@
 		3E2AAD0E1CA81D490044AAA5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3E2AAD111CA81D490044AAA5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3E2AAD131CA81D490044AAA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3E2AAD1D1CA81E240044AAA5 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		3E2AAD1D1CA81E240044AAA5 /* UIView+constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+constraints.swift"; sourceTree = "<group>"; };
 		3E2AAD1F1CA81EA20044AAA5 /* ExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		3E2AAD211CA81EB00044AAA5 /* CalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		3E2AAD231CA823DA0044AAA5 /* CalendarPagingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarPagingCell.swift; sourceTree = "<group>"; };
@@ -325,7 +325,7 @@
 				3E2AAD231CA823DA0044AAA5 /* CalendarPagingCell.swift */,
 				3E2AAD211CA81EB00044AAA5 /* CalendarViewController.swift */,
 				3E2AAD251CA828060044AAA5 /* DateFormatters.swift */,
-				3E2AAD1D1CA81E240044AAA5 /* UIView.swift */,
+				3E2AAD1D1CA81E240044AAA5 /* UIView+constraints.swift */,
 				3E2AAD0B1CA81D490044AAA5 /* Main.storyboard */,
 				3E2AAD0E1CA81D490044AAA5 /* Assets.xcassets */,
 				3E2AAD101CA81D490044AAA5 /* LaunchScreen.storyboard */,
@@ -797,7 +797,7 @@
 				3E2AAD261CA828060044AAA5 /* DateFormatters.swift in Sources */,
 				3E2AAD221CA81EB00044AAA5 /* CalendarViewController.swift in Sources */,
 				3E2AAD0A1CA81D490044AAA5 /* ViewController.swift in Sources */,
-				3E2AAD1E1CA81E240044AAA5 /* UIView.swift in Sources */,
+				3E2AAD1E1CA81E240044AAA5 /* UIView+constraints.swift in Sources */,
 				3E2AAD081CA81D490044AAA5 /* AppDelegate.swift in Sources */,
 				3E2AAD241CA823DA0044AAA5 /* CalendarPagingCell.swift in Sources */,
 			);
