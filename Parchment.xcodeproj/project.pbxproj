@@ -16,12 +16,12 @@
 		3E2AAD191CA81DAB0044AAA5 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
 		3E2AAD1C1CA81DCD0044AAA5 /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3E2AAD1E1CA81E240044AAA5 /* UIView+constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD1D1CA81E240044AAA5 /* UIView+constraints.swift */; };
-		3E2AAD201CA81EA20044AAA5 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD1F1CA81EA20044AAA5 /* ExampleViewController.swift */; };
+		3E2AAD201CA81EA20044AAA5 /* IndexViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD1F1CA81EA20044AAA5 /* IndexViewController.swift */; };
 		3E2AAD221CA81EB00044AAA5 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD211CA81EB00044AAA5 /* CalendarViewController.swift */; };
 		3E2AAD241CA823DA0044AAA5 /* CalendarPagingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD231CA823DA0044AAA5 /* CalendarPagingCell.swift */; };
 		3E2AAD261CA828060044AAA5 /* DateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD251CA828060044AAA5 /* DateFormatters.swift */; };
 		3E2AAD281CA831AB0044AAA5 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD271CA831AB0044AAA5 /* UIView.swift */; };
-		3E2AAD2A1CA8331B0044AAA5 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD291CA8331B0044AAA5 /* UIView.swift */; };
+		3E2AAD2A1CA8331B0044AAA5 /* UIView+constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD291CA8331B0044AAA5 /* UIView+constraints.swift */; };
 		3E2AAD2C1CA869B50044AAA5 /* PagingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD2B1CA869B50044AAA5 /* PagingItem.swift */; };
 		3E2AAD2E1CA86A320044AAA5 /* PagingViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD2D1CA86A320044AAA5 /* PagingViewControllerDelegate.swift */; };
 		3E2AAD361CA86C690044AAA5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2AAD351CA86C690044AAA5 /* AppDelegate.swift */; };
@@ -185,12 +185,12 @@
 		3E2AAD111CA81D490044AAA5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3E2AAD131CA81D490044AAA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3E2AAD1D1CA81E240044AAA5 /* UIView+constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+constraints.swift"; sourceTree = "<group>"; };
-		3E2AAD1F1CA81EA20044AAA5 /* ExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
+		3E2AAD1F1CA81EA20044AAA5 /* IndexViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndexViewController.swift; sourceTree = "<group>"; };
 		3E2AAD211CA81EB00044AAA5 /* CalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		3E2AAD231CA823DA0044AAA5 /* CalendarPagingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarPagingCell.swift; sourceTree = "<group>"; };
 		3E2AAD251CA828060044AAA5 /* DateFormatters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatters.swift; sourceTree = "<group>"; };
 		3E2AAD271CA831AB0044AAA5 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
-		3E2AAD291CA8331B0044AAA5 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		3E2AAD291CA8331B0044AAA5 /* UIView+constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+constraints.swift"; sourceTree = "<group>"; };
 		3E2AAD2B1CA869B50044AAA5 /* PagingItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingItem.swift; sourceTree = "<group>"; };
 		3E2AAD2D1CA86A320044AAA5 /* PagingViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingViewControllerDelegate.swift; sourceTree = "<group>"; };
 		3E2AAD331CA86C690044AAA5 /* DelegateExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DelegateExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -476,8 +476,8 @@
 			children = (
 				3EA04A5C1C53BFF40054E5E0 /* AppDelegate.swift */,
 				3EA04A5E1C53BFF40054E5E0 /* ViewController.swift */,
-				3E2AAD1F1CA81EA20044AAA5 /* ExampleViewController.swift */,
-				3E2AAD291CA8331B0044AAA5 /* UIView.swift */,
+				3E2AAD1F1CA81EA20044AAA5 /* IndexViewController.swift */,
+				3E2AAD291CA8331B0044AAA5 /* UIView+constraints.swift */,
 				3EA04A601C53BFF40054E5E0 /* Main.storyboard */,
 				3EA04A631C53BFF40054E5E0 /* Assets.xcassets */,
 				3EA04A651C53BFF40054E5E0 /* LaunchScreen.storyboard */,
@@ -882,10 +882,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E2AAD2A1CA8331B0044AAA5 /* UIView.swift in Sources */,
+				3E2AAD2A1CA8331B0044AAA5 /* UIView+constraints.swift in Sources */,
 				3EA04A5F1C53BFF40054E5E0 /* ViewController.swift in Sources */,
 				3EA04A5D1C53BFF40054E5E0 /* AppDelegate.swift in Sources */,
-				3E2AAD201CA81EA20044AAA5 /* ExampleViewController.swift in Sources */,
+				3E2AAD201CA81EA20044AAA5 /* IndexViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
