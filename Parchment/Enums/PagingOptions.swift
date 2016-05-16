@@ -150,7 +150,7 @@ public extension PagingOptions {
   }
   
   var menuItemClass: PagingCell.Type {
-    return DefaultPagingCell.self
+    return PagingTitleCell.self
   }
   
   var menuInsets: UIEdgeInsets {

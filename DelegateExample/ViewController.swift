@@ -34,8 +34,8 @@ class ViewController: UIViewController {
   // which is a subclass of PagingViewController that takes in an
   // array view controllers and handles setting up the data source and
   // paging items for us.
-  private lazy var pagingViewController: DefaultPagingViewController = {
-    return DefaultPagingViewController(viewControllers: self.viewControllers)
+  private lazy var pagingViewController: FixedPagingViewController = {
+    return FixedPagingViewController(viewControllers: self.viewControllers)
   }()
   
   override func viewDidLoad() {

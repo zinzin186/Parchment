@@ -1,6 +1,6 @@
 import Foundation
 
-struct PagingCellViewModel {
+struct PagingTitleCellViewModel {
   
   let title: String?
   let font: UIFont

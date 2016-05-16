@@ -1,8 +1,8 @@
 import UIKit
 
-public class DefaultPagingCell: PagingCell {
+public class PagingTitleCell: PagingCell {
   
-  private var viewModel: PagingCellViewModel?
+  private var viewModel: PagingTitleCellViewModel?
   private let titleLabel = UILabel(frame: .zero)
   
   public override var selected: Bool {
@@ -23,7 +23,7 @@ public class DefaultPagingCell: PagingCell {
   
   public override func setPagingItem(pagingItem: PagingItem, theme: PagingTheme) {
     if let titleItem = pagingItem as? PagingTitleItem {
-      viewModel = PagingCellViewModel(title: titleItem.title, theme: theme)
+      viewModel = PagingTitleCellViewModel(title: titleItem.title, theme: theme)
     }
     configureTitleLabel()
   }

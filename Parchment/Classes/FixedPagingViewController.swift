@@ -1,6 +1,6 @@
 import UIKit
 
-public struct DefaultPagingItem: PagingTitleItem, Equatable {
+public struct PagingViewControllerItem: PagingTitleItem, Equatable {
   
   public let viewController: UIViewController
   public let title: String
@@ -11,16 +11,16 @@ public struct DefaultPagingItem: PagingTitleItem, Equatable {
   }
 }
 
-public func ==(lhs: DefaultPagingItem, rhs: DefaultPagingItem) -> Bool {
+public func ==(lhs: PagingViewControllerItem, rhs: PagingViewControllerItem) -> Bool {
   return lhs.viewController == rhs.viewController
 }
 
-public class DefaultPagingViewController: PagingViewController<DefaultPagingItem> {
+public class FixedPagingViewController: PagingViewController<PagingViewControllerItem> {
   
-  let items: [DefaultPagingItem]
+  let items: [PagingViewControllerItem]
   
   public init(viewControllers: [UIViewController], options: PagingOptions = DefaultPagingOptions()) {
-    items = viewControllers.map { DefaultPagingItem(viewController: $0) }
+    items = viewControllers.map { PagingViewControllerItem(viewController: $0) }
     super.init(options: options)
     dataSource = self
     
@@ -31,15 +31,15 @@ public class DefaultPagingViewController: PagingViewController<DefaultPagingItem
   
 }
 
-extension DefaultPagingViewController: PagingViewControllerDataSource {
+extension FixedPagingViewController: PagingViewControllerDataSource {
   
   public func viewControllerForPagingItem(pagingItem: PagingItem) -> UIViewController {
-    let index = items.indexOf(pagingItem as! DefaultPagingItem)!
+    let index = items.indexOf(pagingItem as! PagingViewControllerItem)!
     return items[index].viewController
   }
   
   public func pagingItemBeforePagingItem(pagingItem: PagingItem) -> PagingItem? {
-    guard let index = items.indexOf(pagingItem as! DefaultPagingItem) else { return nil }
+    guard let index = items.indexOf(pagingItem as! PagingViewControllerItem) else { return nil }
     if index > 0 {
       return items[index - 1]
     }
@@ -47,7 +47,7 @@ extension DefaultPagingViewController: PagingViewControllerDataSource {
   }
   
   public func pagingItemAfterPagingItem(pagingItem: PagingItem) -> PagingItem? {
-    guard let index = items.indexOf(pagingItem as! DefaultPagingItem) else { return nil }
+    guard let index = items.indexOf(pagingItem as! PagingViewControllerItem) else { return nil }
     if index < items.count - 1 {
       return items[index + 1]
     }
