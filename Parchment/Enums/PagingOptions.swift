@@ -64,8 +64,10 @@ public protocol PagingOptions {
   var borderOptions: PagingBorderOptions { get }
   var indicatorOptions: PagingIndicatorOptions { get }
   var selectedScrollPosition: PagingSelectedScrollPosition { get }
+  var menuInsets: UIEdgeInsets { get }
   var menuItemSize: PagingMenuItemSize { get }
   var menuItemClass: PagingCell.Type { get }
+  var menuItemSpacing: CGFloat { get }
 }
 
 extension PagingOptions {
@@ -79,6 +81,10 @@ extension PagingOptions {
     case .AlwaysCentered, .PreferCentered:
       return .CenteredHorizontally
     }
+  }
+  
+  var menuHeight: CGFloat {
+    return menuItemSize.height + menuInsets.top + menuInsets.bottom
   }
   
 }

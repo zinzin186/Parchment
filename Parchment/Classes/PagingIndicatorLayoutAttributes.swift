@@ -8,7 +8,7 @@ class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
     if case let .Visible(height, index, _) = options.indicatorOptions {
       backgroundColor = options.theme.indicatorColor
       frame.size.height = height
-      frame.origin.y = options.menuItemSize.height - height
+      frame.origin.y = options.menuHeight - height
       zIndex = index
     }
   }

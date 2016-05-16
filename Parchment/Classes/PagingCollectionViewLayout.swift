@@ -37,7 +37,8 @@ public class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICol
   }
   
   private func configure() {
-    minimumLineSpacing = 0
+    sectionInset = options.menuInsets
+    minimumLineSpacing = options.menuItemSpacing
     minimumInteritemSpacing = 0
     scrollDirection = .Horizontal
     registerDecorationView(PagingIndicatorView.self)
@@ -89,7 +90,9 @@ public class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICol
     }
     
     if elementKind == PagingBorderView.reuseIdentifier {
-      borderLayoutAttributes.update(width: collectionViewContentSize().width)
+      borderLayoutAttributes.update(
+        contentSize: collectionViewContentSize(),
+        bounds: collectionView?.bounds ?? .zero)
       return borderLayoutAttributes
     }
     

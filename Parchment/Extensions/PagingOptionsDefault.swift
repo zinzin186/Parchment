@@ -63,6 +63,14 @@ public extension PagingOptions {
   var menuItemClass: PagingCell.Type {
     return DefaultPagingCell.self
   }
+  
+  var menuInsets: UIEdgeInsets {
+    return UIEdgeInsets()
+  }
+  
+  var menuItemSpacing: CGFloat {
+    return 0
+  }
 
 }
 
