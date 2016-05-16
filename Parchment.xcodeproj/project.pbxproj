@@ -65,6 +65,18 @@
 		3E562ACE1CE7CD8C007623B3 /* DefaultPagingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E562ACD1CE7CD8C007623B3 /* DefaultPagingCell.swift */; };
 		3E5E93E31CE7D899000762A1 /* PagingStateSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E93E21CE7D899000762A1 /* PagingStateSpec.swift */; };
 		3E5E93E91CE7E093000762A1 /* PagingDataStructureSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E93E81CE7E093000762A1 /* PagingDataStructureSpec.swift */; };
+		3E5E93F31CE8BA1E000762A1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E93F21CE8BA1E000762A1 /* AppDelegate.swift */; };
+		3E5E93F51CE8BA1E000762A1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E93F41CE8BA1E000762A1 /* ViewController.swift */; };
+		3E5E93F81CE8BA1E000762A1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E93F61CE8BA1E000762A1 /* Main.storyboard */; };
+		3E5E93FA1CE8BA1E000762A1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E93F91CE8BA1E000762A1 /* Assets.xcassets */; };
+		3E5E93FD1CE8BA1E000762A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E93FB1CE8BA1E000762A1 /* LaunchScreen.storyboard */; };
+		3E5E94021CE8BA26000762A1 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
+		3E5E94061CE8BA37000762A1 /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3E5E94081CE8C2DA000762A1 /* ImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E94071CE8C2DA000762A1 /* ImagesViewController.swift */; };
+		3E5E940A1CE8C45D000762A1 /* UIView+constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E94091CE8C45D000762A1 /* UIView+constraints.swift */; };
+		3E5E940C1CE8C5CF000762A1 /* ImagePagingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E940B1CE8C5CF000762A1 /* ImagePagingCell.swift */; };
+		3E5E940E1CE8C68B000762A1 /* ImagePagingDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E940D1CE8C68B000762A1 /* ImagePagingDataSource.swift */; };
+		3E5E94101CE9E944000762A1 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E940F1CE9E944000762A1 /* ImageCollectionViewCell.swift */; };
 		3E9E8D141C70FDF900F265A4 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
 		3E9E8D151C70FDF900F265A4 /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3EA04A5D1C53BFF40054E5E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA04A5C1C53BFF40054E5E0 /* AppDelegate.swift */; };
@@ -100,6 +112,13 @@
 			remoteGlobalIDString = 3EA04A4A1C53BFE40054E5E0;
 			remoteInfo = Parchment;
 		};
+		3E5E94031CE8BA28000762A1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3EA04A421C53BFE40054E5E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3EA04A4A1C53BFE40054E5E0;
+			remoteInfo = Parchment;
+		};
 		3EA04A881C53C6F70054E5E0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3EA04A421C53BFE40054E5E0 /* Project object */;
@@ -128,6 +147,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				3E2AAD491CA86C960044AAA5 /* Parchment.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E5E94051CE8BA2A000762A1 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3E5E94061CE8BA37000762A1 /* Parchment.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -205,6 +235,18 @@
 		3E562ACD1CE7CD8C007623B3 /* DefaultPagingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultPagingCell.swift; sourceTree = "<group>"; };
 		3E5E93E21CE7D899000762A1 /* PagingStateSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingStateSpec.swift; sourceTree = "<group>"; };
 		3E5E93E81CE7E093000762A1 /* PagingDataStructureSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingDataStructureSpec.swift; sourceTree = "<group>"; };
+		3E5E93F01CE8BA1E000762A1 /* UnplashExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnplashExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E5E93F21CE8BA1E000762A1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3E5E93F41CE8BA1E000762A1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3E5E93F71CE8BA1E000762A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3E5E93F91CE8BA1E000762A1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3E5E93FC1CE8BA1E000762A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3E5E93FE1CE8BA1E000762A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3E5E94071CE8C2DA000762A1 /* ImagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesViewController.swift; sourceTree = "<group>"; };
+		3E5E94091CE8C45D000762A1 /* UIView+constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+constraints.swift"; sourceTree = "<group>"; };
+		3E5E940B1CE8C5CF000762A1 /* ImagePagingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePagingCell.swift; sourceTree = "<group>"; };
+		3E5E940D1CE8C68B000762A1 /* ImagePagingDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePagingDataSource.swift; sourceTree = "<group>"; };
+		3E5E940F1CE9E944000762A1 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		3E73A8131C9A0AE40083C720 /* libInsightfulPager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libInsightfulPager.a; path = ../../../Desktop/libInsightfulPager.a; sourceTree = "<group>"; };
 		3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Parchment.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA04A5A1C53BFF40054E5E0 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -246,6 +288,14 @@
 				3E504ED21C7466CD00AE1CE3 /* Nimble.framework in Frameworks */,
 				3E504ED31C7466CD00AE1CE3 /* Quick.framework in Frameworks */,
 				3E504EC91C7465B000AE1CE3 /* Parchment.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E5E93ED1CE8BA1E000762A1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E5E94021CE8BA26000762A1 /* Parchment.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +411,24 @@
 			path = ParchmentTests;
 			sourceTree = "<group>";
 		};
+		3E5E93F11CE8BA1E000762A1 /* UnplashExample */ = {
+			isa = PBXGroup;
+			children = (
+				3E5E93F21CE8BA1E000762A1 /* AppDelegate.swift */,
+				3E5E93F41CE8BA1E000762A1 /* ViewController.swift */,
+				3E5E940D1CE8C68B000762A1 /* ImagePagingDataSource.swift */,
+				3E5E94071CE8C2DA000762A1 /* ImagesViewController.swift */,
+				3E5E940B1CE8C5CF000762A1 /* ImagePagingCell.swift */,
+				3E5E940F1CE9E944000762A1 /* ImageCollectionViewCell.swift */,
+				3E5E94091CE8C45D000762A1 /* UIView+constraints.swift */,
+				3E5E93F61CE8BA1E000762A1 /* Main.storyboard */,
+				3E5E93F91CE8BA1E000762A1 /* Assets.xcassets */,
+				3E5E93FB1CE8BA1E000762A1 /* LaunchScreen.storyboard */,
+				3E5E93FE1CE8BA1E000762A1 /* Info.plist */,
+			);
+			path = UnplashExample;
+			sourceTree = "<group>";
+		};
 		3EA04A411C53BFE40054E5E0 = {
 			isa = PBXGroup;
 			children = (
@@ -369,6 +437,7 @@
 				3EA04A5B1C53BFF40054E5E0 /* Example */,
 				3E2AAD061CA81D490044AAA5 /* CalendarExample */,
 				3E2AAD341CA86C690044AAA5 /* DelegateExample */,
+				3E5E93F11CE8BA1E000762A1 /* UnplashExample */,
 				3EA04A841C53C3960054E5E0 /* Frameworks */,
 				3EA04A4C1C53BFE40054E5E0 /* Products */,
 			);
@@ -382,6 +451,7 @@
 				3E504EC41C7465B000AE1CE3 /* ParchmentTests.xctest */,
 				3E2AAD051CA81D480044AAA5 /* CalendarExample.app */,
 				3E2AAD331CA86C690044AAA5 /* DelegateExample.app */,
+				3E5E93F01CE8BA1E000762A1 /* UnplashExample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -530,6 +600,25 @@
 			productReference = 3E504EC41C7465B000AE1CE3 /* ParchmentTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		3E5E93EF1CE8BA1E000762A1 /* UnplashExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3E5E94011CE8BA1E000762A1 /* Build configuration list for PBXNativeTarget "UnplashExample" */;
+			buildPhases = (
+				3E5E93EC1CE8BA1E000762A1 /* Sources */,
+				3E5E93ED1CE8BA1E000762A1 /* Frameworks */,
+				3E5E93EE1CE8BA1E000762A1 /* Resources */,
+				3E5E94051CE8BA2A000762A1 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3E5E94041CE8BA28000762A1 /* PBXTargetDependency */,
+			);
+			name = UnplashExample;
+			productName = UnplashExample;
+			productReference = 3E5E93F01CE8BA1E000762A1 /* UnplashExample.app */;
+			productType = "com.apple.product-type.application";
+		};
 		3EA04A4A1C53BFE40054E5E0 /* Parchment */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3EA04A531C53BFE40054E5E0 /* Build configuration list for PBXNativeTarget "Parchment" */;
@@ -588,6 +677,10 @@
 					3E504EC31C7465B000AE1CE3 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
+					3E5E93EF1CE8BA1E000762A1 = {
+						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = C48GZ8PUTA;
+					};
 					3EA04A4A1C53BFE40054E5E0 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = C48GZ8PUTA;
@@ -616,6 +709,7 @@
 				3EA04A591C53BFF40054E5E0 /* Example */,
 				3E2AAD041CA81D480044AAA5 /* CalendarExample */,
 				3E2AAD321CA86C690044AAA5 /* DelegateExample */,
+				3E5E93EF1CE8BA1E000762A1 /* UnplashExample */,
 			);
 		};
 /* End PBXProject section */
@@ -645,6 +739,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E5E93EE1CE8BA1E000762A1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E5E93FD1CE8BA1E000762A1 /* LaunchScreen.storyboard in Resources */,
+				3E5E93FA1CE8BA1E000762A1 /* Assets.xcassets in Resources */,
+				3E5E93F81CE8BA1E000762A1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -722,6 +826,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3E5E93EC1CE8BA1E000762A1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E5E940A1CE8C45D000762A1 /* UIView+constraints.swift in Sources */,
+				3E5E940C1CE8C5CF000762A1 /* ImagePagingCell.swift in Sources */,
+				3E5E94081CE8C2DA000762A1 /* ImagesViewController.swift in Sources */,
+				3E5E94101CE9E944000762A1 /* ImageCollectionViewCell.swift in Sources */,
+				3E5E93F51CE8BA1E000762A1 /* ViewController.swift in Sources */,
+				3E5E93F31CE8BA1E000762A1 /* AppDelegate.swift in Sources */,
+				3E5E940E1CE8C68B000762A1 /* ImagePagingDataSource.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3EA04A461C53BFE40054E5E0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -789,6 +907,11 @@
 			target = 3EA04A4A1C53BFE40054E5E0 /* Parchment */;
 			targetProxy = 3E504ECA1C7465B000AE1CE3 /* PBXContainerItemProxy */;
 		};
+		3E5E94041CE8BA28000762A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3EA04A4A1C53BFE40054E5E0 /* Parchment */;
+			targetProxy = 3E5E94031CE8BA28000762A1 /* PBXContainerItemProxy */;
+		};
 		3EA04A891C53C6F70054E5E0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3EA04A4A1C53BFE40054E5E0 /* Parchment */;
@@ -825,6 +948,22 @@
 			isa = PBXVariantGroup;
 			children = (
 				3E2AAD3F1CA86C690044AAA5 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		3E5E93F61CE8BA1E000762A1 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E5E93F71CE8BA1E000762A1 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		3E5E93FB1CE8BA1E000762A1 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E5E93FC1CE8BA1E000762A1 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -928,6 +1067,34 @@
 				INFOPLIST_FILE = ParchmentTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.ParchmentTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		3E5E93FF1CE8BA1E000762A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = UnplashExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.UnplashExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3E5E94001CE8BA1E000762A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = UnplashExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.UnplashExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1126,6 +1293,15 @@
 			buildConfigurations = (
 				3E504ECC1C7465B000AE1CE3 /* Debug */,
 				3E504ECD1C7465B000AE1CE3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3E5E94011CE8BA1E000762A1 /* Build configuration list for PBXNativeTarget "UnplashExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3E5E93FF1CE8BA1E000762A1 /* Debug */,
+				3E5E94001CE8BA1E000762A1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
