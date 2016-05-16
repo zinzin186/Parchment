@@ -222,13 +222,16 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
   
   func widthForPagingItem<U: PagingItem>(pagingItem: U) -> CGFloat {
     guard let pagingItem = pagingItem as? T else { return 0 }
+    
+    if let delegate = delegate {
+      return delegate.pagingViewController(self, widthForPagingItem: pagingItem) ?? 0
+    }
+    
     switch options.menuItemSize {
     case let .SizeToFit(minWidth, _):
       return minWidth
     case let .Fixed(width, _):
       return width
-    case .Dynamic:
-      return delegate?.pagingViewController(self, widthForPagingItem: pagingItem) ?? 0
     }
   }
   

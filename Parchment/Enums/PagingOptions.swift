@@ -3,7 +3,6 @@ import UIKit
 public enum PagingMenuItemSize {
   case Fixed(width: CGFloat, height: CGFloat)
   case SizeToFit(minWidth: CGFloat, height: CGFloat)
-  case Dynamic(height: CGFloat)
 }
 
 public extension PagingMenuItemSize {
@@ -12,7 +11,6 @@ public extension PagingMenuItemSize {
     switch self {
     case let .Fixed(width, _): return width
     case let .SizeToFit(minWidth, _): return minWidth
-    case .Dynamic: return 0
     }
   }
   
@@ -20,7 +18,6 @@ public extension PagingMenuItemSize {
     switch self {
     case let .Fixed(_, height): return height
     case let .SizeToFit(_, height): return height
-    case let .Dynamic(height): return height
     }
   }
   
