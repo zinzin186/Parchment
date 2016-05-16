@@ -66,6 +66,8 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     pageViewController.dataSource = self
     
     collectionView.registerReusableCell(options.menuItemClass)
+    
+    setupGestureRecognizers()
   }
   
   public func selectPagingItem(pagingItem: T, animated: Bool = false) {
@@ -89,6 +91,34 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
   }
   
   // MARK: Private
+  
+  private func setupGestureRecognizers() {
+    let recognizerLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer))
+    recognizerLeft.direction = .Left
+    
+    let recognizerRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer))
+    recognizerRight.direction = .Right
+    
+    collectionView.addGestureRecognizer(recognizerLeft)
+    collectionView.addGestureRecognizer(recognizerRight)
+  }
+  
+  private dynamic func handleSwipeGestureRecognizer(recognizer: UISwipeGestureRecognizer) {
+    guard let stateMachine = stateMachine else { return }
+    
+    let currentPagingItem = stateMachine.state.currentPagingItem
+    var upcomingPagingItem: T? = nil
+    
+    if recognizer.direction.contains(.Left) {
+      upcomingPagingItem = pagingItemAfterPagingItem(currentPagingItem)
+    } else if recognizer.direction.contains(.Right) {
+      upcomingPagingItem = pagingItemBeforePagingItem(currentPagingItem)
+    }
+    
+    if let item = upcomingPagingItem {
+      selectPagingItem(item, animated: true)
+    }
+  }
   
   private func handleStateUpdate(state: PagingState<T>) {
     collectionViewLayout.state = state
