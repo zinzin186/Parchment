@@ -56,7 +56,9 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
   
   public override func viewDidLoad() {
     super.viewDidLoad()
-    addViewController(pageViewController)
+    
+    addChildViewController(pageViewController)
+    pageViewController.didMoveToParentViewController(self)
     
     collectionView.delegate = self
     collectionView.dataSource = self

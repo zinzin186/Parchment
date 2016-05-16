@@ -18,7 +18,7 @@ class PagingView: UIView {
   }
   
   required init?(coder: NSCoder) {
-    fatalError(InitCoderError)
+    fatalError("init(coder:) has not been implemented")
   }
   
   private func configure() {
