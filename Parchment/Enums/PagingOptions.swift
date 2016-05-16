@@ -6,7 +6,7 @@ public enum PagingMenuItemSize {
   case Dynamic(height: CGFloat)
 }
 
-extension PagingMenuItemSize {
+public extension PagingMenuItemSize {
   
   var width: CGFloat {
     switch self {
