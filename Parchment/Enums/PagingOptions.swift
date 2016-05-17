@@ -56,14 +56,14 @@ public protocol PagingTheme {
 }
 
 public protocol PagingOptions {
-  var theme: PagingTheme { get }
-  var borderOptions: PagingBorderOptions { get }
-  var indicatorOptions: PagingIndicatorOptions { get }
-  var selectedScrollPosition: PagingSelectedScrollPosition { get }
-  var menuInsets: UIEdgeInsets { get }
   var menuItemSize: PagingMenuItemSize { get }
   var menuItemClass: PagingCell.Type { get }
   var menuItemSpacing: CGFloat { get }
+  var menuInsets: UIEdgeInsets { get }
+  var selectedScrollPosition: PagingSelectedScrollPosition { get }
+  var indicatorOptions: PagingIndicatorOptions { get }
+  var borderOptions: PagingBorderOptions { get }
+  var theme: PagingTheme { get }
 }
 
 extension PagingOptions {
