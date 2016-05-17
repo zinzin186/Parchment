@@ -24,6 +24,10 @@ public class FixedPagingViewController: PagingViewController<PagingViewControlle
     super.init(options: options)
     dataSource = self
     
+  }
+  
+  public override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
     if let item = items.first {
       selectPagingItem(item)
     }

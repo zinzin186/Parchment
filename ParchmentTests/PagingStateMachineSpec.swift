@@ -121,37 +121,58 @@ class PagingStateMachineSpec: QuickSpec {
         describe("selected paging item is not equal current item") {
           
           it("enters the scrolling state") {
-            stateMachine.fire(.Select(pagingItem: Item(index: 1), direction: .None))
+            stateMachine.fire(.Select(
+              pagingItem: Item(index: 1),
+              direction: .None,
+              animated: false))
             expect(stateMachine.state).to(beScrolling())
           }
           
           it("sets to offset to zero") {
-            stateMachine.fire(.Select(pagingItem: Item(index: 1), direction: .None))
+            stateMachine.fire(.Select(
+              pagingItem: Item(index: 1),
+              direction: .None,
+              animated: false))
             expect(stateMachine.state.offset).to(equal(0))
           }
           
           it("uses the state's current paging item") {
-            stateMachine.fire(.Select(pagingItem: Item(index: 1), direction: .None))
+            stateMachine.fire(.Select(
+              pagingItem: Item(index: 1),
+              direction: .None,
+              animated: false))
             expect(stateMachine.state.currentPagingItem).to(equal(Item(index: 0)))
           }
           
           it("sets the upcoming paging item to the selected paging item") {
-            stateMachine.fire(.Select(pagingItem: Item(index: 1), direction: .None))
+            stateMachine.fire(.Select(
+              pagingItem: Item(index: 1),
+              direction: .None,
+              animated: false))
             expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: 1)))
           }
           
           describe("has a select block") {
             
-            it("calls the select block with the selected paging item and direction") {
+            it("calls the select block with the selected paging item, direction and animation") {
               var selectedPagingItem: Item?
-              var selectedDirection: PagingDirection?
-              stateMachine.didSelectPagingItem = { pagingItem, direction in
-                selectedPagingItem = pagingItem
-                selectedDirection = direction
+              var direction: PagingDirection?
+              var animated: Bool?
+              
+              stateMachine.didSelectPagingItem = {
+                selectedPagingItem = $0
+                direction = $1
+                animated = $2
               }
-              stateMachine.fire(.Select(pagingItem: Item(index: 1), direction: .Forward))
+              
+              stateMachine.fire(.Select(
+                pagingItem: Item(index: 1),
+                direction: .Forward,
+                animated: false))
+              
               expect(selectedPagingItem).to(equal(Item(index: 1)))
-              expect(selectedDirection).to(equal(PagingDirection.Forward))
+              expect(direction).to(equal(PagingDirection.Forward))
+              expect(animated).to(equal(false))
             }
             
           }
@@ -161,7 +182,10 @@ class PagingStateMachineSpec: QuickSpec {
         describe("selected paging item is equal current item") {
           
           it("does not updated the state") {
-            stateMachine.fire(.Select(pagingItem: Item(index: 0), direction: .None))
+            stateMachine.fire(.Select(
+              pagingItem: Item(index: 0),
+              direction: .None,
+              animated: false))
             let expectedState: PagingState = .Selected(pagingItem: Item(index: 0))
             expect(stateMachine.state).to(equal(expectedState))
           }
@@ -170,10 +194,16 @@ class PagingStateMachineSpec: QuickSpec {
             
             it("does not call the select block") {
               var selectedPagingItem: Item?
-              stateMachine.didSelectPagingItem = { pagingItem, _ in
+              
+              stateMachine.didSelectPagingItem = { pagingItem, _, _ in
                 selectedPagingItem = pagingItem
               }
-              stateMachine.fire(.Select(pagingItem: Item(index: 0), direction: .None))
+              
+              stateMachine.fire(.Select(
+                pagingItem: Item(index: 0),
+                direction: .None,
+                animated: false))
+              
               expect(selectedPagingItem).to(beNil())
             }
             

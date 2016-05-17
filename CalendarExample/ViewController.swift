@@ -53,7 +53,10 @@ class ViewController: UIViewController {
     
     // Set our custom data source
     pagingViewController.dataSource = self
-    
+  }
+  
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
     // Set the current date as the selected paging item
     pagingViewController.selectPagingItem(CalendarItem(date: NSDate()))
   }
