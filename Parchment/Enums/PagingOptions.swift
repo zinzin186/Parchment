@@ -42,7 +42,6 @@ public enum PagingBorderOptions {
 public enum PagingSelectedScrollPosition {
   case Left
   case Right
-  case AlwaysCentered
   case PreferCentered
 }
 
@@ -75,7 +74,7 @@ extension PagingOptions {
       return .Left
     case .Right:
       return .Right
-    case .AlwaysCentered, .PreferCentered:
+    case .PreferCentered:
       return .CenteredHorizontally
     }
   }
