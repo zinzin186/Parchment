@@ -1,6 +1,6 @@
 import UIKit
 
-public struct PagingViewControllerItem: PagingTitleItem, Equatable {
+public struct ViewControllerItem: PagingTitleItem, Equatable {
   
   public let viewController: UIViewController
   public let title: String
@@ -11,16 +11,16 @@ public struct PagingViewControllerItem: PagingTitleItem, Equatable {
   }
 }
 
-public func ==(lhs: PagingViewControllerItem, rhs: PagingViewControllerItem) -> Bool {
+public func ==(lhs: ViewControllerItem, rhs: ViewControllerItem) -> Bool {
   return lhs.viewController == rhs.viewController
 }
 
-public class FixedPagingViewController: PagingViewController<PagingViewControllerItem> {
+public class FixedPagingViewController: PagingViewController<ViewControllerItem> {
   
-  let items: [PagingViewControllerItem]
+  let items: [ViewControllerItem]
   
   public init(viewControllers: [UIViewController], options: PagingOptions = DefaultPagingOptions()) {
-    items = viewControllers.map { PagingViewControllerItem(viewController: $0) }
+    items = viewControllers.map { ViewControllerItem(viewController: $0) }
     super.init(options: options)
     dataSource = self
     
@@ -37,23 +37,23 @@ public class FixedPagingViewController: PagingViewController<PagingViewControlle
 
 extension FixedPagingViewController: PagingViewControllerDataSource {
   
-  public func viewControllerForPagingItem(pagingItem: PagingItem) -> UIViewController {
-    let index = items.indexOf(pagingItem as! PagingViewControllerItem)!
+  public func pagingViewController<T>(pagingViewController: PagingViewController<T>, viewControllerForPagingItem pagingItem: T) -> UIViewController {
+    let index = items.indexOf(pagingItem as! ViewControllerItem)!
     return items[index].viewController
   }
   
-  public func pagingItemBeforePagingItem(pagingItem: PagingItem) -> PagingItem? {
-    guard let index = items.indexOf(pagingItem as! PagingViewControllerItem) else { return nil }
+  public func pagingViewController<T>(pagingViewController: PagingViewController<T>, pagingItemBeforePagingItem pagingItem: T) -> T? {
+    guard let index = items.indexOf(pagingItem as! ViewControllerItem) else { return nil }
     if index > 0 {
-      return items[index - 1]
+      return items[index - 1] as? T
     }
     return nil
   }
   
-  public func pagingItemAfterPagingItem(pagingItem: PagingItem) -> PagingItem? {
-    guard let index = items.indexOf(pagingItem as! PagingViewControllerItem) else { return nil }
+  public func pagingViewController<T>(pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem pagingItem: T) -> T? {
+    guard let index = items.indexOf(pagingItem as! ViewControllerItem) else { return nil }
     if index < items.count - 1 {
-      return items[index + 1]
+      return items[index + 1] as? T
     }
     return nil
   }

@@ -73,19 +73,19 @@ class ViewController: UIViewController {
 
 extension ViewController: PagingViewControllerDataSource {
   
-  func viewControllerForPagingItem(pagingItem: PagingItem) -> UIViewController {
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>, viewControllerForPagingItem pagingItem: T) -> UIViewController {
     let calendarItem = pagingItem as! CalendarItem
     return CalendarViewController(date: calendarItem.date)
   }
   
-  func pagingItemBeforePagingItem(pagingItem: PagingItem) -> PagingItem? {
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>, pagingItemBeforePagingItem pagingItem: T) -> T? {
     let calendarItem = pagingItem as! CalendarItem
-    return CalendarItem(date: calendarItem.date.dateByAddingTimeInterval(-86400))
+    return CalendarItem(date: calendarItem.date.dateByAddingTimeInterval(-86400)) as? T
   }
   
-  func pagingItemAfterPagingItem(pagingItem: PagingItem) -> PagingItem? {
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem pagingItem: T) -> T? {
     let calendarItem = pagingItem as! CalendarItem
-    return CalendarItem(date: calendarItem.date.dateByAddingTimeInterval(86400))
+    return CalendarItem(date: calendarItem.date.dateByAddingTimeInterval(86400)) as? T
   }
   
 }

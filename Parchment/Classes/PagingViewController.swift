@@ -95,9 +95,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
         pagingItem,
         direction: .None,
         animated: false)
-      
     }
-    
   }
   
   public override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -174,7 +172,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
   private func selectViewController(pagingItem: T, direction: PagingDirection, animated: Bool = true) {
     guard let dataSource = dataSource else { return }
     pageViewController.selectViewController(
-      dataSource.viewControllerForPagingItem(pagingItem),
+      dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem),
       direction: direction.pageViewControllerNavigationDirection,
       animated: animated,
       completion: nil)
@@ -251,18 +249,18 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     guard
       let dataSource = dataSource,
       let state = stateMachine?.state.currentPagingItem,
-      let pagingItem = dataSource.pagingItemBeforePagingItem(state) else { return nil }
+      let pagingItem = dataSource.pagingViewController(self, pagingItemBeforePagingItem: state) else { return nil }
     
-    return dataSource.viewControllerForPagingItem(pagingItem)
+    return dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem)
   }
   
   public func em_pageViewController(pageViewController: EMPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
     guard
       let dataSource = dataSource,
       let state = stateMachine?.state.currentPagingItem,
-      let pagingItem = dataSource.pagingItemAfterPagingItem(state) else { return nil }
+      let pagingItem = dataSource.pagingViewController(self, pagingItemAfterPagingItem: state) else { return nil }
     
-    return dataSource.viewControllerForPagingItem(pagingItem)
+    return dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem)
   }
   
   // MARK: PagingItemsPresentable
@@ -282,12 +280,14 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     }
   }
   
-  func pagingItemAfterPagingItem<T : PagingItem>(pagingItem: T) -> T? {
-    return dataSource?.pagingItemAfterPagingItem(pagingItem) as? T
+  func pagingItemBeforePagingItem<U: PagingItem>(pagingItem: U) -> U? {
+    return dataSource?.pagingViewController(self,
+      pagingItemBeforePagingItem: pagingItem as! T) as? U
   }
   
-  func pagingItemBeforePagingItem<T : PagingItem>(pagingItem: T) -> T? {
-    return dataSource?.pagingItemBeforePagingItem(pagingItem) as? T
+  func pagingItemAfterPagingItem<U: PagingItem>(pagingItem: U) -> U? {
+    return dataSource?.pagingViewController(self,
+      pagingItemAfterPagingItem: pagingItem as! T) as? U
   }
   
   // MARK: EMPageViewControllerDelegate

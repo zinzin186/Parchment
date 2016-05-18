@@ -64,23 +64,23 @@ class ImagePagingDataSource {
 
 extension ImagePagingDataSource: PagingViewControllerDataSource {
   
-  func viewControllerForPagingItem(pagingItem: PagingItem) -> UIViewController {
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>, viewControllerForPagingItem pagingItem: T) -> UIViewController {
     let item = pagingItem as! ImageItem
     return ImagesViewController(images: item.images)
   }
   
-  func pagingItemBeforePagingItem(pagingItem: PagingItem) -> PagingItem? {
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>, pagingItemBeforePagingItem pagingItem: T) -> T? {
     guard let index = items.indexOf(pagingItem as! ImageItem) else { return nil }
     if index > 0 {
-      return items[index - 1]
+      return items[index - 1] as? T
     }
     return nil
   }
   
-  func pagingItemAfterPagingItem(pagingItem: PagingItem) -> PagingItem? {
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem pagingItem: T) -> T? {
     guard let index = items.indexOf(pagingItem as! ImageItem) else { return nil }
     if index < items.count - 1 {
-      return items[index + 1]
+      return items[index + 1] as? T
     }
     return nil
   }

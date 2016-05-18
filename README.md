@@ -50,11 +50,12 @@ Parchment supports adding your own custom data sources. This allows you to alloc
 To add your own data source, you need to conform to the `PagingViewControllerDataSource` protocol:
 
 ```Swift
-protocol PagingViewControllerDataSource: class {
-  func viewControllerForPagingItem(pagingItem: PagingItem) -> UIViewController
-  func pagingItemBeforePagingItem(pagingItem: PagingItem) -> PagingItem?
-  func pagingItemAfterPagingItem(pagingItem: PagingItem) -> PagingItem?
+public protocol PagingViewControllerDataSource: class {  
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>, viewControllerForPagingItem: T) -> UIViewController
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>, pagingItemBeforePagingItem: T) -> T?
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem: T) -> T?
 }
+
 ```
 
 If you've ever used [UIPageViewController](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIPageViewControllerClassReferenceClassRef/) this should seem familiar. Instead of returning view controllers directly, you return a object conforming to `PagingItem`. `PagingItem` is used to generate menu items for all the view controllers, without having to actually allocate them before they are needed.
