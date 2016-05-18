@@ -8,6 +8,8 @@
   <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg" /></a>
 </p>
 
+<br/>
+
 ![](http://martinrechsteiner.com/parchment/B31NddXwaB.gif "Contacts Example")
 ![](http://martinrechsteiner.com/parchment/50y71CYgDQ.gif "Unsplash Example")
 ![](http://martinrechsteiner.com/parchment/qYPjvCeZrs.gif "Calendar Example")
