@@ -281,6 +281,8 @@ public class EMPageViewController: UIViewController, UIScrollViewDelegate {
   public override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     
+    adjustingContentOffset = true
+    
     guard !scrolling else {
       return
     }
