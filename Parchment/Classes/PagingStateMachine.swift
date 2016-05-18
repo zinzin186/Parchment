@@ -70,13 +70,15 @@ class PagingStateMachine<T: PagingItem where T: Equatable> {
   
   private func handleSelectEvent(event: PagingEvent<T>, selectedPagingItem: T, direction: PagingDirection, animated: Bool) {
     if selectedPagingItem != state.currentPagingItem {
-      state = .Scrolling(
-        pagingItem: state.currentPagingItem,
-        upcomingPagingItem: selectedPagingItem,
-        offset: 0)
-      
-      didSelectPagingItem?(selectedPagingItem, direction, animated)
-      didChangeState?(state, event)
+      if case .Selected = state {
+        state = .Scrolling(
+          pagingItem: state.currentPagingItem,
+          upcomingPagingItem: selectedPagingItem,
+          offset: 0)
+        
+        didSelectPagingItem?(selectedPagingItem, direction, animated)
+        didChangeState?(state, event)
+      }
     }
   }
   
