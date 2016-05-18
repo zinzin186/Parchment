@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://martinrechsteiner.com/parchment/5R993wsyGB.png" width="360" height="120" />
+  <img src="http://martinrechsteiner.com/parchment/JW1fAVsH25.png" width="360" height="120" />
 </p>
 
 <p align="center">
@@ -17,7 +17,7 @@
 
 Parchment is a framework for paging between view controllers while showing menu items along with the content. It's build to be very customizable, written fully in Swift, and comes with very good default behaviors.
 
-## Usage
+## Getting Started
 
 The easiest way to use Parchment is to use `FixedPagingViewController`. Just pass in an array of view controllers and it’ll set up everything for you.
 
@@ -39,7 +39,7 @@ view.addSubview(pagingViewController.view)
 pagingViewController.didMoveToParentViewController(self)
 ```
 
-Parchment will then generate menu items for each view controller using their title property. You can customize how the menu items will look, or even create your completely custom subclass. See [Customization]().
+Parchment will then generate menu items for each view controller using their title property. You can customize how the menu items will look, or even create your completely custom subclass. See [Customization](#customization).
 
 _Check out `ViewController.swift` in the Example target for more details._
 
