@@ -60,7 +60,7 @@ protocol PagingViewControllerDataSource: class {
 If you've ever used [UIPageViewController](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIPageViewControllerClassReferenceClassRef/) this should seem familiar. Instead of returning view controllers directly, you return a object conforming to `PagingItem`. `PagingItem` is used to generate menu items for all the view controllers, without having to actually allocate them before they are needed.
 
 ### Calendar Example
-Let’s take a look at an example of how you can create you’re own `PagingItem` and use that with your custom data source. This is what we want to achieve:
+Let’s take a look at an example of how you can create your own calendar data source. This is what we want to achieve:
 
 ![](http://martinrechsteiner.com/parchment/qYPjvCeZrs.gif "Calendar Example")
 
