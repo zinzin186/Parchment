@@ -185,7 +185,10 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     let oldContentOffset: CGPoint = collectionView.contentOffset
     let fromItems = dataStructure.visibleItems
     let toItems = visibleItems(pagingItem, width: collectionView.bounds.width)
-    let itemsWidth = diffWidth(from: fromItems, to: toItems)
+    let itemsWidth = diffWidth(
+      from: fromItems,
+      to: toItems,
+      itemSpacing: options.menuItemSpacing)
     
     dataStructure = PagingDataStructure(visibleItems: toItems)
     collectionViewLayout.dataStructure = dataStructure

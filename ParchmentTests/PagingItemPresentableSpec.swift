@@ -129,21 +129,35 @@ class PagingItemsSpec: QuickSpec {
         
         it("accumulates the correct width") {
           let items = [Item(index: 3, width: 100)]
-          let width = presentable.widthFromItem(Item(index: 0, width: 50),
-                                                items: items)
-          expect(width).to(equal(200))
+          let width = presentable.widthFromItem(
+            Item(index: 0, width: 50),
+            items: items,
+            itemSpacing: 50)
+          expect(width).to(equal(350))
         }
         
         it("returns zero for items already in data structure") {
           let items = [Item(index: 1, width: 100), Item(index: 2, width: 50)]
-          let firstItemWidth = presentable.widthFromItem(Item(index: 1, width: 100), items: items)
-          let lastItemWidth = presentable.widthFromItem(Item(index: 2, width: 50), items: items)
+          
+          let firstItemWidth = presentable.widthFromItem(
+            Item(index: 1, width: 100),
+            items: items,
+            itemSpacing: 0)
+          
+          let lastItemWidth = presentable.widthFromItem(
+            Item(index: 2, width: 50),
+            items: items,
+            itemSpacing: 0)
+          
           expect(firstItemWidth).to(equal(0))
           expect(lastItemWidth).to(equal(0))
         }
         
         it("returns zero when there no visible items") {
-          let width = presentable.widthFromItem(Item(index: 0, width: 50), items: [])
+          let width = presentable.widthFromItem(
+            Item(index: 0, width: 50),
+            items: [],
+            itemSpacing: 0)
           expect(width).to(equal(0))
         }
         
@@ -163,7 +177,10 @@ class PagingItemsSpec: QuickSpec {
             Item(index: 1, width: 100),
           ]
           
-          let width = presentable.diffWidth(from: from, to: to)
+          let width = presentable.diffWidth(
+            from: from,
+            to: to,
+            itemSpacing: 0)
           
           expect(width).to(equal(-50))
         }
@@ -179,7 +196,10 @@ class PagingItemsSpec: QuickSpec {
             Item(index: 1, width: 100)
           ]
           
-          let width = presentable.diffWidth(from: from, to: to)
+          let width = presentable.diffWidth(
+            from: from,
+            to: to,
+            itemSpacing: 0)
           
           expect(width).to(equal(50))
         }
