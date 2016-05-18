@@ -1,19 +1,23 @@
-# Parchment
+<p align="center">
+  <img src="http://martinrechsteiner.com/parchment/0E0pJdj9yV.png" width="360" height="150" />
+</p>
 
-[![Build Status](https://img.shields.io/circleci/project/rechsteiner/parchment.svg)](https://circleci.com/gh/rechsteiner/Parchment)
-[![Cocoapods Compatible](https://img.shields.io/cocoapods/v/Parchment.svg)](https://cocoapods.org/pods/Parchment)
-[![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg)](https://github.com/Carthage/Carthage)
-
-Parchment is a framework for paging between view controllers while showing menu items along with the content. It's build to be very customizable, written fully in Swift, and comes with very good default behaviors 💫
+<p align="center">
+  <a href="https://circleci.com/gh/rechsteiner/Parchment"><img src="https://img.shields.io/circleci/project/rechsteiner/parchment.svg" /></a>
+  <a href="https://cocoapods.org/pods/Parchment"><img src="https://img.shields.io/cocoapods/v/Parchment.svg" /></a>
+  <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg" /></a>
+</p>
 
 ![](http://martinrechsteiner.com/parchment/B31NddXwaB.gif "Contacts Example")
 ![](http://martinrechsteiner.com/parchment/50y71CYgDQ.gif "Unsplash Example")
 ![](http://martinrechsteiner.com/parchment/qYPjvCeZrs.gif "Calendar Example")
 ![](http://martinrechsteiner.com/parchment/30G73P2ZoX.gif "Cities Example")
 
+Parchment is a framework for paging between view controllers while showing menu items along with the content. It's build to be very customizable, written fully in Swift, and comes with very good default behaviors 💫
+
 ## Usage
 
-The easiest way to use Parchment is to use FixedPagingViewController. Just pass in an array of view controllers and it’ll set up everything for you.
+The easiest way to use Parchment is to use `FixedPagingViewController`. Just pass in an array of view controllers and it’ll set up everything for you.
 
 ```Swift
 let firstViewController = UIViewController()
@@ -41,7 +45,7 @@ _Check out `ViewController.swift` in the Example target for more details._
 
 Parchment supports adding your own custom data sources. This allows you to allocate view controllers only when they are needed, and can even be used to create infinitly scrolling data sources ✨
 
-To add your own data source, you need to conform to the PagingViewControllerDataSource protocol:
+To add your own data source, you need to conform to the `PagingViewControllerDataSource` protocol:
 
 ```Swift
 protocol PagingViewControllerDataSource: class {
@@ -58,7 +62,7 @@ Let’s take a look at an example of how you can create you’re own `PagingItem
 
 ![](http://martinrechsteiner.com/parchment/qYPjvCeZrs.gif "Calendar Example")
 
-First thing we need to do is create our own PagingItem that will hold our date. We also need to make sure it conforms to Equatable.
+First thing we need to do is create our own `PagingItem` that will hold our date. We also need to make sure it conforms to `Equatable`.
 
 ```Swift
 struct CalendarItem: PagingItem, Equatable {
