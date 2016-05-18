@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://martinrechsteiner.com/parchment/0E0pJdj9yV.png" width="360" height="150" />
+  <img src="http://martinrechsteiner.com/parchment/5R993wsyGB.png" width="360" height="120/>
 </p>
 
 <p align="center">
@@ -13,7 +13,7 @@
 ![](http://martinrechsteiner.com/parchment/qYPjvCeZrs.gif "Calendar Example")
 ![](http://martinrechsteiner.com/parchment/30G73P2ZoX.gif "Cities Example")
 
-Parchment is a framework for paging between view controllers while showing menu items along with the content. It's build to be very customizable, written fully in Swift, and comes with very good default behaviors 💫
+Parchment is a framework for paging between view controllers while showing menu items along with the content. It's build to be very customizable, written fully in Swift, and comes with very good default behaviors.
 
 ## Usage
 
