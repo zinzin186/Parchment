@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://martinrechsteiner.com/parchment/5R993wsyGB.png" width="360" height="120/>
+  <img src="http://martinrechsteiner.com/parchment/5R993wsyGB.png" width="360" height="120" />
 </p>
 
 <p align="center">
