@@ -100,6 +100,18 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     
   }
   
+  public override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    guard let stateMachine = stateMachine else { return }
+    coordinator.animateAlongsideTransition({ context in
+      self.collectionView.selectItemAtIndexPath(
+        self.dataStructure.indexPathForPagingItem(stateMachine.state.currentPagingItem),
+        animated: false,
+        scrollPosition: self.options.scrollPosition)
+      self.collectionViewLayout.invalidateLayout()
+      }, completion: nil)
+  }
+  
   // MARK: Private
   
   private func setupGestureRecognizers() {
@@ -293,14 +305,14 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     pagingStateMachine: PagingStateMachine<U>,
     pagingItemBeforePagingItem pagingItem: U) -> U? {
     guard let pagingItem = pagingItem as? T else { return nil }
-    return dataSource?.pagingItemBeforePagingItem(pagingItem) as? U
+    return pagingItemBeforePagingItem(pagingItem) as? U
   }
   
   func pagingStateMachine<U>(
     pagingStateMachine: PagingStateMachine<U>,
     pagingItemAfterPagingItem pagingItem: U) -> U? {
     guard let pagingItem = pagingItem as? T else { return nil }
-    return dataSource?.pagingItemAfterPagingItem(pagingItem) as? U
+    return pagingItemAfterPagingItem(pagingItem) as? U
   }
   
 }
