@@ -127,7 +127,8 @@ You can use the `PagingViewControllerDelegate` to manually control the width of 
 
 ```Swift
 protocol PagingViewControllerDelegate: class {
-  func pagingViewController<T>(pagingViewController: PagingViewController<T>, widthForPagingItem pagingItem: T) -> CGFloat
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>,
+    widthForPagingItem pagingItem: T) -> CGFloat
 }
 ```
 
