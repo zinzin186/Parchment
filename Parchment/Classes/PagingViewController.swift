@@ -86,6 +86,8 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
       stateMachine = PagingStateMachine(initialState: state)
       collectionViewLayout.state = state
       
+      updateContentOffset(pagingItem)
+      
       selectCollectionViewCell(
         pagingItem,
         scrollPosition: options.scrollPosition,
@@ -144,6 +146,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     collectionViewLayout.state = state
     switch state {
     case let .Selected(pagingItem):
+      updateContentOffset(pagingItem)
       selectCollectionViewCell(
         pagingItem,
         scrollPosition: options.scrollPosition,
@@ -169,17 +172,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     stateMachine?.delegate = self
   }
   
-  private func selectViewController(pagingItem: T, direction: PagingDirection, animated: Bool = true) {
-    guard let dataSource = dataSource else { return }
-    pageViewController.selectViewController(
-      dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem),
-      direction: direction.pageViewControllerNavigationDirection,
-      animated: animated,
-      completion: nil)
-  }
-  
-  private func selectCollectionViewCell(pagingItem: T, scrollPosition: UICollectionViewScrollPosition, animated: Bool) {
-    
+  private func updateContentOffset(pagingItem: T) {
     let oldContentOffset: CGPoint = collectionView.contentOffset
     let fromItems = dataStructure.visibleItems
     let toItems = visibleItems(pagingItem, width: collectionView.bounds.width)
@@ -194,7 +187,18 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     collectionView.contentOffset = CGPoint(
       x: oldContentOffset.x + itemsWidth,
       y: oldContentOffset.y)
-    
+  }
+  
+  private func selectViewController(pagingItem: T, direction: PagingDirection, animated: Bool = true) {
+    guard let dataSource = dataSource else { return }
+    pageViewController.selectViewController(
+      dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem),
+      direction: direction.pageViewControllerNavigationDirection,
+      animated: animated,
+      completion: nil)
+  }
+  
+  private func selectCollectionViewCell(pagingItem: T, scrollPosition: UICollectionViewScrollPosition, animated: Bool) {
     collectionView.selectItemAtIndexPath(
       dataStructure.indexPathForPagingItem(pagingItem),
       animated: animated,
