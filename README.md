@@ -15,7 +15,7 @@
 ![](http://martinrechsteiner.com/parchment/qYPjvCeZrs.gif "Calendar Example")
 ![](http://martinrechsteiner.com/parchment/30G73P2ZoX.gif "Cities Example")
 
-Parchment is a framework for paging between view controllers while showing menu items along with the content. It's build to be very customizable, written fully in Swift, and comes with very good default behaviors.
+Parchment allows you to page between view controllers while showing menu items that scrolls along with the content. It's build to be very customizable, written fully in Swift, and comes with good defaults.
 
 ## Getting Started
 
@@ -51,9 +51,15 @@ To add your own data source, you need to conform to the `PagingViewControllerDat
 
 ```Swift
 public protocol PagingViewControllerDataSource: class {  
-  func pagingViewController<T>(pagingViewController: PagingViewController<T>, viewControllerForPagingItem: T) -> UIViewController
-  func pagingViewController<T>(pagingViewController: PagingViewController<T>, pagingItemBeforePagingItem: T) -> T?
-  func pagingViewController<T>(pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem: T) -> T?
+
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>,
+    viewControllerForPagingItem: T) -> UIViewController
+    
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>,
+    pagingItemBeforePagingItem: T) -> T?
+    
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>,
+    pagingItemAfterPagingItem: T) -> T?
 }
 
 ```
@@ -82,22 +88,26 @@ We need to conform to `PagingViewControllerDataSource` in order to implement our
 ```Swift
 extension ViewController: PagingViewControllerDataSource {
   
-  func viewControllerForPagingItem(pagingItem: PagingItem) -> UIViewController {
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>,
+      viewControllerForPagingItem pagingItem: T) -> UIViewController {
     let calendarItem = pagingItem as! CalendarItem
     return CalendarViewController(date: calendarItem.date)
   }
   
-  func pagingItemBeforePagingItem(pagingItem: PagingItem) -> PagingItem? {
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>,
+      pagingItemBeforePagingItem pagingItem: T) -> T? {
     let calendarItem = pagingItem as! CalendarItem
-    return CalendarItem(date: calendarItem.date.dateByAddingTimeInterval(-86400))
+    return CalendarItem(date: calendarItem.date.dateByAddingTimeInterval(-86400)) as? T
   }
   
-  func pagingItemAfterPagingItem(pagingItem: PagingItem) -> PagingItem? {
+  func pagingViewController<T>(pagingViewController: PagingViewController<T>,
+      pagingItemAfterPagingItem pagingItem: T) -> T? {
     let calendarItem = pagingItem as! CalendarItem
-    return CalendarItem(date: calendarItem.date.dateByAddingTimeInterval(86400))
+    return CalendarItem(date: calendarItem.date.dateByAddingTimeInterval(86400)) as? T
   }
   
 }
+
 ```
 
 Then we simply need to create our `PagingViewController` and specify our custom `PagingItem`:
