@@ -37,13 +37,13 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
   
   public init(options: PagingOptions = DefaultPagingOptions()) {
     self.options = options
-    self.dataStructure = PagingDataStructure(visibleItems: [])
+    self.dataStructure = PagingDataStructure(visibleItems: [], totalWidth: 0)
     super.init(nibName: nil, bundle: nil)
   }
 
   required public init?(coder: NSCoder) {
     self.options = DefaultPagingOptions()
-    self.dataStructure = PagingDataStructure(visibleItems: [])
+    self.dataStructure = PagingDataStructure(visibleItems: [], totalWidth: 0)
     super.init(coder: coder)
   }
   
@@ -176,16 +176,19 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     let oldContentOffset: CGPoint = collectionView.contentOffset
     let fromItems = dataStructure.visibleItems
     let toItems = visibleItems(pagingItem, width: collectionView.bounds.width)
-    let itemsWidth = diffWidth(
+    let totalWidth = toItems.reduce(0) { widthForPagingItem($0.1) + $0.0 }
+    
+    dataStructure = PagingDataStructure(visibleItems: toItems, totalWidth: totalWidth)
+    collectionViewLayout.dataStructure = dataStructure
+    collectionView.reloadData()
+    
+    let offset = diffWidth(
       from: fromItems,
       to: toItems,
       itemSpacing: options.menuItemSpacing)
     
-    dataStructure = PagingDataStructure(visibleItems: toItems)
-    collectionViewLayout.dataStructure = dataStructure
-    collectionView.reloadData()
     collectionView.contentOffset = CGPoint(
-      x: oldContentOffset.x + itemsWidth,
+      x: oldContentOffset.x + offset,
       y: oldContentOffset.y)
   }
   
@@ -209,11 +212,9 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
     if case .SizeToFit = options.menuItemSize {
-      let items = dataStructure.visibleItems
-      let width = items.reduce(0) { widthForPagingItem($0.1) + $0.0 }
-      if width < collectionView.bounds.width {
+      if dataStructure.totalWidth < collectionView.bounds.width {
         return CGSize(
-          width: collectionView.bounds.width / CGFloat(items.count),
+          width: collectionView.bounds.width / CGFloat(dataStructure.visibleItems.count),
           height: options.menuItemSize.height)
       }
     }

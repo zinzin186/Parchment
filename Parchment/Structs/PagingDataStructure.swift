@@ -3,6 +3,12 @@ import Foundation
 struct PagingDataStructure<T: PagingItem where T: Equatable> {
   
   let visibleItems: [T]
+  let totalWidth: CGFloat
+  
+  init(visibleItems: [T], totalWidth: CGFloat) {
+    self.visibleItems = visibleItems
+    self.totalWidth = totalWidth
+  }
   
   func directionForIndexPath(indexPath: NSIndexPath, currentPagingItem: T) -> PagingDirection {
     guard let currentIndexPath = indexPathForPagingItem(currentPagingItem) else { return .None }
