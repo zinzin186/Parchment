@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="http://martinrechsteiner.com/parchment/JW1fAVsH25.png" width="360" height="120" />
+  <img src="http://martinrechsteiner.com/parchment/Bi683ArwV5.png" width="260" height="120" />
 </p>
 
 <p align="center">
-  <a href="https://circleci.com/gh/rechsteiner/Parchment"><img src="https://img.shields.io/circleci/project/rechsteiner/parchment.svg" /></a>
+  <a href="https://circleci.com/gh/rechsteiner/Parchment"><img src="https://circleci.com/gh/rechsteiner/Parchment/tree/master.svg?style=shield&circle-token=8e4da6c8bf09271f72f32bf3c7a7c9d743ff50fb" /></a>
   <a href="https://cocoapods.org/pods/Parchment"><img src="https://img.shields.io/cocoapods/v/Parchment.svg" /></a>
   <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg" /></a>
 </p>
@@ -15,11 +15,11 @@
 ![](http://martinrechsteiner.com/parchment/qYPjvCeZrs.gif "Calendar Example")
 ![](http://martinrechsteiner.com/parchment/30G73P2ZoX.gif "Cities Example")
 
-Parchment allows you to page between view controllers while showing menu items that scrolls along with the content. It's build to be very customizable, written fully in Swift, and comes with good defaults.
+Parchment allows you to page between view controllers while showing menu items that scrolls along with the content. It’s build to be very customizable, it’s well-tested and written fully in Swift.
 
 ## Getting Started
 
-The easiest way to use Parchment is to use `FixedPagingViewController`. Just pass in an array of view controllers and it’ll set up everything for you.
+The easiest way to use Parchment is to use `FixedPagingViewController`. Just pass in an array of view controllers and it will set up everything for you.
 
 ```Swift
 let firstViewController = UIViewController()
@@ -315,7 +315,7 @@ Parchment will be compatible with the lastest public release of Swift. Older rel
 3. Run `pod install`
 
 ## Acknowledgements
-A big thanks to emalyak for the `EMPageViewController` library 🙌
+A big thanks to @emalyak for the `EMPageViewController` library 🙌
 
 ## Licence
 
