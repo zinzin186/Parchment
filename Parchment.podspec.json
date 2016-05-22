@@ -16,6 +16,9 @@
   "platforms": {
     "ios": "8.2"
   },
-  "source_files": "Parchment",
+  "source_files": [
+    "Parchment/**/*.swift",
+    "Parchment/*.swift"
+  ],
   "requires_arc": true
 }
