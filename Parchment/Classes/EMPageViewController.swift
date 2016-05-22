@@ -378,6 +378,8 @@ public class EMPageViewController: UIViewController, UIScrollViewDelegate {
       } else if (self.navigationDirection == .Reverse) {
         self.beforeViewController!.endAppearanceTransition()
         self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.beforeViewController!, transitionSuccessful: false)
+      } else {
+        self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.selectedViewController!, transitionSuccessful: true)
       }
       
       self.didFinishScrollingCompletionHandler?(transitionSuccessful: false)
