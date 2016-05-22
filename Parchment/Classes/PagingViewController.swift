@@ -104,6 +104,7 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
     super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
     guard let stateMachine = stateMachine else { return }
     coordinator.animateAlongsideTransition({ context in
+      self.updateContentOffset(stateMachine.state.currentPagingItem)
       self.collectionView.selectItemAtIndexPath(
         self.dataStructure.indexPathForPagingItem(stateMachine.state.currentPagingItem),
         animated: false,
