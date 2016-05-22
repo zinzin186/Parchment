@@ -283,10 +283,6 @@ public class EMPageViewController: UIViewController, UIScrollViewDelegate {
     
     adjustingContentOffset = true
     
-    guard !scrolling else {
-      return
-    }
-    
     self.scrollView.frame = self.view.bounds
     if self.orientationIsHorizontal {
       self.scrollView.contentSize = CGSize(width: self.view.bounds.width * 3, height: self.view.bounds.height)
