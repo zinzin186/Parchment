@@ -116,6 +116,35 @@ class PagingStateMachineSpec: QuickSpec {
         
       }
       
+      describe("cancel scrolling") {
+        
+        describe("is in the selected state") {
+          it("does not updated the state") {
+            stateMachine.fire(.CancelScrolling)
+            let expectedState: PagingState = .Selected(pagingItem: Item(index: 0))
+            expect(stateMachine.state).to(equal(expectedState))
+          }
+        }
+        
+        describe("is in the scrolling state") {
+          
+          beforeEach {
+            let state: PagingState = .Scrolling(
+              pagingItem: Item(index: 0),
+              upcomingPagingItem: Item(index: 1),
+              offset: 0.5)
+            stateMachine = PagingStateMachine(initialState: state)
+          }
+          
+          it("selects the current paging item") {
+            stateMachine.fire(.CancelScrolling)
+            expect(stateMachine.state).to(equal(PagingState.Selected(pagingItem: Item(index: 0))))
+          }
+          
+        }
+        
+      }
+      
       describe("select event") {
         
         describe("selected paging item is not equal current item") {

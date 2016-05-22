@@ -32,6 +32,8 @@ class PagingStateMachine<T: PagingItem where T: Equatable> {
         animated: animated)
     case .FinishScrolling:
       handleFinishScrollingEvent(event)
+    case .CancelScrolling:
+      handleCancelScrollingEvent(event)
     }
   }
   
@@ -86,6 +88,16 @@ class PagingStateMachine<T: PagingItem where T: Equatable> {
     switch state {
     case let .Scrolling(currentPagingItem, upcomingPagingItem, _):
       state = .Selected(pagingItem: upcomingPagingItem ?? currentPagingItem)
+      didChangeState?(state, event)
+    case .Selected:
+      break
+    }
+  }
+  
+  private func handleCancelScrollingEvent(event: PagingEvent<T>) {
+    switch state {
+    case let .Scrolling(currentPagingItem, _, _):
+      state = .Selected(pagingItem: currentPagingItem)
       didChangeState?(state, event)
     case .Selected:
       break
