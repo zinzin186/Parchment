@@ -4,8 +4,9 @@ machine:
 
 dependencies:
   override:
+    - bundle install
     - carthage bootstrap --use-ssh --platform ios
 
 test:
   override:
-    - scan -s iOS -p Parchment.xcodeproj
+    - bundle exec scan -s iOS -p Parchment.xcodeproj
