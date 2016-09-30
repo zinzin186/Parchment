@@ -219,9 +219,10 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
   
   public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
     if case .SizeToFit = options.menuItemSize {
-      if dataStructure.totalWidth < collectionView.bounds.width {
+      let inset = options.menuInsets.left + options.menuInsets.right
+      if dataStructure.totalWidth + inset < collectionView.bounds.width {
         return CGSize(
-          width: collectionView.bounds.width / CGFloat(dataStructure.visibleItems.count),
+          width: (collectionView.bounds.width - inset) / CGFloat(dataStructure.visibleItems.count),
           height: options.menuItemSize.height)
       }
     }
