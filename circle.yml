@@ -1,11 +1,12 @@
 machine:
   xcode:
-    version: "7.3"
+    version: "8.0"
 
 dependencies:
   override:
+    - bundle install
     - carthage bootstrap --use-ssh --platform ios
 
 test:
   override:
-    - scan -s iOS -p Parchment.xcodeproj
+    - bundle exec scan -s iOS -p Parchment.xcodeproj
