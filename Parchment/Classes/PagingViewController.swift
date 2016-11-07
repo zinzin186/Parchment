@@ -230,6 +230,26 @@ public class PagingViewController<T: PagingItem where T: Equatable>:
       width: widthForPagingItem(dataStructure.pagingItemForIndexPath(indexPath)),
       height: options.menuItemSize.height)
   }
+    
+  public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+    switch options.menuHorizontalAlignment {
+    case .Center:
+      if case .SizeToFit = options.menuItemSize {
+        return options.menuInsets
+      }
+      var itemsWidth: CGFloat = 0.0
+      for index in dataStructure.visibleItems.indices {
+        let indexPath = NSIndexPath(forItem: index, inSection: section)
+        itemsWidth += widthForPagingItem(dataStructure.pagingItemForIndexPath(indexPath))
+      }
+      let itemSpacing = options.menuItemSpacing * CGFloat(dataStructure.visibleItems.count - 1)
+      let padding = collectionView.bounds.width - itemsWidth - itemSpacing
+      let horizontalInset = max(0, padding) / 2
+      return UIEdgeInsets(top: 0, left: horizontalInset, bottom: 0, right: horizontalInset)
+    case .Default:
+      return options.menuInsets
+    }
+  }
   
   public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
     guard let stateMachine = stateMachine else { return }
