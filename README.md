@@ -142,6 +142,7 @@ protocol PagingOptions {
   var menuItemClass: PagingCell.Type { get }
   var menuItemSpacing: CGFloat { get }
   var menuInsets: UIEdgeInsets { get }
+  var menuHorizontalAlignment: PagingMenuHorizontalAlignment { get }
   var selectedScrollPosition: PagingSelectedScrollPosition { get }
   var indicatorOptions: PagingIndicatorOptions { get }
   var borderOptions: PagingBorderOptions { get }
@@ -185,6 +186,23 @@ _Default: `0`_
 The insets around all of the menu items.
 
 _Default: `UIEdgeInsets()`_
+
+#### `menuAlignment`
+  
+
+
+```Swift
+public enum PagingMenuHorizontalAlignment {
+  case Default
+
+  // Allows all paging items to be centered within the paging menu
+  // when PagingMenuItemSize is .Fixed and the sum of the widths
+  // of all the paging items are less than the paging menu
+  case Center 
+}
+```
+
+_Default: `.Default`_
 
 #### `PagingSelectedScrollPosition`
 

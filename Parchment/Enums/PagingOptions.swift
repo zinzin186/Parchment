@@ -45,6 +45,11 @@ public enum PagingSelectedScrollPosition {
   case PreferCentered
 }
 
+public enum PagingMenuHorizontalAlignment {
+  case Default
+  case Center
+}
+
 public protocol PagingTheme {
   var font: UIFont { get }
   var textColor: UIColor { get }
@@ -60,6 +65,7 @@ public protocol PagingOptions {
   var menuItemClass: PagingCell.Type { get }
   var menuItemSpacing: CGFloat { get }
   var menuInsets: UIEdgeInsets { get }
+  var menuHorizontalAlignment: PagingMenuHorizontalAlignment { get }
   var selectedScrollPosition: PagingSelectedScrollPosition { get }
   var indicatorOptions: PagingIndicatorOptions { get }
   var borderOptions: PagingBorderOptions { get }
@@ -157,6 +163,9 @@ public extension PagingOptions {
     return 0
   }
   
+  var menuHorizontalAlignment: PagingMenuHorizontalAlignment {
+    return .Default
+  }
 }
 
 struct DefaultPagingTheme: PagingTheme {}
