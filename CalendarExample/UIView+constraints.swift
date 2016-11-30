@@ -2,43 +2,43 @@ import UIKit
 
 extension UIView {
   
-  func constrainCentered(subview: UIView) {
+  func constrainCentered(_ subview: UIView) {
     
     subview.translatesAutoresizingMaskIntoConstraints = false
     
     let verticalContraint = NSLayoutConstraint(
       item: subview,
-      attribute: .CenterY,
-      relatedBy: .Equal,
+      attribute: .centerY,
+      relatedBy: .equal,
       toItem: self,
-      attribute: .CenterY,
+      attribute: .centerY,
       multiplier: 1.0,
       constant: 0)
     
     let horizontalContraint = NSLayoutConstraint(
       item: subview,
-      attribute: .CenterX,
-      relatedBy: .Equal,
+      attribute: .centerX,
+      relatedBy: .equal,
       toItem: self,
-      attribute: .CenterX,
+      attribute: .centerX,
       multiplier: 1.0,
       constant: 0)
     
     let heightContraint = NSLayoutConstraint(
       item: subview,
-      attribute: .Height,
-      relatedBy: .Equal,
+      attribute: .height,
+      relatedBy: .equal,
       toItem: nil,
-      attribute: .NotAnAttribute,
+      attribute: .notAnAttribute,
       multiplier: 1.0,
       constant: subview.frame.height)
     
     let widthContraint = NSLayoutConstraint(
       item: subview,
-      attribute: .Width,
-      relatedBy: .Equal,
+      attribute: .width,
+      relatedBy: .equal,
       toItem: nil,
-      attribute: .NotAnAttribute,
+      attribute: .notAnAttribute,
       multiplier: 1.0,
       constant: subview.frame.width)
     
@@ -50,43 +50,43 @@ extension UIView {
     
   }
   
-  func constrainToEdges(subview: UIView) {
+  func constrainToEdges(_ subview: UIView) {
     
     subview.translatesAutoresizingMaskIntoConstraints = false
     
     let topContraint = NSLayoutConstraint(
       item: subview,
-      attribute: .Top,
-      relatedBy: .Equal,
+      attribute: .top,
+      relatedBy: .equal,
       toItem: self,
-      attribute: .Top,
+      attribute: .top,
       multiplier: 1.0,
       constant: 0)
     
     let bottomConstraint = NSLayoutConstraint(
       item: subview,
-      attribute: .Bottom,
-      relatedBy: .Equal,
+      attribute: .bottom,
+      relatedBy: .equal,
       toItem: self,
-      attribute: .Bottom,
+      attribute: .bottom,
       multiplier: 1.0,
       constant: 0)
     
     let leadingContraint = NSLayoutConstraint(
       item: subview,
-      attribute: .Leading,
-      relatedBy: .Equal,
+      attribute: .leading,
+      relatedBy: .equal,
       toItem: self,
-      attribute: .Leading,
+      attribute: .leading,
       multiplier: 1.0,
       constant: 0)
     
     let trailingContraint = NSLayoutConstraint(
       item: subview,
-      attribute: .Trailing,
-      relatedBy: .Equal,
+      attribute: .trailing,
+      relatedBy: .equal,
       toItem: self,
-      attribute: .Trailing,
+      attribute: .trailing,
       multiplier: 1.0,
       constant: 0)
     

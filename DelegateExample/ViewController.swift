@@ -5,7 +5,7 @@ class ViewController: UIViewController {
 
   // Let's start by creating an array of citites that we
   // will use to generate some view controllers.
-  private let cities = [
+  fileprivate let cities = [
     "Oslo",
     "Stockholm",
     "Tokyo",
@@ -25,7 +25,7 @@ class ViewController: UIViewController {
   
   // Map over the cities in the array and initialize a new view
   // controller with the name of that city.
-  private lazy var viewControllers: [UIViewController] = {
+  fileprivate lazy var viewControllers: [UIViewController] = {
     return self.cities.map { CityViewController(title: $0) }
   }()
 
@@ -34,7 +34,7 @@ class ViewController: UIViewController {
   // which is a subclass of PagingViewController that takes in an
   // array view controllers and handles setting up the data source and
   // paging items for us.
-  private lazy var pagingViewController: FixedPagingViewController = {
+  fileprivate lazy var pagingViewController: FixedPagingViewController = {
     return FixedPagingViewController(viewControllers: self.viewControllers)
   }()
   
@@ -46,7 +46,7 @@ class ViewController: UIViewController {
     addChildViewController(pagingViewController)
     view.addSubview(pagingViewController.view)
     view.constrainToEdges(pagingViewController.view)
-    pagingViewController.didMoveToParentViewController(self)
+    pagingViewController.didMove(toParentViewController: self)
 
     // Set the paging view controller delegate so that we can handle
     // the width for the paging items.
@@ -63,17 +63,17 @@ extension ViewController: PagingViewControllerDelegate {
   // can access the title string by casting the paging item to a
   // PagingTitleItem, which is the PagingItem type used by
   // FixedPagingViewController.
-  func pagingViewController<T>(pagingViewController: PagingViewController<T>, widthForPagingItem pagingItem: T) -> CGFloat {
+  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, widthForPagingItem pagingItem: T) -> CGFloat {
     
     guard let item = pagingItem as? PagingTitleItem else { return 0 }
     
     let options = pagingViewController.options
     let insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-    let size = CGSize(width: CGFloat.max, height: options.menuItemSize.height)
+    let size = CGSize(width: CGFloat.greatestFiniteMagnitude, height: options.menuItemSize.height)
     let attributes = [NSFontAttributeName: options.theme.font]
     
-    let rect = item.title.boundingRectWithSize(size,
-      options: .UsesLineFragmentOrigin,
+    let rect = item.title.boundingRect(with: size,
+      options: .usesLineFragmentOrigin,
       attributes: attributes,
       context: nil)
     

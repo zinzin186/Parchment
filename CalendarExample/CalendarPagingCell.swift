@@ -3,17 +3,17 @@ import Parchment
 
 class CalendarPagingCell: PagingCell {
   
-  private var theme: PagingTheme?
+  fileprivate var theme: PagingTheme?
   
   lazy var dateLabel: UILabel = {
     let dateLabel = UILabel(frame: .zero)
-    dateLabel.font = UIFont.systemFontOfSize(20)
+    dateLabel.font = UIFont.systemFont(ofSize: 20)
     return dateLabel
   }()
   
   lazy var weekdayLabel: UILabel = {
     let weekdayLabel = UILabel(frame: .zero)
-    weekdayLabel.font = UIFont.systemFontOfSize(12)
+    weekdayLabel.font = UIFont.systemFont(ofSize: 12)
     return weekdayLabel
   }()
   
@@ -33,7 +33,7 @@ class CalendarPagingCell: PagingCell {
     }
   }
   
-  private func configure() {
+  fileprivate func configure() {
     addSubview(dateLabel)
     addSubview(weekdayLabel)
     
@@ -42,37 +42,37 @@ class CalendarPagingCell: PagingCell {
     
     let verticalDateLabelContraint = NSLayoutConstraint(
       item: dateLabel,
-      attribute: .CenterY,
-      relatedBy: .Equal,
+      attribute: .centerY,
+      relatedBy: .equal,
       toItem: self,
-      attribute: .CenterY,
+      attribute: .centerY,
       multiplier: 1.0,
       constant: -9)
     
     let horizontalDateLabelContraint = NSLayoutConstraint(
       item: dateLabel,
-      attribute: .CenterX,
-      relatedBy: .Equal,
+      attribute: .centerX,
+      relatedBy: .equal,
       toItem: self,
-      attribute: .CenterX,
+      attribute: .centerX,
       multiplier: 1.0,
       constant: 0)
     
     let verticalWeekdayLabelContraint = NSLayoutConstraint(
       item: weekdayLabel,
-      attribute: .CenterY,
-      relatedBy: .Equal,
+      attribute: .centerY,
+      relatedBy: .equal,
       toItem: self,
-      attribute: .CenterY,
+      attribute: .centerY,
       multiplier: 1.0,
       constant: 12)
     
     let horizontalWeekdayLabelContraint = NSLayoutConstraint(
       item: weekdayLabel,
-      attribute: .CenterX,
-      relatedBy: .Equal,
+      attribute: .centerX,
+      relatedBy: .equal,
       toItem: self,
-      attribute: .CenterX,
+      attribute: .centerX,
       multiplier: 1.0,
       constant: 0)
     
@@ -84,7 +84,7 @@ class CalendarPagingCell: PagingCell {
     ])
   }
   
-  private func updateSelectedState() {
+  fileprivate func updateSelectedState() {
     guard let theme = theme else { return }
     if selected {
       dateLabel.textColor = theme.selectedTextColor
@@ -95,7 +95,7 @@ class CalendarPagingCell: PagingCell {
     }
   }
   
-  override func setPagingItem(pagingItem: PagingItem, theme: PagingTheme) {
+  override func setPagingItem(_ pagingItem: PagingItem, theme: PagingTheme) {
     let calendarItem = pagingItem as! CalendarItem
     dateLabel.text = DateFormatters.dateFormatter.stringFromDate(calendarItem.date)
     weekdayLabel.text = DateFormatters.weekdayFormatter.stringFromDate(calendarItem.date)

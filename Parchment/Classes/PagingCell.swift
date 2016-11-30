@@ -1,7 +1,7 @@
 import UIKit
 
-public class PagingCell: UICollectionViewCell {
-  public func setPagingItem(pagingItem: PagingItem, theme: PagingTheme) {
+open class PagingCell: UICollectionViewCell {
+  open func setPagingItem(_ pagingItem: PagingItem, theme: PagingTheme) {
     fatalError("setPagingItem: not implemented")
   }
 }

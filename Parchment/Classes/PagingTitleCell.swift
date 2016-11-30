@@ -1,11 +1,11 @@
 import UIKit
 
-public class PagingTitleCell: PagingCell {
+open class PagingTitleCell: PagingCell {
   
-  private var viewModel: PagingTitleCellViewModel?
-  private let titleLabel = UILabel(frame: .zero)
+  fileprivate var viewModel: PagingTitleCellViewModel?
+  fileprivate let titleLabel = UILabel(frame: .zero)
   
-  public override var selected: Bool {
+  open override var isSelected: Bool {
     didSet {
       configureTitleLabel()
     }
@@ -21,25 +21,25 @@ public class PagingTitleCell: PagingCell {
     configure()
   }
   
-  public override func setPagingItem(pagingItem: PagingItem, theme: PagingTheme) {
+  open override func setPagingItem(_ pagingItem: PagingItem, theme: PagingTheme) {
     if let titleItem = pagingItem as? PagingTitleItem {
       viewModel = PagingTitleCellViewModel(title: titleItem.title, theme: theme)
     }
     configureTitleLabel()
   }
   
-  private func configure() {
+  fileprivate func configure() {
     contentView.addSubview(titleLabel)
     contentView.constrainToEdges(titleLabel)
   }
   
-  private func configureTitleLabel() {
+  fileprivate func configureTitleLabel() {
     guard let viewModel = viewModel else { return }
     titleLabel.text = viewModel.title
     titleLabel.font = viewModel.font
-    titleLabel.textAlignment = .Center
+    titleLabel.textAlignment = .center
     
-    if selected {
+    if isSelected {
       titleLabel.textColor = viewModel.selectedTextColor
     } else {
       titleLabel.textColor = viewModel.textColor

@@ -1,66 +1,66 @@
 import Foundation
 
 protocol PagingStateMachineDelegate: class {
-  func pagingStateMachine<T>(pagingStateMachine: PagingStateMachine<T>, pagingItemBeforePagingItem: T) -> T?
-  func pagingStateMachine<T>(pagingStateMachine: PagingStateMachine<T>, pagingItemAfterPagingItem: T) -> T?
+  func pagingStateMachine<T>(_ pagingStateMachine: PagingStateMachine<T>, pagingItemBeforePagingItem: T) -> T?
+  func pagingStateMachine<T>(_ pagingStateMachine: PagingStateMachine<T>, pagingItemAfterPagingItem: T) -> T?
 }
 
-class PagingStateMachine<T: PagingItem where T: Equatable> {
+class PagingStateMachine<T: PagingItem> where T: Equatable {
   
   weak var delegate: PagingStateMachineDelegate?
   
   var didSelectPagingItem: ((T, PagingDirection, Bool) -> Void)?
   var didChangeState: ((PagingState<T>, PagingEvent<T>?) -> Void)?
   
-  private(set) var state: PagingState<T>
+  fileprivate(set) var state: PagingState<T>
   
   init(initialState: PagingState<T>) {
     self.state = initialState
   }
   
-  func fire(event: PagingEvent<T>) {
+  func fire(_ event: PagingEvent<T>) {
     switch event {
-    case let .Scroll(offset):
+    case let .scroll(offset):
       handleScrollEvent(
         event,
         offset: offset)
-    case let .Select(pagingItem, direction, animated):
+    case let .select(pagingItem, direction, animated):
       handleSelectEvent(
         event,
         selectedPagingItem: pagingItem,
         direction: direction,
         animated: animated)
-    case .FinishScrolling:
+    case .finishScrolling:
       handleFinishScrollingEvent(event)
-    case .CancelScrolling:
+    case .cancelScrolling:
       handleCancelScrollingEvent(event)
     }
   }
   
-  private func handleScrollEvent(event: PagingEvent<T>, offset: CGFloat) {
+  fileprivate func handleScrollEvent(_ event: PagingEvent<T>, offset: CGFloat) {
     switch state {
-    case let .Scrolling(pagingItem, upcomingPagingItem, oldOffset):
+    case let .scrolling(pagingItem, upcomingPagingItem, oldOffset):
       if oldOffset < 0 && offset > 0 {
-        state = .Selected(pagingItem: pagingItem)
+        state = .selected(pagingItem: pagingItem)
       } else if oldOffset > 0 && offset < 0 {
-        state = .Selected(pagingItem: pagingItem)
+        state = .selected(pagingItem: pagingItem)
       } else if offset == 0 {
-        state = .Selected(pagingItem: pagingItem)
+        state = .selected(pagingItem: pagingItem)
       } else {
-        state = .Scrolling(
+        state = .scrolling(
           pagingItem: pagingItem,
           upcomingPagingItem: upcomingPagingItem,
           offset: offset)
       }
-    case let .Selected(pagingItem):
+    case let .selected(pagingItem):
       if offset > 0 {
-        state = .Scrolling(
+        state = .scrolling(
           pagingItem: pagingItem,
           upcomingPagingItem: delegate?.pagingStateMachine(self,
             pagingItemAfterPagingItem: pagingItem),
           offset: offset)
       } else if offset < 0 {
-        state = .Scrolling(
+        state = .scrolling(
           pagingItem: pagingItem,
           upcomingPagingItem: delegate?.pagingStateMachine(self,
             pagingItemBeforePagingItem: pagingItem),
@@ -70,10 +70,10 @@ class PagingStateMachine<T: PagingItem where T: Equatable> {
     didChangeState?(state, event)
   }
   
-  private func handleSelectEvent(event: PagingEvent<T>, selectedPagingItem: T, direction: PagingDirection, animated: Bool) {
+  fileprivate func handleSelectEvent(_ event: PagingEvent<T>, selectedPagingItem: T, direction: PagingDirection, animated: Bool) {
     if selectedPagingItem != state.currentPagingItem {
-      if case .Selected = state {
-        state = .Scrolling(
+      if case .selected = state {
+        state = .scrolling(
           pagingItem: state.currentPagingItem,
           upcomingPagingItem: selectedPagingItem,
           offset: 0)
@@ -84,22 +84,22 @@ class PagingStateMachine<T: PagingItem where T: Equatable> {
     }
   }
   
-  private func handleFinishScrollingEvent(event: PagingEvent<T>) {
+  fileprivate func handleFinishScrollingEvent(_ event: PagingEvent<T>) {
     switch state {
-    case let .Scrolling(currentPagingItem, upcomingPagingItem, _):
-      state = .Selected(pagingItem: upcomingPagingItem ?? currentPagingItem)
+    case let .scrolling(currentPagingItem, upcomingPagingItem, _):
+      state = .selected(pagingItem: upcomingPagingItem ?? currentPagingItem)
       didChangeState?(state, event)
-    case .Selected:
+    case .selected:
       break
     }
   }
   
-  private func handleCancelScrollingEvent(event: PagingEvent<T>) {
+  fileprivate func handleCancelScrollingEvent(_ event: PagingEvent<T>) {
     switch state {
-    case let .Scrolling(currentPagingItem, _, _):
-      state = .Selected(pagingItem: currentPagingItem)
+    case let .scrolling(currentPagingItem, _, _):
+      state = .selected(pagingItem: currentPagingItem)
       didChangeState?(state, event)
-    case .Selected:
+    case .selected:
       break
     }
   }

@@ -2,8 +2,8 @@ import UIKit
 
 class PagingBorderView: UICollectionReusableView {
   
-  override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {
-    super.applyLayoutAttributes(layoutAttributes)
+  override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
+    super.apply(layoutAttributes)
     if let attributes = layoutAttributes as? PagingBorderLayoutAttributes {
       backgroundColor = attributes.backgroundColor
     }

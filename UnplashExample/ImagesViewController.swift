@@ -2,18 +2,18 @@ import UIKit
 
 class ImagesViewController: UIViewController {
   
-  private let images: [UIImage]
+  fileprivate let images: [UIImage]
   
-  private lazy var collectionViewLayout: UICollectionViewFlowLayout = {
+  fileprivate lazy var collectionViewLayout: UICollectionViewFlowLayout = {
     let layout = UICollectionViewFlowLayout()
     layout.sectionInset = UIEdgeInsets(top: 18, left: 0, bottom: 18, right: 0)
     layout.minimumLineSpacing = 15
     return layout
   }()
   
-  private lazy var collectionView: UICollectionView = {
+  fileprivate lazy var collectionView: UICollectionView = {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
-    collectionView.backgroundColor = .whiteColor()
+    collectionView.backgroundColor = .white
     return collectionView
   }()
   
@@ -26,7 +26,7 @@ class ImagesViewController: UIViewController {
     
     collectionView.dataSource = self
     collectionView.delegate = self
-    collectionView.registerClass(
+    collectionView.register(
       ImageCollectionViewCell.self,
       forCellWithReuseIdentifier: ImageCollectionViewCell.reuseIdentifier)
   }
@@ -44,7 +44,7 @@ class ImagesViewController: UIViewController {
 
 extension ImagesViewController: UICollectionViewDelegateFlowLayout {
   
-  func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     return CGSize(
       width: collectionView.bounds.width - 36,
       height: 220)
@@ -54,13 +54,13 @@ extension ImagesViewController: UICollectionViewDelegateFlowLayout {
 
 extension ImagesViewController: UICollectionViewDataSource {
   
-  func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCellWithReuseIdentifier(ImageCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! ImageCollectionViewCell
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewCell.reuseIdentifier, for: indexPath) as! ImageCollectionViewCell
     cell.setImage(images[indexPath.item])
     return cell
   }
   
-  func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return images.count
   }
   

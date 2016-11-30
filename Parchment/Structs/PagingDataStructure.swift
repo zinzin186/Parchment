@@ -1,6 +1,6 @@
 import Foundation
 
-struct PagingDataStructure<T: PagingItem where T: Equatable> {
+struct PagingDataStructure<T: PagingItem> where T: Equatable {
   
   let visibleItems: [T]
   let totalWidth: CGFloat
@@ -10,23 +10,23 @@ struct PagingDataStructure<T: PagingItem where T: Equatable> {
     self.totalWidth = totalWidth
   }
   
-  func directionForIndexPath(indexPath: NSIndexPath, currentPagingItem: T) -> PagingDirection {
-    guard let currentIndexPath = indexPathForPagingItem(currentPagingItem) else { return .None }
+  func directionForIndexPath(_ indexPath: IndexPath, currentPagingItem: T) -> PagingDirection {
+    guard let currentIndexPath = indexPathForPagingItem(currentPagingItem) else { return .none }
     
     if indexPath.item > currentIndexPath.item {
-      return .Forward
+      return .forward
     } else if indexPath.item < currentIndexPath.item {
-      return .Reverse
+      return .reverse
     }
-    return .None
+    return .none
   }
   
-  func indexPathForPagingItem(pagingItem: T) -> NSIndexPath? {
-    guard let index = visibleItems.indexOf(pagingItem) else { return nil }
-    return NSIndexPath(forItem: index, inSection: 0)
+  func indexPathForPagingItem(_ pagingItem: T) -> IndexPath? {
+    guard let index = visibleItems.index(of: pagingItem) else { return nil }
+    return IndexPath(item: index, section: 0)
   }
   
-  func pagingItemForIndexPath(indexPath: NSIndexPath) -> T {
+  func pagingItemForIndexPath(_ indexPath: IndexPath) -> T {
     return visibleItems[indexPath.item]
   }
   

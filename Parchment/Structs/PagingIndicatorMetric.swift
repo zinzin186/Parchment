@@ -3,9 +3,9 @@ import Foundation
 struct PagingIndicatorMetric {
   
   enum Inset {
-    case Left(CGFloat)
-    case Right(CGFloat)
-    case None
+    case left(CGFloat)
+    case right(CGFloat)
+    case none
   }
   
   let frame: CGRect
@@ -13,7 +13,7 @@ struct PagingIndicatorMetric {
   
   var x: CGFloat {
     switch insets {
-    case let .Left(inset):
+    case let .left(inset):
       return frame.origin.x + inset
     default:
       return frame.origin.x
@@ -22,11 +22,11 @@ struct PagingIndicatorMetric {
   
   var width: CGFloat {
     switch insets {
-    case let .Left(inset):
+    case let .left(inset):
       return frame.size.width - inset
-    case let .Right(inset):
+    case let .right(inset):
       return frame.size.width - inset
-    case .None:
+    case .none:
       return frame.size.width
     }
   }
