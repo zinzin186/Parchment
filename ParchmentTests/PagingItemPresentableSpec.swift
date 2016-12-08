@@ -26,21 +26,21 @@ struct Presentable: PagingItemsPresentable {
     Item(index: 8, width: 50)
   ]
   
-  func widthForPagingItem<T: PagingItem>(pagingItem: T) -> CGFloat {
+  func widthForPagingItem<T: PagingItem>(_ pagingItem: T) -> CGFloat {
     guard let item = pagingItem as? Item else { return 0 }
     return item.width
   }
   
-  func pagingItemBeforePagingItem<T: PagingItem>(pagingItem: T) -> T? {
-    guard let index = items.indexOf(pagingItem as! Item) else { return nil }
+  func pagingItemBeforePagingItem<T: PagingItem>(_ pagingItem: T) -> T? {
+    guard let index = items.index(of: pagingItem as! Item) else { return nil }
     if index > 0 {
       return items[index - 1] as? T
     }
     return nil
   }
   
-  func pagingItemAfterPagingItem<T: PagingItem>(pagingItem: T) -> T? {
-    guard let index = items.indexOf(pagingItem as! Item) else { return nil }
+  func pagingItemAfterPagingItem<T: PagingItem>(_ pagingItem: T) -> T? {
+    guard let index = items.index(of: pagingItem as! Item) else { return nil }
     if index < items.count - 1 {
       return items[index + 1] as? T
     }

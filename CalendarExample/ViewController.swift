@@ -28,7 +28,7 @@ struct CalendarPagingTheme: PagingTheme {
 // of PagingCell
 struct CalendarPagingOptions: PagingOptions {
   let menuItemClass: PagingCell.Type = CalendarPagingCell.self
-  let menuItemSize: PagingMenuItemSize = .Fixed(width: 48, height: 58)
+  let menuItemSize: PagingMenuItemSize = .fixed(width: 48, height: 58)
   let theme: PagingTheme = CalendarPagingTheme()
 }
 
@@ -49,7 +49,7 @@ class ViewController: UIViewController {
     addChildViewController(pagingViewController)
     view.addSubview(pagingViewController.view)
     view.constrainToEdges(pagingViewController.view)
-    pagingViewController.didMoveToParentViewController(self)
+    pagingViewController.didMove(toParentViewController: self)
     
     // Set our custom data source
     pagingViewController.dataSource = self
@@ -74,18 +74,18 @@ class ViewController: UIViewController {
 extension ViewController: PagingViewControllerDataSource {
   
   func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForPagingItem pagingItem: T) -> UIViewController {
-    let calendarItem = pagingItem 
+    let calendarItem = pagingItem as! CalendarItem
     return CalendarViewController(date: calendarItem.date)
   }
   
   func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemBeforePagingItem pagingItem: T) -> T? {
-    let calendarItem = pagingItem 
-    return CalendarItem(date: calendarItem.date.dateByAddingTimeInterval(-86400)) as? T
+    let calendarItem = pagingItem as! CalendarItem
+    return CalendarItem(date: calendarItem.date.addingTimeInterval(-86400)) as? T
   }
   
   func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem pagingItem: T) -> T? {
-    let calendarItem = pagingItem 
-    return CalendarItem(date: calendarItem.date.dateByAddingTimeInterval(86400)) as? T
+    let calendarItem = pagingItem as! CalendarItem
+    return CalendarItem(date: calendarItem.date.addingTimeInterval(86400)) as? T
   }
   
 }

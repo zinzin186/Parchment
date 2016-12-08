@@ -27,7 +27,7 @@ class CalendarPagingCell: PagingCell {
     configure()
   }
   
-  override var selected: Bool {
+  override var isSelected: Bool {
     didSet {
       updateSelectedState()
     }
@@ -86,7 +86,7 @@ class CalendarPagingCell: PagingCell {
   
   fileprivate func updateSelectedState() {
     guard let theme = theme else { return }
-    if selected {
+    if isSelected {
       dateLabel.textColor = theme.selectedTextColor
       weekdayLabel.textColor = theme.selectedTextColor
     } else {
@@ -97,8 +97,8 @@ class CalendarPagingCell: PagingCell {
   
   override func setPagingItem(_ pagingItem: PagingItem, theme: PagingTheme) {
     let calendarItem = pagingItem as! CalendarItem
-    dateLabel.text = DateFormatters.dateFormatter.stringFromDate(calendarItem.date)
-    weekdayLabel.text = DateFormatters.weekdayFormatter.stringFromDate(calendarItem.date)
+    dateLabel.text = DateFormatters.dateFormatter.string(from: calendarItem.date)
+    weekdayLabel.text = DateFormatters.weekdayFormatter.string(from: calendarItem.date)
     
     self.theme = theme
     updateSelectedState()
