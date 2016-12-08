@@ -10,6 +10,6 @@ protocol ArithmeticType {
 
 extension CGFloat: ArithmeticType {}
 
-func tween<T: ArithmeticType>(from from: T, to: T, progress: T) -> T {
+func tween<T: ArithmeticType>(from: T, to: T, progress: T) -> T {
   return ((to - from) * progress) + from
 }

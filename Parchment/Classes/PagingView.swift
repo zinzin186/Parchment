@@ -2,9 +2,9 @@ import UIKit
 
 class PagingView: UIView {
   
-  private let pageView: UIView
-  private let collectionView: UICollectionView
-  private let options: PagingOptions
+  fileprivate let pageView: UIView
+  fileprivate let collectionView: UICollectionView
+  fileprivate let options: PagingOptions
   
   init(pageView: UIView, collectionView: UICollectionView, options: PagingOptions) {
     
@@ -21,13 +21,13 @@ class PagingView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  private func configure() {
+  fileprivate func configure() {
     addSubview(collectionView)
     addSubview(pageView)
     setupConstraints()
   }
   
-  private func setupConstraints() {
+  fileprivate func setupConstraints() {
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     pageView.translatesAutoresizingMaskIntoConstraints = false
     
@@ -38,21 +38,21 @@ class PagingView: UIView {
       "collectionView": collectionView,
       "pageView": pageView]
     
-    let horizontalCollectionViewContraints = NSLayoutConstraint.constraintsWithVisualFormat(
-      "H:|[collectionView]|",
-      options: .DirectionLeadingToTrailing,
+    let horizontalCollectionViewContraints = NSLayoutConstraint.constraints(
+      withVisualFormat: "H:|[collectionView]|",
+      options: NSLayoutFormatOptions(),
       metrics: metrics,
       views: views)
     
-    let horizontalPagingContentViewContraints = NSLayoutConstraint.constraintsWithVisualFormat(
-      "H:|[pageView]|",
-      options: .DirectionLeadingToTrailing,
+    let horizontalPagingContentViewContraints = NSLayoutConstraint.constraints(
+      withVisualFormat: "H:|[pageView]|",
+      options: NSLayoutFormatOptions(),
       metrics: metrics,
       views: views)
     
-    let verticalContraints = NSLayoutConstraint.constraintsWithVisualFormat(
-      "V:|[collectionView(==height)][pageView]|",
-      options: .DirectionLeadingToTrailing,
+    let verticalContraints = NSLayoutConstraint.constraints(
+      withVisualFormat: "V:|[collectionView(==height)][pageView]|",
+      options: NSLayoutFormatOptions(),
       metrics: metrics,
       views: views)
     

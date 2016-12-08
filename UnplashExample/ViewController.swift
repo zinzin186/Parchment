@@ -22,7 +22,7 @@ func ==(lhs: ImageItem, rhs: ImageItem) -> Bool {
 // Lets create our own custom theme.
 struct ImagePagingTheme: PagingTheme {
   let borderColor: UIColor = UIColor(white: 0, alpha: 0.1)
-  let indicatorColor: UIColor = .blackColor()
+  let indicatorColor: UIColor = .black
 }
 
 // We need to create our own options struct in order to customize it
@@ -32,17 +32,17 @@ struct ImagePagingTheme: PagingTheme {
 // and the paging indicator.
 struct ImagePagingOptions: PagingOptions {
   let menuItemClass: PagingCell.Type = ImagePagingCell.self
-  let menuItemSize: PagingMenuItemSize = .Fixed(width: 70, height: 70)
+  let menuItemSize: PagingMenuItemSize = .fixed(width: 70, height: 70)
   let menuItemSpacing: CGFloat = 8
   let menuInsets = UIEdgeInsets(top: 12, left: 18, bottom: 12, right: 18)
   let theme: PagingTheme = ImagePagingTheme()
   
-  let indicatorOptions: PagingIndicatorOptions = .Visible(
+  let indicatorOptions: PagingIndicatorOptions = .visible(
     height: 1,
     zIndex: Int.max,
     insets: UIEdgeInsets())
   
-  let borderOptions: PagingBorderOptions = .Visible(
+  let borderOptions: PagingBorderOptions = .visible(
     height: 1,
     zIndex: Int.max - 1,
     insets: UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18))
@@ -59,7 +59,7 @@ class ViewController: UIViewController {
   // Our data source is responsible for holding the paging items and
   // telling the paging view controller what paging item comes before
   // or after any given item.
-  private let dataSource = ImagePagingDataSource()
+  fileprivate let dataSource = ImagePagingDataSource()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -69,13 +69,13 @@ class ViewController: UIViewController {
     addChildViewController(pagingViewController)
     view.addSubview(pagingViewController.view)
     view.constrainToEdges(pagingViewController.view)
-    pagingViewController.didMoveToParentViewController(self)
+    pagingViewController.didMove(toParentViewController: self)
     
     // Set our custom data source.
     pagingViewController.dataSource = dataSource
   }
   
-  override func viewDidAppear(animated: Bool) {
+  override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     
     // Set the first item as the selected paging item.

@@ -1,17 +1,17 @@
 import UIKit
 
-public class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICollectionViewFlowLayout {
+open class PagingCollectionViewLayout<T: PagingItem>: UICollectionViewFlowLayout where T: Equatable {
   
   var state: PagingState<T>?
   var dataStructure: PagingDataStructure<T>
   
-  private let options: PagingOptions
-  private let indicatorLayoutAttributes: PagingIndicatorLayoutAttributes
-  private let borderLayoutAttributes: PagingBorderLayoutAttributes
+  fileprivate let options: PagingOptions
+  fileprivate let indicatorLayoutAttributes: PagingIndicatorLayoutAttributes
+  fileprivate let borderLayoutAttributes: PagingBorderLayoutAttributes
   
-  private var range: Range<Int> {
-    guard let collectionView = collectionView else { return 0...0 }
-    return 0..<(collectionView.numberOfItemsInSection(0) - 1)
+  fileprivate var range: Range<Int> {
+    guard let collectionView = collectionView else { return Range(0...0) }
+    return 0..<(collectionView.numberOfItems(inSection: 0) - 1)
   }
   
   init(options: PagingOptions, dataStructure: PagingDataStructure<T>) {
@@ -21,11 +21,11 @@ public class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICol
     
     indicatorLayoutAttributes = PagingIndicatorLayoutAttributes(
       forDecorationViewOfKind: PagingIndicatorView.reuseIdentifier,
-      withIndexPath: NSIndexPath(forItem: 0, inSection: 0))
+      with: IndexPath(item: 0, section: 0))
     
     borderLayoutAttributes = PagingBorderLayoutAttributes(
       forDecorationViewOfKind: PagingBorderView.reuseIdentifier,
-      withIndexPath: NSIndexPath(forItem: 1, inSection: 0))
+      with: IndexPath(item: 1, section: 0))
     
     super.init()
     
@@ -36,31 +36,31 @@ public class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICol
     fatalError("init(coder:) has not been implemented")
   }
   
-  private func configure() {
+  fileprivate func configure() {
     sectionInset = options.menuInsets
     minimumLineSpacing = options.menuItemSpacing
     minimumInteritemSpacing = 0
-    scrollDirection = .Horizontal
+    scrollDirection = .horizontal
     registerDecorationView(PagingIndicatorView.self)
     registerDecorationView(PagingBorderView.self)
     indicatorLayoutAttributes.configure(options)
     borderLayoutAttributes.configure(options)
   }
   
-  public override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
+  open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
     return true
   }
   
-  public override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-    var layoutAttributes = super.layoutAttributesForElementsInRect(rect)!
+  open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+    var layoutAttributes = super.layoutAttributesForElements(in: rect)!
     
-    let indicatorAttributes = layoutAttributesForDecorationViewOfKind(PagingIndicatorView.reuseIdentifier,
-      atIndexPath: NSIndexPath(forItem: 0, inSection: 0))
+    let indicatorAttributes = layoutAttributesForDecorationView(ofKind: PagingIndicatorView.reuseIdentifier,
+      at: IndexPath(item: 0, section: 0))
     
-    let borderAttributes = layoutAttributesForDecorationViewOfKind(PagingBorderView.reuseIdentifier,
-      atIndexPath: NSIndexPath(forItem: 1, inSection: 0))
+    let borderAttributes = layoutAttributesForDecorationView(ofKind: PagingBorderView.reuseIdentifier,
+      at: IndexPath(item: 1, section: 0))
     
-    if let indicatorAttributes = indicatorAttributes, borderAttributes = borderAttributes {
+    if let indicatorAttributes = indicatorAttributes, let borderAttributes = borderAttributes {
       layoutAttributes.append(indicatorAttributes)
       layoutAttributes.append(borderAttributes)
     }
@@ -68,7 +68,7 @@ public class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICol
     return layoutAttributes
   }
   
-  public override func layoutAttributesForDecorationViewOfKind(elementKind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
+  open override func layoutAttributesForDecorationView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
     guard
       let state = state,
       let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem) else { return nil }
@@ -91,50 +91,50 @@ public class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICol
     
     if elementKind == PagingBorderView.reuseIdentifier {
       borderLayoutAttributes.update(
-        contentSize: collectionViewContentSize(),
+        contentSize: collectionViewContentSize,
         bounds: collectionView?.bounds ?? .zero)
       return borderLayoutAttributes
     }
     
-    return super.layoutAttributesForDecorationViewOfKind(elementKind, atIndexPath: indexPath)
+    return super.layoutAttributesForDecorationView(ofKind: elementKind, at: indexPath)
   }
   
   // MARK: Private
   
-  private func upcomingIndexPathForIndexPath(indexPath: NSIndexPath) -> NSIndexPath {
+  fileprivate func upcomingIndexPathForIndexPath(_ indexPath: IndexPath) -> IndexPath {
     guard
       let state = state else { return indexPath }
     
-    if let upcomingPagingItem = state.upcomingPagingItem, upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem) {
+    if let upcomingPagingItem = state.upcomingPagingItem, let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem) {
       return upcomingIndexPath
-    } else if indexPath.item == range.startIndex {
-      return NSIndexPath(forItem: indexPath.item - 1, inSection: 0)
-    } else if indexPath.item == range.endIndex {
-      return NSIndexPath(forItem: indexPath.item + 1, inSection: 0)
+    } else if indexPath.item == range.lowerBound {
+      return IndexPath(item: indexPath.item - 1, section: 0)
+    } else if indexPath.item == range.upperBound {
+      return IndexPath(item: indexPath.item + 1, section: 0)
     }
     return indexPath
   }
   
-  private func indicatorInsetsForIndex(index: Int) -> PagingIndicatorMetric.Inset {
-    if case let .Visible(_, _, insets) = options.indicatorOptions {
-      if index == range.startIndex {
-        return .Left(insets.left)
-      } else if index >= range.endIndex {
-        return .Right(insets.right)
+  fileprivate func indicatorInsetsForIndex(_ index: Int) -> PagingIndicatorMetric.Inset {
+    if case let .visible(_, _, insets) = options.indicatorOptions {
+      if index == range.lowerBound {
+        return .left(insets.left)
+      } else if index >= range.upperBound {
+        return .right(insets.right)
       }
     }
-    return .None
+    return .none
   }
   
-  private func indicatorFrameForIndex(index: Int) -> CGRect {
+  fileprivate func indicatorFrameForIndex(_ index: Int) -> CGRect {
     guard
       let state = state,
       let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem) else { return .zero }
     
-    if index < range.startIndex {
+    if index < range.lowerBound {
       let frame = frameForIndex(currentIndexPath.item)
       return frame.offsetBy(dx: -frame.width, dy: 0)
-    } else if index > range.endIndex {
+    } else if index > range.upperBound {
       let frame = frameForIndex(currentIndexPath.item)
       return frame.offsetBy(dx: frame.width, dy: 0)
     } else {
@@ -142,9 +142,9 @@ public class PagingCollectionViewLayout<T: PagingItem where T: Equatable>: UICol
     }
   }
   
-  private func frameForIndex(index: Int) -> CGRect {
-    let currentIndexPath = NSIndexPath(forItem: index, inSection: 0)
-    let layoutAttributes = layoutAttributesForItemAtIndexPath(currentIndexPath)!
+  fileprivate func frameForIndex(_ index: Int) -> CGRect {
+    let currentIndexPath = IndexPath(item: index, section: 0)
+    let layoutAttributes = layoutAttributesForItem(at: currentIndexPath)!
     return layoutAttributes.frame
   }
   

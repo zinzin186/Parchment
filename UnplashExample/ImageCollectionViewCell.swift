@@ -4,9 +4,9 @@ class ImageCollectionViewCell: UICollectionViewCell {
   
   static let reuseIdentifier: String = "ImageCellIdentifier"
   
-  private lazy var imageView: UIImageView = {
+  fileprivate lazy var imageView: UIImageView = {
     let imageView = UIImageView(frame: .zero)
-    imageView.contentMode = .ScaleAspectFill
+    imageView.contentMode = .scaleAspectFill
     return imageView
   }()
   
@@ -21,7 +21,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func setImage(image: UIImage) {
+  func setImage(_ image: UIImage) {
     imageView.image = image
   }
   

@@ -3,25 +3,25 @@ import Parchment
 
 class ImagePagingCell: PagingCell {
   
-  private lazy var imageView: UIImageView = {
+  fileprivate lazy var imageView: UIImageView = {
     let imageView = UIImageView(frame: .zero)
-    imageView.contentMode = .ScaleAspectFill
+    imageView.contentMode = .scaleAspectFill
     return imageView
   }()
   
-  private lazy var titleLabel: UILabel = {
+  fileprivate lazy var titleLabel: UILabel = {
     let label = UILabel(frame: .zero)
-    label.font = UIFont.systemFontOfSize(13, weight: UIFontWeightSemibold)
-    label.textColor = UIColor.whiteColor()
+    label.font = UIFont.systemFont(ofSize: 13, weight: UIFontWeightSemibold)
+    label.textColor = UIColor.white
     label.backgroundColor = UIColor(white: 0, alpha: 0.6)
     label.numberOfLines = 0
     return label
   }()
   
-  private lazy var paragraphStyle: NSParagraphStyle = {
+  fileprivate lazy var paragraphStyle: NSParagraphStyle = {
     let paragraphStyle = NSMutableParagraphStyle()
     paragraphStyle.hyphenationFactor = 1
-    paragraphStyle.alignment = .Center
+    paragraphStyle.alignment = .center
     return paragraphStyle
   }()
   
@@ -39,7 +39,7 @@ class ImagePagingCell: PagingCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  override func setPagingItem(pagingItem: PagingItem, theme: PagingTheme) {
+  override func setPagingItem(_ pagingItem: PagingItem, theme: PagingTheme) {
     let item = pagingItem as! ImageItem
     imageView.image = item.headerImage
     titleLabel.attributedText = NSAttributedString(

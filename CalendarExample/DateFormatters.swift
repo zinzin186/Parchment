@@ -2,21 +2,21 @@ import Foundation
 
 struct DateFormatters {
   
-  static var shortDateFormatter: NSDateFormatter = {
-    let dateFormatter = NSDateFormatter()
-    dateFormatter.timeStyle = .NoStyle
-    dateFormatter.dateStyle = .ShortStyle
+  static var shortDateFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
+    dateFormatter.timeStyle = .none
+    dateFormatter.dateStyle = .short
     return dateFormatter
   }()
   
-  static var dateFormatter: NSDateFormatter = {
-    let dateFormatter = NSDateFormatter()
+  static var dateFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "d"
     return dateFormatter
   }()
   
-  static var weekdayFormatter: NSDateFormatter = {
-    let dateFormatter = NSDateFormatter()
+  static var weekdayFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "EEE"
     return dateFormatter
   }()
