@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     addChildViewController(pagingViewController)
     view.addSubview(pagingViewController.view)
     view.constrainToEdges(pagingViewController.view)
-    pagingViewController.didMoveToParentViewController(self)
+    pagingViewController.didMove(toParentViewController: self)
   }
   
 }

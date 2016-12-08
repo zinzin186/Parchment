@@ -20,7 +20,7 @@ class PagingStateSpec: QuickSpec {
       describe("Scrolling") {
         
         it("returns the current paging item") {
-          let state: PagingState = .Scrolling(
+          let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: Item(index: 1),
             offset: 0)
@@ -28,7 +28,7 @@ class PagingStateSpec: QuickSpec {
         }
         
         it("returns the correct offset") {
-          let state: PagingState = .Scrolling(
+          let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: Item(index: 1),
             offset: 0.5)
@@ -38,7 +38,7 @@ class PagingStateSpec: QuickSpec {
         describe("has an upcoming paging item") {
           
           it("returns the correct upcoming paging item") {
-            let state: PagingState = .Scrolling(
+            let state: PagingState = .scrolling(
               pagingItem: Item(index: 0),
               upcomingPagingItem: Item(index: 1),
               offset: 0)
@@ -49,7 +49,7 @@ class PagingStateSpec: QuickSpec {
           
             describe("offset is larger then 0.5") {
               it("returns the upcoming paging item as the visually selected item") {
-                let state: PagingState = .Scrolling(
+                let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: Item(index: 1),
                   offset: 0.6)
@@ -59,7 +59,7 @@ class PagingStateSpec: QuickSpec {
             
             describe("offset is smaller then 0.5") {
               it("returns the current paging item as the visually selected item") {
-                let state: PagingState = .Scrolling(
+                let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: Item(index: 1),
                   offset: 0.3)
@@ -74,7 +74,7 @@ class PagingStateSpec: QuickSpec {
         describe("does not have an upcoming paging item") {
           
           it("returns nil for upcoming paging item") {
-            let state: PagingState = .Scrolling(
+            let state: PagingState = .scrolling(
               pagingItem: Item(index: 0),
               upcomingPagingItem: nil,
               offset: 0)
@@ -85,7 +85,7 @@ class PagingStateSpec: QuickSpec {
             
             describe("offset is larger then 0.5") {
               it("returns the current paging item as the visually selected item") {
-                let state: PagingState = .Scrolling(
+                let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: nil,
                   offset: 0.6)
@@ -95,7 +95,7 @@ class PagingStateSpec: QuickSpec {
             
             describe("offset is smaller then 0.5") {
               it("returns the current paging item as the visually selected item") {
-                let state: PagingState = .Scrolling(
+                let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: nil,
                   offset: 0.3)
@@ -110,7 +110,7 @@ class PagingStateSpec: QuickSpec {
       
       describe("Selected") {
         
-        let state: PagingState = .Selected(pagingItem: Item(index: 0))
+        let state: PagingState = .selected(pagingItem: Item(index: 0))
         
         it("returns the current paging item") {
           expect(state.currentPagingItem).to(equal(Item(index: 0)))
