@@ -1,12 +1,12 @@
 import UIKit
 
-class PagingView: UIView {
+open class PagingView: UIView {
   
-  fileprivate let pageView: UIView
-  fileprivate let collectionView: UICollectionView
-  fileprivate let options: PagingOptions
+  open let pageView: UIView
+  open let collectionView: UICollectionView
+  open let options: PagingOptions
   
-  init(pageView: UIView, collectionView: UICollectionView, options: PagingOptions) {
+  public init(pageView: UIView, collectionView: UICollectionView, options: PagingOptions) {
     
     self.pageView = pageView
     self.collectionView = collectionView
@@ -17,17 +17,17 @@ class PagingView: UIView {
     configure()
   }
   
-  required init?(coder: NSCoder) {
+  required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
-  fileprivate func configure() {
+  open func configure() {
     addSubview(collectionView)
     addSubview(pageView)
     setupConstraints()
   }
   
-  fileprivate func setupConstraints() {
+  open func setupConstraints() {
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     pageView.translatesAutoresizingMaskIntoConstraints = false
     
