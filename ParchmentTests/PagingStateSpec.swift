@@ -23,16 +23,16 @@ class PagingStateSpec: QuickSpec {
           let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: Item(index: 1),
-            offset: 0)
+            progress: 0)
           expect(state.currentPagingItem).to(equal(Item(index: 0)))
         }
         
-        it("returns the correct offset") {
+        it("returns the correct progress") {
           let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: Item(index: 1),
-            offset: 0.5)
-          expect(state.offset).to(equal(0.5))
+            progress: 0.5)
+          expect(state.progress).to(equal(0.5))
         }
         
         describe("has an upcoming paging item") {
@@ -41,28 +41,28 @@ class PagingStateSpec: QuickSpec {
             let state: PagingState = .scrolling(
               pagingItem: Item(index: 0),
               upcomingPagingItem: Item(index: 1),
-              offset: 0)
+              progress: 0)
             expect(state.upcomingPagingItem).to(equal(Item(index: 1)))
           }
           
           describe("visuallySelectedPagingItem") {
           
-            describe("offset is larger then 0.5") {
+            describe("progress is larger then 0.5") {
               it("returns the upcoming paging item as the visually selected item") {
                 let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: Item(index: 1),
-                  offset: 0.6)
+                  progress: 0.6)
                 expect(state.visuallySelectedPagingItem).to(equal(Item(index: 1)))
               }
             }
             
-            describe("offset is smaller then 0.5") {
+            describe("progress is smaller then 0.5") {
               it("returns the current paging item as the visually selected item") {
                 let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: Item(index: 1),
-                  offset: 0.3)
+                  progress: 0.3)
                 expect(state.visuallySelectedPagingItem).to(equal(Item(index: 0)))
               }
             }
@@ -77,28 +77,28 @@ class PagingStateSpec: QuickSpec {
             let state: PagingState = .scrolling(
               pagingItem: Item(index: 0),
               upcomingPagingItem: nil,
-              offset: 0)
+              progress: 0)
             expect(state.upcomingPagingItem).to(beNil())
           }
           
           describe("visuallySelectedPagingItem") {
             
-            describe("offset is larger then 0.5") {
+            describe("progress is larger then 0.5") {
               it("returns the current paging item as the visually selected item") {
                 let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: nil,
-                  offset: 0.6)
+                  progress: 0.6)
                 expect(state.visuallySelectedPagingItem).to(equal(Item(index: 0)))
               }
             }
             
-            describe("offset is smaller then 0.5") {
+            describe("progress is smaller then 0.5") {
               it("returns the current paging item as the visually selected item") {
                 let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: nil,
-                  offset: 0.3)
+                  progress: 0.3)
                 expect(state.visuallySelectedPagingItem).to(equal(Item(index: 0)))
               }
             }
@@ -120,8 +120,8 @@ class PagingStateSpec: QuickSpec {
           expect(state.upcomingPagingItem).to(beNil())
         }
         
-        it("returns zero for the offset") {
-          expect(state.offset).to(equal(0))
+        it("returns zero for the progress") {
+          expect(state.progress).to(equal(0))
         }
         
         it("returns the current paging item as the visually selected item") {

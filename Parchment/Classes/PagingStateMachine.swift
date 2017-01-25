@@ -20,10 +20,10 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
   
   func fire(_ event: PagingEvent<T>) {
     switch event {
-    case let .scroll(offset):
+    case let .scroll(progress):
       handleScrollEvent(
         event,
-        offset: offset)
+        progress: progress)
     case let .select(pagingItem, direction, animated):
       handleSelectEvent(
         event,
@@ -37,34 +37,34 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     }
   }
   
-  fileprivate func handleScrollEvent(_ event: PagingEvent<T>, offset: CGFloat) {
+  fileprivate func handleScrollEvent(_ event: PagingEvent<T>, progress: CGFloat) {
     switch state {
-    case let .scrolling(pagingItem, upcomingPagingItem, oldOffset):
-      if oldOffset < 0 && offset > 0 {
+    case let .scrolling(pagingItem, upcomingPagingItem, oldProgress):
+      if oldProgress < 0 && progress > 0 {
         state = .selected(pagingItem: pagingItem)
-      } else if oldOffset > 0 && offset < 0 {
+      } else if oldProgress > 0 && progress < 0 {
         state = .selected(pagingItem: pagingItem)
-      } else if offset == 0 {
+      } else if progress == 0 {
         state = .selected(pagingItem: pagingItem)
       } else {
         state = .scrolling(
           pagingItem: pagingItem,
           upcomingPagingItem: upcomingPagingItem,
-          offset: offset)
+          progress: progress)
       }
     case let .selected(pagingItem):
-      if offset > 0 {
+      if progress > 0 {
         state = .scrolling(
           pagingItem: pagingItem,
           upcomingPagingItem: delegate?.pagingStateMachine(self,
             pagingItemAfterPagingItem: pagingItem),
-          offset: offset)
-      } else if offset < 0 {
+          progress: progress)
+      } else if progress < 0 {
         state = .scrolling(
           pagingItem: pagingItem,
           upcomingPagingItem: delegate?.pagingStateMachine(self,
             pagingItemBeforePagingItem: pagingItem),
-          offset: offset)
+          progress: progress)
       }
     }
     didChangeState?(state, event)
@@ -76,7 +76,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
         state = .scrolling(
           pagingItem: state.currentPagingItem,
           upcomingPagingItem: selectedPagingItem,
-          offset: 0)
+          progress: 0)
         
         didSelectPagingItem?(selectedPagingItem, direction, animated)
         didChangeState?(state, event)

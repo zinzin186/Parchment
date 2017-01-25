@@ -2,7 +2,7 @@ import Foundation
 
 enum PagingState<T: PagingItem>: Equatable where T: Equatable {
   case selected(pagingItem: T)
-  case scrolling(pagingItem: T, upcomingPagingItem: T?, offset: CGFloat)
+  case scrolling(pagingItem: T, upcomingPagingItem: T?, progress: CGFloat)
 }
 
 extension PagingState {
@@ -25,17 +25,17 @@ extension PagingState {
     }
   }
   
-  var offset: CGFloat {
+  var progress: CGFloat {
     switch self {
-    case let .scrolling(_, _, offset):
-      return offset
+    case let .scrolling(_, _, progress):
+      return progress
     case .selected:
       return 0
     }
   }
   
   var visuallySelectedPagingItem: T {
-    if fabs(offset) > 0.5 {
+    if fabs(progress) > 0.5 {
       return upcomingPagingItem ?? currentPagingItem
     } else {
       return currentPagingItem

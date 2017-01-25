@@ -328,7 +328,7 @@ open class PagingViewController<T: PagingItem>:
   // MARK: EMPageViewControllerDelegate
 
   open func em_pageViewController(_ pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
-    stateMachine?.fire(.scroll(offset: progress))
+    stateMachine?.fire(.scroll(progress: progress))
   }
   
   open func em_pageViewController(_ pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
