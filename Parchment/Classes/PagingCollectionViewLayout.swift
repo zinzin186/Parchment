@@ -47,12 +47,30 @@ open class PagingCollectionViewLayout<T: PagingItem>: UICollectionViewFlowLayout
     borderLayoutAttributes.configure(options)
   }
   
+  override open class var layoutAttributesClass: AnyClass {
+    return PagingCellLayoutAttributes.self
+  }
+  
   open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
     return true
   }
   
+  open override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+    guard let layoutAttributes = super.layoutAttributesForItem(at: indexPath)?.copy() as? PagingCellLayoutAttributes else { return nil }
+    layoutAttributes.progress = progressForItem(at: indexPath)
+    return layoutAttributes
+  }
+  
   open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-    var layoutAttributes = super.layoutAttributesForElements(in: rect)!
+    guard let attributes = super.layoutAttributesForElements(in: rect) else { return nil }
+  
+    var layoutAttributes = [UICollectionViewLayoutAttributes]()
+    for attribute in attributes {
+      if let attribute = attribute.copy() as? PagingCellLayoutAttributes {
+        attribute.progress = progressForItem(at: attribute.indexPath)
+        layoutAttributes.append(attribute)
+      }
+    }
     
     let indicatorAttributes = layoutAttributesForDecorationView(ofKind: PagingIndicatorView.reuseIdentifier,
       at: IndexPath(item: 0, section: 0))
@@ -100,6 +118,22 @@ open class PagingCollectionViewLayout<T: PagingItem>: UICollectionViewFlowLayout
   }
   
   // MARK: Private
+  
+  fileprivate func progressForItem(at indexPath: IndexPath) -> CGFloat {
+    guard
+      let state = state,
+      let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem) else { return 0 }
+    
+    let upcomingIndexPath = upcomingIndexPathForIndexPath(currentIndexPath)
+    switch indexPath.item {
+    case currentIndexPath.item:
+      return 1 - fabs(state.offset)
+    case upcomingIndexPath.item:
+      return fabs(state.offset)
+    default:
+      return 0
+    }
+  }
   
   fileprivate func upcomingIndexPathForIndexPath(_ indexPath: IndexPath) -> IndexPath {
     guard

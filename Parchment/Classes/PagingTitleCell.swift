@@ -46,4 +46,15 @@ open class PagingTitleCell: PagingCell {
     }
   }
   
+  open override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
+    super.apply(layoutAttributes)
+    guard let viewModel = viewModel else { return }
+    if let attributes = layoutAttributes as? PagingCellLayoutAttributes {
+      titleLabel.textColor = UIColor.interpolate(
+        from: viewModel.textColor,
+        to: viewModel.selectedTextColor,
+        with: attributes.progress)
+    }
+  }
+  
 }
