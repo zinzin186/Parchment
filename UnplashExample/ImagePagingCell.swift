@@ -45,6 +45,11 @@ class ImagePagingCell: PagingCell {
     titleLabel.attributedText = NSAttributedString(
       string: item.title,
       attributes: [NSParagraphStyleAttributeName: paragraphStyle])
+  open override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
+    if let attributes = layoutAttributes as? PagingCellLayoutAttributes {
+      let scale = 1 + attributes.progress
+      imageView.transform = CGAffineTransform(scaleX: scale, y: scale)
+    }
   }
   
 }

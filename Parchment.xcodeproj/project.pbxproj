@@ -85,6 +85,7 @@
 		3EFEFBF71C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift */; };
 		957F14091E35583500E562F8 /* PagingCellLayoutAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957F14081E35583500E562F8 /* PagingCellLayoutAttributes.swift */; };
 		9597F2951E3903F4003FD289 /* UIColor+interpolation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9597F2941E3903F4003FD289 /* UIColor+interpolation.swift */; };
+		9597F2971E390519003FD289 /* UIColor+interpolation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9597F2961E390519003FD289 /* UIColor+interpolation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -263,6 +264,7 @@
 		3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorLayoutAttributesSpec.swift; sourceTree = "<group>"; };
 		957F14081E35583500E562F8 /* PagingCellLayoutAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingCellLayoutAttributes.swift; sourceTree = "<group>"; };
 		9597F2941E3903F4003FD289 /* UIColor+interpolation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+interpolation.swift"; sourceTree = "<group>"; };
+		9597F2961E390519003FD289 /* UIColor+interpolation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+interpolation.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -327,6 +329,7 @@
 				3E2AAD211CA81EB00044AAA5 /* CalendarViewController.swift */,
 				3E2AAD251CA828060044AAA5 /* DateFormatters.swift */,
 				3E2AAD1D1CA81E240044AAA5 /* UIView+constraints.swift */,
+				9597F2961E390519003FD289 /* UIColor+interpolation.swift */,
 				3E2AAD0B1CA81D490044AAA5 /* Main.storyboard */,
 				3E2AAD0E1CA81D490044AAA5 /* Assets.xcassets */,
 				3E2AAD101CA81D490044AAA5 /* LaunchScreen.storyboard */,
@@ -790,6 +793,7 @@
 				3E2AAD1E1CA81E240044AAA5 /* UIView+constraints.swift in Sources */,
 				3E2AAD081CA81D490044AAA5 /* AppDelegate.swift in Sources */,
 				3E2AAD241CA823DA0044AAA5 /* CalendarPagingCell.swift in Sources */,
+				9597F2971E390519003FD289 /* UIColor+interpolation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
