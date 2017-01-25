@@ -102,6 +102,21 @@ class CalendarPagingCell: PagingCell {
     
     self.theme = theme
     updateSelectedState()
+  override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
+    super.apply(layoutAttributes)
+    guard let theme = theme else { return }
+
+    if let attributes = layoutAttributes as? PagingCellLayoutAttributes {
+      dateLabel.textColor = UIColor.interpolate(
+        from: theme.textColor,
+        to: theme.selectedTextColor,
+        with: attributes.progress)
+      
+      weekdayLabel.textColor = UIColor.interpolate(
+        from: theme.textColor,
+        to: theme.selectedTextColor,
+        with: attributes.progress)
+    }
   }
   
 }
