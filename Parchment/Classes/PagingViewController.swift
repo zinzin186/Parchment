@@ -268,7 +268,9 @@ open class PagingViewController<T: PagingItem>:
   
   public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(indexPath: indexPath, cellType: options.menuItemClass)
-    cell.setPagingItem(dataStructure.visibleItems[indexPath.item], theme: options.theme)
+    let pagingItem = dataStructure.visibleItems[indexPath.item]
+    let selected = stateMachine?.state.currentPagingItem == pagingItem
+    cell.setPagingItem(pagingItem, selected: selected, theme: options.theme)
     return cell
   }
   

@@ -21,9 +21,12 @@ open class PagingTitleCell: PagingCell {
     configure()
   }
   
-  open override func setPagingItem(_ pagingItem: PagingItem, theme: PagingTheme) {
+  open override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
     if let titleItem = pagingItem as? PagingTitleItem {
-      viewModel = PagingTitleCellViewModel(title: titleItem.title, theme: theme)
+      viewModel = PagingTitleCellViewModel(
+        title: titleItem.title,
+        selected: selected,
+        theme: theme)
     }
     configureTitleLabel()
   }
@@ -39,7 +42,7 @@ open class PagingTitleCell: PagingCell {
     titleLabel.font = viewModel.font
     titleLabel.textAlignment = .center
     
-    if isSelected {
+    if viewModel.selected {
       titleLabel.textColor = viewModel.selectedTextColor
     } else {
       titleLabel.textColor = viewModel.textColor
