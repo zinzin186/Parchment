@@ -187,9 +187,7 @@ The insets around all of the menu items.
 
 _Default: `UIEdgeInsets()`_
 
-#### `menuAlignment`
-  
-
+#### `menuHorizontalAlignment`
 
 ```Swift
 public enum PagingMenuHorizontalAlignment {
@@ -203,6 +201,23 @@ public enum PagingMenuHorizontalAlignment {
 ```
 
 _Default: `.Default`_
+
+#### `menuTransition`
+
+Determine the transition behaviour of menu items while scrolling the content.
+
+```Swift
+public enum PagingMenuTransition {
+  // Update scroll offset based on how much the content has
+  // scrolled. Makes the menu items transition smoothly as you scroll.
+  case scrollAlongside
+  
+  // Animate the menu item position after a transition has completed.
+  case animateAfter
+}
+```
+
+Default: .scrollAlongside
 
 #### `PagingSelectedScrollPosition`
 

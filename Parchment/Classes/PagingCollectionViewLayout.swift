@@ -103,7 +103,7 @@ open class PagingCollectionViewLayout<T: PagingItem>: UICollectionViewFlowLayout
         frame: indicatorFrameForIndex(upcomingIndexPath.item),
         insets: indicatorInsetsForIndex(upcomingIndexPath.item))
       
-      indicatorLayoutAttributes.update(from: from, to: to, progress: fabs(state.offset))
+      indicatorLayoutAttributes.update(from: from, to: to, progress: fabs(state.progress))
       return indicatorLayoutAttributes
     }
     
@@ -127,9 +127,9 @@ open class PagingCollectionViewLayout<T: PagingItem>: UICollectionViewFlowLayout
     let upcomingIndexPath = upcomingIndexPathForIndexPath(currentIndexPath)
     switch indexPath.item {
     case currentIndexPath.item:
-      return 1 - fabs(state.offset)
+      return 1 - fabs(state.progress)
     case upcomingIndexPath.item:
-      return fabs(state.offset)
+      return fabs(state.progress)
     default:
       return 0
     }
