@@ -27,12 +27,6 @@ class CalendarPagingCell: PagingCell {
     configure()
   }
   
-  override var isSelected: Bool {
-    didSet {
-      updateSelectedState()
-    }
-  }
-  
   fileprivate func configure() {
     addSubview(dateLabel)
     addSubview(weekdayLabel)
@@ -84,9 +78,9 @@ class CalendarPagingCell: PagingCell {
     ])
   }
   
-  fileprivate func updateSelectedState() {
+  fileprivate func updateSelectedState(selected: Bool) {
     guard let theme = theme else { return }
-    if isSelected {
+    if selected {
       dateLabel.textColor = theme.selectedTextColor
       weekdayLabel.textColor = theme.selectedTextColor
     } else {
@@ -95,13 +89,15 @@ class CalendarPagingCell: PagingCell {
     }
   }
   
-  override func setPagingItem(_ pagingItem: PagingItem, theme: PagingTheme) {
+  override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
     let calendarItem = pagingItem as! CalendarItem
     dateLabel.text = DateFormatters.dateFormatter.string(from: calendarItem.date)
     weekdayLabel.text = DateFormatters.weekdayFormatter.string(from: calendarItem.date)
     
     self.theme = theme
-    updateSelectedState()
+    updateSelectedState(selected: selected)
+  }
+  
   override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
     super.apply(layoutAttributes)
     guard let theme = theme else { return }

@@ -39,12 +39,20 @@ class ImagePagingCell: PagingCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  override func setPagingItem(_ pagingItem: PagingItem, theme: PagingTheme) {
+  override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
     let item = pagingItem as! ImageItem
     imageView.image = item.headerImage
     titleLabel.attributedText = NSAttributedString(
       string: item.title,
       attributes: [NSParagraphStyleAttributeName: paragraphStyle])
+    
+    if selected {
+      imageView.transform = CGAffineTransform(scaleX: 2, y: 2)
+    } else {
+      imageView.transform = CGAffineTransform.identity
+    }
+  }
+  
   open override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
     if let attributes = layoutAttributes as? PagingCellLayoutAttributes {
       let scale = 1 + attributes.progress
