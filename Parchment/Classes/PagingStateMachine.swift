@@ -3,6 +3,7 @@ import Foundation
 protocol PagingStateMachineDelegate: class {
   func pagingStateMachine<T>(_ pagingStateMachine: PagingStateMachine<T>, pagingItemBeforePagingItem: T) -> T?
   func pagingStateMachine<T>(_ pagingStateMachine: PagingStateMachine<T>, pagingItemAfterPagingItem: T) -> T?
+  func pagingStateMachine<T>(_ pagingStateMachine: PagingStateMachine<T>, transitionFrom: T, to: T?) -> PagingTransition
 }
 
 class PagingStateMachine<T: PagingItem> where T: Equatable {
@@ -39,7 +40,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
   
   fileprivate func handleScrollEvent(_ event: PagingEvent<T>, progress: CGFloat) {
     switch state {
-    case let .scrolling(pagingItem, upcomingPagingItem, oldProgress):
+    case let .scrolling(pagingItem, upcomingPagingItem, oldProgress, transition):
       if oldProgress < 0 && progress > 0 {
         state = .selected(pagingItem: pagingItem)
       } else if oldProgress > 0 && progress < 0 {
@@ -50,21 +51,30 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
         state = .scrolling(
           pagingItem: pagingItem,
           upcomingPagingItem: upcomingPagingItem,
-          progress: progress)
+          progress: progress,
+          transition: transition)
       }
     case let .selected(pagingItem):
       if progress > 0 {
+        
+        let upcomingPagingItem = delegate?.pagingStateMachine(self, pagingItemAfterPagingItem: pagingItem)
+        let transition = delegate?.pagingStateMachine(self, transitionFrom: pagingItem, to: upcomingPagingItem)
+        
         state = .scrolling(
           pagingItem: pagingItem,
-          upcomingPagingItem: delegate?.pagingStateMachine(self,
-            pagingItemAfterPagingItem: pagingItem),
-          progress: progress)
+          upcomingPagingItem: upcomingPagingItem,
+          progress: progress,
+          transition: transition)
       } else if progress < 0 {
+        
+        let upcomingPagingItem = delegate?.pagingStateMachine(self, pagingItemBeforePagingItem: pagingItem)
+        let transition = delegate?.pagingStateMachine(self, transitionFrom: pagingItem, to: upcomingPagingItem)
+        
         state = .scrolling(
           pagingItem: pagingItem,
-          upcomingPagingItem: delegate?.pagingStateMachine(self,
-            pagingItemBeforePagingItem: pagingItem),
-          progress: progress)
+          upcomingPagingItem: upcomingPagingItem,
+          progress: progress,
+          transition: transition)
       }
     }
     didChangeState?(state, event)
@@ -76,7 +86,8 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
         state = .scrolling(
           pagingItem: state.currentPagingItem,
           upcomingPagingItem: selectedPagingItem,
-          progress: 0)
+          progress: 0,
+          transition: delegate?.pagingStateMachine(self, transitionFrom: state.currentPagingItem, to: selectedPagingItem))
         
         didSelectPagingItem?(selectedPagingItem, direction, animated)
         didChangeState?(state, event)
@@ -86,7 +97,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
   
   fileprivate func handleFinishScrollingEvent(_ event: PagingEvent<T>) {
     switch state {
-    case let .scrolling(currentPagingItem, upcomingPagingItem, _):
+    case let .scrolling(currentPagingItem, upcomingPagingItem, _, _):
       state = .selected(pagingItem: upcomingPagingItem ?? currentPagingItem)
       didChangeState?(state, event)
     case .selected:
@@ -96,7 +107,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
   
   fileprivate func handleCancelScrollingEvent(_ event: PagingEvent<T>) {
     switch state {
-    case let .scrolling(currentPagingItem, _, _):
+    case let .scrolling(currentPagingItem, _, _, _):
       state = .selected(pagingItem: currentPagingItem)
       didChangeState?(state, event)
     case .selected:

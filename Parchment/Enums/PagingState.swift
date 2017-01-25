@@ -2,14 +2,18 @@ import Foundation
 
 enum PagingState<T: PagingItem>: Equatable where T: Equatable {
   case selected(pagingItem: T)
-  case scrolling(pagingItem: T, upcomingPagingItem: T?, progress: CGFloat)
+  case scrolling(
+    pagingItem: T,
+    upcomingPagingItem: T?,
+    progress: CGFloat,
+    transition: PagingTransition?)
 }
 
 extension PagingState {
   
   var currentPagingItem: T {
     switch self {
-    case let .scrolling(pagingItem, _, _):
+    case let .scrolling(pagingItem, _, _, _):
       return pagingItem
     case let .selected(pagingItem):
       return pagingItem
@@ -18,7 +22,7 @@ extension PagingState {
   
   var upcomingPagingItem: T? {
     switch self {
-    case let .scrolling(_, upcomingPagingItem, _):
+    case let .scrolling(_, upcomingPagingItem, _, _):
       return upcomingPagingItem
     case .selected:
       return nil
@@ -27,8 +31,26 @@ extension PagingState {
   
   var progress: CGFloat {
     switch self {
-    case let .scrolling(_, _, progress):
+    case let .scrolling(_, _, progress, _):
       return progress
+    case .selected:
+      return 0
+    }
+  }
+  
+  var contentOffset: CGPoint {
+    switch self {
+    case let .scrolling(_, _, _, transition):
+      return transition?.contentOffset ?? .zero
+    case .selected:
+      return .zero
+    }
+  }
+  
+  var distance: CGFloat {
+    switch self {
+    case let .scrolling(_, _, _, transition):
+      return transition?.distance ?? 0
     case .selected:
       return 0
     }
@@ -46,11 +68,11 @@ extension PagingState {
 
 func ==<T: PagingItem>(lhs: PagingState<T>, rhs: PagingState<T>) -> Bool where T: Equatable {
   switch (lhs, rhs) {
-  case (let .scrolling(a, b, c), let .scrolling(x, y, z)):
-    if a == x && c == z {
-      if let b = b, let y = y, b == y {
+  case (let .scrolling(a, b, c, d), let .scrolling(w, x, y, z)):
+    if a == w && c == y && d == z {
+      if let b = b, let x = x, b == x {
         return true
-      } else if b == nil && y == nil {
+      } else if b == nil && x == nil {
         return true
       }
     }
