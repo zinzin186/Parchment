@@ -28,6 +28,7 @@ public enum PagingIndicatorOptions {
   case visible(
     height: CGFloat,
     zIndex: Int,
+    spacing: UIEdgeInsets,
     insets: UIEdgeInsets)
 }
 
@@ -151,6 +152,7 @@ public extension PagingOptions {
     return .visible(
       height: 4,
       zIndex: Int.max,
+     spacing: UIEdgeInsets.zero,
       insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
   }
   
