@@ -40,7 +40,8 @@ struct ImagePagingOptions: PagingOptions {
   let indicatorOptions: PagingIndicatorOptions = .visible(
     height: 1,
     zIndex: Int.max,
-    insets: UIEdgeInsets())
+    spacing: UIEdgeInsets.zero,
+    insets: UIEdgeInsets.zero)
   
   let borderOptions: PagingBorderOptions = .visible(
     height: 1,

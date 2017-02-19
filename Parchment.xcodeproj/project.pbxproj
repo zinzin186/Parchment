@@ -820,12 +820,12 @@
 				TargetAttributes = {
 					3E2AAD041CA81D480044AAA5 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = C48GZ8PUTA;
+						DevelopmentTeam = G4TGN24VA2;
 						LastSwiftMigration = 0810;
 					};
 					3E2AAD321CA86C690044AAA5 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = C48GZ8PUTA;
+						DevelopmentTeam = G4TGN24VA2;
 						LastSwiftMigration = 0810;
 					};
 					3E504EC31C7465B000AE1CE3 = {
@@ -835,7 +835,7 @@
 					};
 					3E5E93EF1CE8BA1E000762A1 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = C48GZ8PUTA;
+						DevelopmentTeam = G4TGN24VA2;
 						LastSwiftMigration = 0810;
 					};
 					3EA04A4A1C53BFE40054E5E0 = {
@@ -845,12 +845,12 @@
 					};
 					3EA04A591C53BFF40054E5E0 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = C48GZ8PUTA;
+						DevelopmentTeam = G4TGN24VA2;
 						LastSwiftMigration = 0810;
 					};
 					9597F29B1E394482003FD289 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = C48GZ8PUTA;
+						DevelopmentTeam = G4TGN24VA2;
 						ProvisioningStyle = Automatic;
 					};
 					95B300FC1E59E43800B95D02 = {
@@ -1253,6 +1253,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = G4TGN24VA2;
 				INFOPLIST_FILE = CalendarExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1268,6 +1269,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = G4TGN24VA2;
 				INFOPLIST_FILE = CalendarExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1283,6 +1285,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = G4TGN24VA2;
 				INFOPLIST_FILE = DelegateExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1298,6 +1301,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = G4TGN24VA2;
 				INFOPLIST_FILE = DelegateExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1345,6 +1349,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = G4TGN24VA2;
 				INFOPLIST_FILE = UnplashExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1360,6 +1365,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = G4TGN24VA2;
 				INFOPLIST_FILE = UnplashExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1524,6 +1530,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = G4TGN24VA2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -1543,6 +1550,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = G4TGN24VA2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -1565,7 +1573,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = C48GZ8PUTA;
+				DEVELOPMENT_TEAM = G4TGN24VA2;
 				INFOPLIST_FILE = IconsExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1585,7 +1593,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = C48GZ8PUTA;
+				DEVELOPMENT_TEAM = G4TGN24VA2;
 				INFOPLIST_FILE = IconsExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
