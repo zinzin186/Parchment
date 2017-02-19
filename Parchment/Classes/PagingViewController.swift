@@ -81,23 +81,42 @@ open class PagingViewController<T: PagingItem>:
           animated: animated))
       }
     } else {
-      
       let state: PagingState = .selected(pagingItem: pagingItem)
       stateMachine = PagingStateMachine(initialState: state)
       collectionViewLayout.state = state
       
-      updateContentOffset(pagingItem)
-      
-      selectCollectionViewCell(
-        pagingItem,
-        scrollPosition: options.scrollPosition,
-        animated: false)
-      
-      selectViewController(
-        pagingItem,
-        direction: .none,
-        animated: false)
+      if isViewLoaded && view.window != nil {
+        
+        generateItems(around: state.currentPagingItem)
+        
+        collectionView.selectItem(
+          at: dataStructure.indexPathForPagingItem(state.currentPagingItem),
+          animated: false,
+          scrollPosition: options.scrollPosition)
+        
+        selectViewController(
+          state.currentPagingItem,
+          direction: .none,
+          animated: false)
+      }
     }
+  }
+  
+  open override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    guard let state = stateMachine?.state else { return }
+    
+    generateItems(around: state.currentPagingItem)
+  
+    collectionView.selectItem(
+      at: dataStructure.indexPathForPagingItem(state.currentPagingItem),
+      animated: false,
+      scrollPosition: options.scrollPosition)
+
+    selectViewController(
+      state.currentPagingItem,
+      direction: .none,
+      animated: false)
   }
   
   open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -107,7 +126,7 @@ open class PagingViewController<T: PagingItem>:
       
       stateMachine.fire(.cancelScrolling)
       
-      self.updateContentOffset(stateMachine.state.currentPagingItem)
+      self.reloadItems(around: stateMachine.state.currentPagingItem)
       
       self.collectionView.selectItem(
         at: self.dataStructure.indexPathForPagingItem(stateMachine.state.currentPagingItem),
@@ -153,11 +172,11 @@ open class PagingViewController<T: PagingItem>:
     collectionViewLayout.state = state
     switch state {
     case let .selected(pagingItem):
-      updateContentOffset(pagingItem)
-      selectCollectionViewCell(
-        pagingItem,
-        scrollPosition: options.scrollPosition,
-        animated: options.menuTransition == .animateAfter ? true : false)
+      reloadItems(around: pagingItem)
+      collectionView.selectItem(
+        at: dataStructure.indexPathForPagingItem(pagingItem),
+        animated: options.menuTransition == .animateAfter,
+        scrollPosition: options.scrollPosition)
     case .scrolling:
       
       if options.menuTransition == .scrollAlongside {
@@ -172,10 +191,10 @@ open class PagingViewController<T: PagingItem>:
       }
       
       collectionViewLayout.invalidateLayout()
-      selectCollectionViewCell(
-        state.visuallySelectedPagingItem,
-        scrollPosition: UICollectionViewScrollPosition(),
-        animated: false)
+      collectionView.selectItem(
+        at: dataStructure.indexPathForPagingItem(state.visuallySelectedPagingItem),
+        animated: false,
+        scrollPosition: UICollectionViewScrollPosition())
     }
   }
   
@@ -191,19 +210,24 @@ open class PagingViewController<T: PagingItem>:
     stateMachine?.delegate = self
   }
   
-  fileprivate func updateContentOffset(_ pagingItem: T) {
-    let oldContentOffset: CGPoint = collectionView.contentOffset
-    let fromItems = dataStructure.visibleItems
+  fileprivate func generateItems(around pagingItem: T) {
     let toItems = visibleItems(pagingItem, width: collectionView.bounds.width * 1.5)
     let totalWidth = toItems.reduce(0) { widthForPagingItem($0.1) + $0.0 }
     
     dataStructure = PagingDataStructure(visibleItems: toItems, totalWidth: totalWidth)
     collectionViewLayout.dataStructure = dataStructure
     collectionView.reloadData()
+  }
+  
+  fileprivate func reloadItems(around pagingItem: T) {
+    let oldContentOffset: CGPoint = collectionView.contentOffset
+    let fromItems = dataStructure.visibleItems
+    
+    generateItems(around: pagingItem)
     
     let offset = diffWidth(
       from: fromItems,
-      to: toItems,
+      to: dataStructure.visibleItems,
       itemSpacing: options.menuItemSpacing)
     
     collectionView.contentOffset = CGPoint(
@@ -219,14 +243,7 @@ open class PagingViewController<T: PagingItem>:
       animated: animated,
       completion: nil)
   }
-  
-  fileprivate func selectCollectionViewCell(_ pagingItem: T, scrollPosition: UICollectionViewScrollPosition, animated: Bool) {
-    collectionView.selectItem(
-      at: dataStructure.indexPathForPagingItem(pagingItem),
-      animated: animated,
-      scrollPosition: scrollPosition)
-  }
-  
+
   // MARK: UICollectionViewDelegateFlowLayout
   
   open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
