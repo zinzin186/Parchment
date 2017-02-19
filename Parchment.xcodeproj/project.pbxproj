@@ -104,6 +104,8 @@
 		95B3010F1E59E70D00B95D02 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
 		95B301101E59E70D00B95D02 /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		95B301151E59E9BB00B95D02 /* UIView+constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B301141E59E9BB00B95D02 /* UIView+constraints.swift */; };
+		95B301171E59FCD500B95D02 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B301161E59FCD500B95D02 /* UIEdgeInsets.swift */; };
+		95B301191E59FD1600B95D02 /* UIScrollView+near.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B301181E59FD1600B95D02 /* UIScrollView+near.swift */; };
 		95F2CCA61E395762003C973E /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
 		95F2CCA71E395762003C973E /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -341,6 +343,8 @@
 		95B301091E59E43800B95D02 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		95B3010B1E59E43800B95D02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		95B301141E59E9BB00B95D02 /* UIView+constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+constraints.swift"; sourceTree = "<group>"; };
+		95B301161E59FCD500B95D02 /* UIEdgeInsets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIEdgeInsets.swift; sourceTree = "<group>"; };
+		95B301181E59FD1600B95D02 /* UIScrollView+near.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScrollView+near.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -583,6 +587,8 @@
 			children = (
 				3E2AAD271CA831AB0044AAA5 /* UIView+constraints.swift */,
 				9597F2941E3903F4003FD289 /* UIColor+interpolation.swift */,
+				95B301161E59FCD500B95D02 /* UIEdgeInsets.swift */,
+				95B301181E59FD1600B95D02 /* UIScrollView+near.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1049,6 +1055,7 @@
 				3E4090831C88BBCF00800E22 /* Reusable.swift in Sources */,
 				3E2AAD281CA831AB0044AAA5 /* UIView+constraints.swift in Sources */,
 				3E49C7251C8F5C13006269DD /* PagingBorderView.swift in Sources */,
+				95B301191E59FD1600B95D02 /* UIScrollView+near.swift in Sources */,
 				3E40909A1C88BCC900800E22 /* PagingDirection.swift in Sources */,
 				3ED1C8D81CC1554E00B46885 /* PagingItemPresentable.swift in Sources */,
 				3E49C7291C8F5C13006269DD /* PagingView.swift in Sources */,
@@ -1062,6 +1069,7 @@
 				3E4090AE1C88BDD100800E22 /* PagingBorderLayoutAttributes.swift in Sources */,
 				3E4283FC1C99CF9000032D95 /* PagingDataStructure.swift in Sources */,
 				3E49C7281C8F5C13006269DD /* PagingIndicatorView.swift in Sources */,
+				95B301171E59FCD500B95D02 /* UIEdgeInsets.swift in Sources */,
 				3E49C7261C8F5C13006269DD /* PagingCell.swift in Sources */,
 				3E49C72E1C8F5CCE006269DD /* PagingCellViewModel.swift in Sources */,
 				3E562ACE1CE7CD8C007623B3 /* PagingTitleCell.swift in Sources */,

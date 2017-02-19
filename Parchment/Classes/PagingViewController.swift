@@ -172,21 +172,25 @@ open class PagingViewController<T: PagingItem>:
     collectionViewLayout.state = state
     switch state {
     case let .selected(pagingItem):
+
       reloadItems(around: pagingItem)
       collectionView.selectItem(
         at: dataStructure.indexPathForPagingItem(pagingItem),
         animated: options.menuTransition == .animateAfter,
         scrollPosition: options.scrollPosition)
+
     case .scrolling:
       
       if options.menuTransition == .scrollAlongside {
-        let inset = options.menuInsets.left + options.menuInsets.right
-        let offset = state.contentOffset.x + (state.distance * fabs(state.progress))
-        
-        if dataStructure.totalWidth + inset >= collectionView.bounds.width {
-          collectionView.setContentOffset(CGPoint(
-            x: min(max(0, offset), collectionView.contentSize.width - collectionView.bounds.width),
-            y: state.contentOffset.y), animated: false)
+        if state.distance != 0 {
+          if dataStructure.totalWidth + options.menuInsets.horizontal >= collectionView.bounds.width {
+
+            let contentOffset = CGPoint(
+              x: state.contentOffset.x + (state.distance * fabs(state.progress)),
+              y: state.contentOffset.y)
+            
+            collectionView.setContentOffset(contentOffset, animated: false)
+          }
         }
       }
       
@@ -233,6 +237,7 @@ open class PagingViewController<T: PagingItem>:
     collectionView.contentOffset = CGPoint(
       x: oldContentOffset.x + offset,
       y: oldContentOffset.y)
+    collectionView.layoutIfNeeded()
   }
   
   fileprivate func selectViewController(_ pagingItem: T, direction: PagingDirection, animated: Bool = true) {
@@ -242,6 +247,21 @@ open class PagingViewController<T: PagingItem>:
       direction: direction.pageViewControllerNavigationDirection,
       animated: animated,
       completion: nil)
+  }
+  
+  fileprivate func distance(from: UICollectionViewCell, to: UICollectionViewCell) -> CGFloat {
+    switch (options.selectedScrollPosition) {
+    case .left:
+      return to.frame.origin.x - collectionView.contentOffset.x
+    case .right:
+      let currentPosition = to.frame.origin.x + to.frame.width
+      let width = collectionView.contentOffset.x + collectionView.bounds.width
+      return currentPosition - width
+    case .preferCentered:
+      let distanceToCenter = collectionView.bounds.midX - from.frame.midX
+      let distanceBetweenCells = to.frame.midX - from.frame.midX
+      return distanceBetweenCells - distanceToCenter
+    }
   }
 
   // MARK: UICollectionViewDelegateFlowLayout
@@ -386,24 +406,17 @@ open class PagingViewController<T: PagingItem>:
     
     let currentCell = collectionView(collectionView, cellForItemAt: currentIndexPath)
     let upcomingCell = collectionView(collectionView, cellForItemAt: upcomingIndexPath)
-      
-    switch (options.selectedScrollPosition) {
-    case .left:
-      return PagingTransition(
-        contentOffset: collectionView.contentOffset,
-        distance: upcomingCell.frame.origin.x - collectionView.contentOffset.x)
-    case .right:
-      return PagingTransition(
-        contentOffset: collectionView.contentOffset,
-        distance: (upcomingCell.frame.origin.x + upcomingCell.frame.width) - (collectionView.contentOffset.x + collectionView.bounds.width))
-    case .preferCentered:
-      let distanceToCenter = collectionView.bounds.midX - currentCell.frame.midX
-      let distanceBetweenCells = upcomingCell.frame.midX - currentCell.frame.midX
-      return PagingTransition(
-        contentOffset: collectionView.contentOffset,
-        distance: distanceBetweenCells - distanceToCenter)
+    var distance = self.distance(from: currentCell, to: upcomingCell)
+   
+    if collectionView.near(edge: .left, clearance: -distance) {
+      distance = -(collectionView.contentOffset.x + collectionView.contentInset.left)
+    } else if collectionView.near(edge: .right, clearance: distance) {
+      distance = collectionView.contentSize.width - (collectionView.contentOffset.x + collectionView.bounds.width)
     }
     
+    return PagingTransition(
+      contentOffset: collectionView.contentOffset,
+      distance: distance)
   }
   
   func pagingStateMachine<U>(
