@@ -24,17 +24,13 @@ open class FixedPagingViewController: PagingViewController<ViewControllerItem> {
     super.init(options: options)
     dataSource = self
     
+    if let item = items.first {
+      selectPagingItem(item)
+    }
   }
 
   required public init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
-  }
-  
-  open override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    if let item = items.first {
-      selectPagingItem(item)
-    }
   }
   
 }

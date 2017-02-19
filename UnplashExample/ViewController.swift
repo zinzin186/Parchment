@@ -73,10 +73,6 @@ class ViewController: UIViewController {
     
     // Set our custom data source.
     pagingViewController.dataSource = dataSource
-  }
-  
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
     
     // Set the first item as the selected paging item.
     pagingViewController.selectPagingItem(dataSource.items.first!)
