@@ -22,8 +22,8 @@ open class PagingView: UIView {
   }
   
   open func configure() {
-    addSubview(collectionView)
     addSubview(pageView)
+    addSubview(collectionView)
     setupConstraints()
   }
   
