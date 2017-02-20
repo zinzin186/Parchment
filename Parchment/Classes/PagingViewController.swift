@@ -408,9 +408,9 @@ open class PagingViewController<T: PagingItem>:
     let upcomingCell = collectionView(collectionView, cellForItemAt: upcomingIndexPath)
     var distance = self.distance(from: currentCell, to: upcomingCell)
    
-    if collectionView.near(edge: .left, clearance: -distance) {
+    if collectionView.near(edge: .left, clearance: -distance) && distance < 0 {
       distance = -(collectionView.contentOffset.x + collectionView.contentInset.left)
-    } else if collectionView.near(edge: .right, clearance: distance) {
+    } else if collectionView.near(edge: .right, clearance: distance) && distance > 0 {
       distance = collectionView.contentSize.width - (collectionView.contentOffset.x + collectionView.bounds.width)
     }
     
