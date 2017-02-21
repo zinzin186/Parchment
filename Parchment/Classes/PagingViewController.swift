@@ -84,39 +84,31 @@ open class PagingViewController<T: PagingItem>:
       let state: PagingState = .selected(pagingItem: pagingItem)
       stateMachine = PagingStateMachine(initialState: state)
       collectionViewLayout.state = state
+
+      selectViewController(
+        state.currentPagingItem,
+        direction: .none,
+        animated: false)
       
       if isViewLoaded && view.window != nil {
-        
         generateItems(around: state.currentPagingItem)
-        
         collectionView.selectItem(
           at: dataStructure.indexPathForPagingItem(state.currentPagingItem),
           animated: false,
           scrollPosition: options.scrollPosition)
-        
-        selectViewController(
-          state.currentPagingItem,
-          direction: .none,
-          animated: false)
       }
     }
   }
-  
+    
   open override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     guard let state = stateMachine?.state else { return }
     
     generateItems(around: state.currentPagingItem)
-  
     collectionView.selectItem(
       at: dataStructure.indexPathForPagingItem(state.currentPagingItem),
       animated: false,
       scrollPosition: options.scrollPosition)
-
-    selectViewController(
-      state.currentPagingItem,
-      direction: .none,
-      animated: false)
   }
   
   open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
