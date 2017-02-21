@@ -84,7 +84,7 @@ import UIKit
      - parameter destinationViewController: The view controller being scrolled to where the transition should end
      - parameter progress: The progress of the transition, where 0 is a neutral scroll position, >= 1 is a complete transition to the right view controller in a horizontal orientation, or the below view controller in a vertical orientation, and <= -1 is a complete transition to the left view controller in a horizontal orientation, or the above view controller in a vertical orientation. Values may be greater than 1 or less than -1 if bouncing is enabled and the scroll velocity is quick enough.
      */
-    @objc optional func em_pageViewController(_ pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController:UIViewController, progress: CGFloat)
+    @objc optional func em_pageViewController(_ pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController:UIViewController?, progress: CGFloat)
     
     /**
      Called after a page transition attempt has completed.
@@ -416,12 +416,20 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     
     private func loadBeforeViewController(for selectedViewController:UIViewController) {
         // Retreive the new before controller from the data source if available, otherwise set as nil
-        self.beforeViewController = self.dataSource?.em_pageViewController(self, viewControllerBeforeViewController: selectedViewController)
+        if let beforeViewController = self.dataSource?.em_pageViewController(self, viewControllerBeforeViewController: selectedViewController) {
+            self.beforeViewController = beforeViewController
+        } else {
+            self.beforeViewController = nil
+        }
     }
     
     private func loadAfterViewController(for selectedViewController:UIViewController) {
         // Retreive the new after controller from the data source if available, otherwise set as nil
-        self.afterViewController = self.dataSource?.em_pageViewController(self, viewControllerAfterViewController: selectedViewController)
+        if let afterViewController = self.dataSource?.em_pageViewController(self, viewControllerAfterViewController: selectedViewController) {
+            self.afterViewController = afterViewController
+        } else {
+            self.afterViewController = nil
+        }
     }
     
     
@@ -521,6 +529,13 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
                     if (self.selectedViewController != nil) {
                         self.delegate?.em_pageViewController?(self, isScrollingFrom: self.selectedViewController!, destinationViewController: self.afterViewController!, progress: progress)
                     }
+                } else {
+                    if (self.selectedViewController != nil) {
+                        self.delegate?.em_pageViewController?(self,
+                                                              isScrollingFrom: self.selectedViewController!,
+                                                              destinationViewController: nil,
+                                                              progress: progress)
+                    }
                 }
                 
                 // Scrolling reverse / before
@@ -540,6 +555,13 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
                     
                     if (self.selectedViewController != nil) {
                         self.delegate?.em_pageViewController?(self, isScrollingFrom: self.selectedViewController!, destinationViewController: self.beforeViewController!, progress: progress)
+                    }
+                } else {
+                    if (self.selectedViewController != nil) {
+                        self.delegate?.em_pageViewController?(self,
+                                                              isScrollingFrom: self.selectedViewController!,
+                                                              destinationViewController: nil,
+                                                              progress: progress)
                     }
                 }
                 
