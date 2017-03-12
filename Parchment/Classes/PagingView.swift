@@ -22,6 +22,7 @@ open class PagingView: UIView {
   }
   
   open func configure() {
+    collectionView.backgroundColor = options.theme.headerBackgroundColor
     addSubview(pageView)
     addSubview(collectionView)
     setupConstraints()
