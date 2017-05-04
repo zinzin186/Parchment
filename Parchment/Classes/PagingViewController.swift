@@ -108,11 +108,12 @@ open class PagingViewController<T: PagingItem>:
       }
     }
   }
-    
-  open override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
+  
+  open override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
     guard let state = stateMachine?.state else { return }
     
+    view.layoutIfNeeded()
     generateItems(around: state.currentPagingItem)
     collectionView.selectItem(
       at: dataStructure.indexPathForPagingItem(state.currentPagingItem),
