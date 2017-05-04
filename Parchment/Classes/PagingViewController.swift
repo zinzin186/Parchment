@@ -14,7 +14,7 @@ open class PagingViewController<T: PagingItem>:
   open weak var dataSource: PagingViewControllerDataSource?
   fileprivate var dataStructure: PagingDataStructure<T>
   
-  fileprivate var stateMachine: PagingStateMachine<T>? {
+  internal var stateMachine: PagingStateMachine<T>? {
     didSet {
       handleStateMachineUpdate()
     }
