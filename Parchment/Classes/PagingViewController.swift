@@ -32,7 +32,7 @@ open class PagingViewController<T: PagingItem>:
   open lazy var collectionView: UICollectionView = {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
     collectionView.backgroundColor = .white
-    collectionView.isScrollEnabled = false
+    collectionView.showsHorizontalScrollIndicator = false
     return collectionView
   }()
   
@@ -71,7 +71,10 @@ open class PagingViewController<T: PagingItem>:
     collectionView.dataSource = self
     collectionView.registerReusableCell(options.menuItemClass)
     
-    setupGestureRecognizers()
+    if case .swipe = options.menuGesture {
+      collectionView.isScrollEnabled = false
+      setupGestureRecognizers()
+    }
     
     if let state = stateMachine?.state {
       selectViewController(
@@ -167,9 +170,14 @@ open class PagingViewController<T: PagingItem>:
       if let event = event {
         switch event {
         case .finishScrolling, .cancelScrolling:
-          let animated = options.menuTransition == .animateAfter
-          reloadItems(around: pagingItem)
-          selectCollectionViewItem(for: pagingItem, animated: animated)
+          
+          // We only want to select the current paging item
+          // if the user is not scrolling the collection view.
+          if collectionView.isDragging == false {
+            let animated = options.menuTransition == .animateAfter
+            reloadItems(around: pagingItem)
+            selectCollectionViewItem(for: pagingItem, animated: animated)
+          }
         default:
           break
         }
@@ -181,10 +189,30 @@ open class PagingViewController<T: PagingItem>:
       // just started scrolling.
       if case .selected = oldState {
         invalidationContext.invalidateTransition = true
+
+        // If the upcoming item is outside the currently visible
+        // items we need to append the items that are around the
+        // upcoming item so we can animate the transition.
+        if let upcomingPagingItem = state.upcomingPagingItem {
+
+          // Stop any ongoing scrolling so that the isDragging
+          // property is set to false in case the collection
+          // view is still scrolling after a swipe.
+          stopScrolling()
+
+          if dataStructure.visibleItems.contains(upcomingPagingItem) == false {
+            reloadItems(around: upcomingPagingItem, keepExisting: true)
+          }
+        }
+        
       }
       
-      invalidationContext.invalidateContentOffset = true
-      collectionViewLayout.invalidateLayout(with: invalidationContext)
+      // We don't want to update the content offset while the
+      // user is dragging in the collection view.
+      if collectionView.isDragging == false {
+        invalidationContext.invalidateContentOffset = true
+        collectionViewLayout.invalidateLayout(with: invalidationContext)
+      }
     }
   }
   
@@ -258,9 +286,13 @@ open class PagingViewController<T: PagingItem>:
     return items
   }
   
-  fileprivate func reloadItems(around pagingItem: T) {
+  fileprivate func reloadItems(around pagingItem: T, keepExisting: Bool = false) {
+    var toItems = generateItems(around: pagingItem)
     
-    let toItems = generateItems(around: pagingItem)
+    if keepExisting {
+      toItems = dataStructure.visibleItems.union(toItems)
+    }
+    
     let oldContentOffset = collectionView.contentOffset
     let oldDataStructure = dataStructure
     let sortedItems = Array(toItems).sorted()
@@ -294,6 +326,10 @@ open class PagingViewController<T: PagingItem>:
       x: oldContentOffset.x - offset,
       y: oldContentOffset.y)
     
+    // Update the transition state for the layout in case there is
+    // already a transition in progress.
+    collectionViewLayout.updateCurrentTransition()
+    
     // We need to perform layout here, if not the collection view
     // seems to get in a weird state.
     collectionView.layoutIfNeeded()
@@ -326,8 +362,36 @@ open class PagingViewController<T: PagingItem>:
     guard let item = pagingItem else { return false }
     return dataSource?.pagingViewController(self, pagingItemAfterPagingItem: item) != nil
   }
+  
+  fileprivate func stopScrolling() {
+    collectionView.setContentOffset(collectionView.contentOffset, animated: false)
+  }
 
   // MARK: UICollectionViewDelegate
+  
+  public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    
+    // If we don't have any visible items there is no point in
+    // checking if we're near an edge. This seems to be empty quite
+    // often when scrolling very fast.
+    if collectionView.indexPathsForVisibleItems.isEmpty {
+      return
+    }
+    
+    if scrollView.near(edge: .left) {
+      if let firstPagingItem = dataStructure.sortedItems.first {
+        if dataStructure.hasItemsBefore {
+          reloadItems(around: firstPagingItem)
+        }
+      }
+    } else if scrollView.near(edge: .right) {
+      if let lastPagingItem = dataStructure.sortedItems.last {
+        if dataStructure.hasItemsAfter {
+          reloadItems(around: lastPagingItem)
+        }
+      }
+    }
+  }
   
   open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard let stateMachine = stateMachine else { return }
@@ -383,8 +447,14 @@ open class PagingViewController<T: PagingItem>:
   }
   
   open func em_pageViewController(_ pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
+    guard let state = stateMachine?.state else { return }
+    
     if transitionSuccessful {
-      stateMachine?.fire(.finishScrolling)
+      // EMPageViewController will trigger didFinishScrolling even
+      // when your are scrolling towards an item that doesn't exist.
+      if state.upcomingPagingItem != nil {
+        stateMachine?.fire(.finishScrolling)
+      }
     }
   }
   

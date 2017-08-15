@@ -131,6 +131,28 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     
     return layoutAttributes
   }
+  
+  // The content offset and distance between items can change while a
+  // transition is in progress meaning the current transition will be
+  // wrong. For instance, when hitting the edge of the collection view
+  // while transitioning we need to reload all the paging items and
+  // update the transition data.
+  func updateCurrentTransition() {
+    let oldTransition = currentTransition
+    invalidateTransition()
+    
+    if let oldTransition = oldTransition,
+      let newTransition = currentTransition {
+      
+      let contentOffset = CGPoint(
+        x: view.contentOffset.x - (oldTransition.distance - newTransition.distance),
+        y: view.contentOffset.y)
+      
+      currentTransition = PagingTransition(
+        contentOffset: contentOffset,
+        distance: oldTransition.distance)
+    }
+  }
 
   // MARK: Private
   

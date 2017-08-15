@@ -56,6 +56,11 @@ public enum PagingMenuTransition {
   case animateAfter
 }
 
+public enum PagingMenuGesture {
+  case scrolling
+  case swipe
+}
+
 public protocol PagingTheme {
   var font: UIFont { get }
   var textColor: UIColor { get }
@@ -73,6 +78,7 @@ public protocol PagingOptions {
   var menuInsets: UIEdgeInsets { get }
   var menuHorizontalAlignment: PagingMenuHorizontalAlignment { get }
   var menuTransition: PagingMenuTransition { get }
+  var menuGesture: PagingMenuGesture { get }
   var selectedScrollPosition: PagingSelectedScrollPosition { get }
   var indicatorOptions: PagingIndicatorOptions { get }
   var borderOptions: PagingBorderOptions { get }
@@ -151,6 +157,10 @@ public extension PagingOptions {
   
   var menuTransition: PagingMenuTransition {
     return .scrollAlongside
+  }
+  
+  var menuGesture: PagingMenuGesture {
+    return .scrolling
   }
   
   var theme: PagingTheme {
