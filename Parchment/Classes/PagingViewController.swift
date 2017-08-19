@@ -7,7 +7,7 @@ open class PagingViewController<T: PagingItem>:
   EMPageViewControllerDataSource,
   EMPageViewControllerDelegate,
   PagingItemsPresentable,
-  PagingStateMachineDelegate where T: Equatable {
+  PagingStateMachineDelegate where T: Hashable, T: Comparable {
   
   open let options: PagingOptions
   open weak var delegate: PagingViewControllerDelegate?

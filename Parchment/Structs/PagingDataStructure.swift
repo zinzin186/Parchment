@@ -1,6 +1,6 @@
 import Foundation
 
-struct PagingDataStructure<T: PagingItem> where T: Equatable {
+struct PagingDataStructure<T: PagingItem> where T: Hashable, T: Comparable {
   
   let visibleItems: [T]
   let totalWidth: CGFloat

@@ -1,6 +1,7 @@
 import UIKit
 
-open class PagingCollectionViewLayout<T: PagingItem>: UICollectionViewFlowLayout where T: Equatable {
+open class PagingCollectionViewLayout<T: PagingItem>:
+  UICollectionViewFlowLayout where T: Hashable, T: Comparable {
   
   var state: PagingState<T>?
   var dataStructure: PagingDataStructure<T>

@@ -3,14 +3,6 @@ import Quick
 import Nimble
 @testable import Parchment
 
-private struct Item: PagingItem, Equatable {
-  let index: Int
-}
-
-private func ==(lhs: Item, rhs: Item) -> Bool {
-  return lhs.index == rhs.index
-}
-
 private func beScrolling() -> MatcherFunc<PagingState<Item>> {
   return MatcherFunc { expression, message in
     message.postfixMessage = "be .Scrolling)"

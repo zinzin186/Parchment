@@ -3,14 +3,22 @@ import Parchment
 
 // First thing we need to do is create our own
 // PagingItem that will hold our date. We also
-// need to make sure it conforms to Equatable, 
+// need to make sure it conforms to Equatable,
 // since that is required by PagingViewController
-struct CalendarItem: PagingItem, Equatable {
+struct CalendarItem: PagingItem, Equatable, Hashable, Comparable {
   let date: Date
+  
+  var hashValue: Int {
+    return date.hashValue
+  }
 }
 
 func ==(lhs: CalendarItem, rhs: CalendarItem) -> Bool {
   return lhs.date == rhs.date
+}
+
+func <(lhs: CalendarItem, rhs: CalendarItem) -> Bool {
+  return lhs.date < rhs.date
 }
 
 // Create our own custom purple theme

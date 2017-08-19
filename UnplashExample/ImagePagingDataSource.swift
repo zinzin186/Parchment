@@ -5,6 +5,7 @@ class ImagePagingDataSource {
   
   let items: [ImageItem] = [
     ImageItem(
+      index: 0,
       title: "Green",
       headerImage: UIImage(named: "green-1")!,
       images: [
@@ -14,6 +15,7 @@ class ImagePagingDataSource {
         UIImage(named: "green-4")!,
       ]),
     ImageItem(
+      index: 1,
       title: "Food",
       headerImage: UIImage(named: "food-1")!,
       images: [
@@ -23,6 +25,7 @@ class ImagePagingDataSource {
         UIImage(named: "food-4")!,
       ]),
     ImageItem(
+      index: 2,
       title: "Succulents",
       headerImage: UIImage(named: "succulents-1")!,
       images: [
@@ -32,6 +35,7 @@ class ImagePagingDataSource {
         UIImage(named: "succulents-4")!,
       ]),
     ImageItem(
+      index: 3,
       title: "City",
       headerImage: UIImage(named: "city-1")!,
       images: [
@@ -41,6 +45,7 @@ class ImagePagingDataSource {
         UIImage(named: "city-4")!,
       ]),
     ImageItem(
+      index: 4,
       title: "Scenic",
       headerImage: UIImage(named: "scenic-1")!,
       images: [
@@ -50,6 +55,7 @@ class ImagePagingDataSource {
         UIImage(named: "scenic-4")!,
       ]),
     ImageItem(
+      index: 5,
       title: "Coffee",
       headerImage: UIImage(named: "coffee-1")!,
       images: [

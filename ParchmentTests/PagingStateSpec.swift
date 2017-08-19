@@ -3,14 +3,6 @@ import Quick
 import Nimble
 @testable import Parchment
 
-private struct Item: PagingItem, Equatable {
-  let index: Int
-}
-
-private func ==(lhs: Item, rhs: Item) -> Bool {
-  return lhs.index == rhs.index
-}
-
 class PagingStateSpec: QuickSpec {
   
   override func spec() {
