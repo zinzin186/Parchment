@@ -185,32 +185,36 @@ open class PagingViewController<T: PagingItem>:
     case .scrolling:
       let invalidationContext = PagingInvalidationContext()
       
-      // When the old state is .selected it means that the user
-      // just started scrolling.
-      if case .selected = oldState {
-        invalidationContext.invalidateTransition = true
-
-        // If the upcoming item is outside the currently visible
-        // items we need to append the items that are around the
-        // upcoming item so we can animate the transition.
-        if let upcomingPagingItem = state.upcomingPagingItem {
-
+      // We don't want to update the content offset if there is no
+      // upcoming item to scroll to. We need to invalidate the layout
+      // though in order to update the layout attributes for the
+      // decoration views.
+      if let upcomingPagingItem = state.upcomingPagingItem {
+        
+        // When the old state is .selected it means that the user
+        // just started scrolling.
+        if case .selected = oldState {
+          invalidationContext.invalidateTransition = true
+          
           // Stop any ongoing scrolling so that the isDragging
           // property is set to false in case the collection
           // view is still scrolling after a swipe.
           stopScrolling()
-
+          
+          // If the upcoming item is outside the currently visible
+          // items we need to append the items that are around the
+          // upcoming item so we can animate the transition.
           if dataStructure.visibleItems.contains(upcomingPagingItem) == false {
             reloadItems(around: upcomingPagingItem, keepExisting: true)
           }
         }
         
+        invalidationContext.invalidateContentOffset = true
       }
       
       // We don't want to update the content offset while the
       // user is dragging in the collection view.
       if collectionView.isDragging == false {
-        invalidationContext.invalidateContentOffset = true
         collectionViewLayout.invalidateLayout(with: invalidationContext)
       }
     }
