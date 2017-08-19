@@ -96,6 +96,15 @@ extension PagingOptions {
     return menuItemSize.height + menuInsets.top + menuInsets.bottom
   }
   
+  var estimatedItemWidth: CGFloat {
+    switch menuItemSize {
+    case let .fixed(width, _):
+      return width
+    case let .sizeToFit(minWidth, _):
+      return minWidth
+    }
+  }
+  
 }
 
 public extension PagingTheme {

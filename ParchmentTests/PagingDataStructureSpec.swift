@@ -16,7 +16,7 @@ class PagingDataStructureSpec: QuickSpec {
           Item(index: 0),
           Item(index: 1),
           Item(index: 2)
-        ], totalWidth: 0)
+        ])
       }
       
       describe("indexPathForPagingItem:") {
