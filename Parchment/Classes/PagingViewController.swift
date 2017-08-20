@@ -296,7 +296,8 @@ open class PagingViewController<T: PagingItem>:
     if keepExisting {
       toItems = dataStructure.visibleItems.union(toItems)
     }
-    
+  
+    let oldLayoutAttributes = collectionViewLayout.layoutAttributes
     let oldContentOffset = collectionView.contentOffset
     let oldDataStructure = dataStructure
     let sortedItems = Array(toItems).sorted()
@@ -308,6 +309,7 @@ open class PagingViewController<T: PagingItem>:
     
     collectionViewLayout.dataStructure = dataStructure
     collectionView.reloadData()
+    collectionViewLayout.prepare()
     
     // After reloading the data the content offset is going to be
     // reset. We need to diff which items where added/removed and
@@ -317,12 +319,12 @@ open class PagingViewController<T: PagingItem>:
     let diff = PagingDiff(from: oldDataStructure, to: dataStructure)
     
     for indexPath in diff.removed() {
-      offset += collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame.width ?? 0
+      offset += oldLayoutAttributes[indexPath]?.frame.width ?? 0
       offset += options.menuItemSpacing
     }
     
     for indexPath in diff.added() {
-      offset -= collectionViewLayout.layoutAttributesForItem(at: indexPath)?.frame.width ?? 0
+      offset -= collectionViewLayout.layoutAttributes[indexPath]?.frame.width ?? 0
       offset -= options.menuItemSpacing
     }
     

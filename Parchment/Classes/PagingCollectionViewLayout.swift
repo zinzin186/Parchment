@@ -5,6 +5,8 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   
   var state: PagingState<T>?
   var dataStructure: PagingDataStructure<T>
+  var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
+  
   weak var delegate: PagingCollectionViewLayoutDelegate?
   
   open override var collectionViewContentSize: CGSize {
@@ -27,7 +29,6 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private let indicatorLayoutAttributes: PagingIndicatorLayoutAttributes
   private let borderLayoutAttributes: PagingBorderLayoutAttributes
   private var contentSize: CGSize = .zero
-  private var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
   private var invalidationSummary: InvalidationSummary = .everything
   private var currentTransition: PagingTransition? = nil
   
@@ -282,7 +283,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
         // When using sizeToFit the content will always be as wide as
         // the bounds so there is not possible to center the items. In
         // all the other cases we want to center them if the menu
-      // alignment is set to .center
+        // alignment is set to .center
       default:
         if case .center = options.menuHorizontalAlignment {
           
