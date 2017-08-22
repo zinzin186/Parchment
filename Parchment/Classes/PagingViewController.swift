@@ -33,6 +33,7 @@ open class PagingViewController<T: PagingItem>:
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
     collectionView.backgroundColor = .white
     collectionView.showsHorizontalScrollIndicator = false
+    collectionView.isScrollEnabled = false
     return collectionView
   }()
   
@@ -71,9 +72,14 @@ open class PagingViewController<T: PagingItem>:
     collectionView.dataSource = self
     collectionView.registerReusableCell(options.menuItemClass)
     
-    if case .swipe = options.menuGesture {
-      collectionView.isScrollEnabled = false
+    switch (options.menuInteraction) {
+    case .scrolling:
+      collectionView.isScrollEnabled = true
+      collectionView.alwaysBounceHorizontal = true
+    case .swipe:
       setupGestureRecognizers()
+    case .none:
+      break
     }
     
     if let state = stateMachine?.state {

@@ -160,7 +160,7 @@ protocol PagingOptions {
   var menuInsets: UIEdgeInsets { get }
   var menuHorizontalAlignment: PagingMenuHorizontalAlignment { get }
   var menuTransition: PagingMenuTransition { get }
-  var menuGesture: PagingMenuGesture { get }
+  var menuInteraction: PagingMenuInteraction { get }
   var selectedScrollPosition: PagingSelectedScrollPosition { get }
   var indicatorOptions: PagingIndicatorOptions { get }
   var borderOptions: PagingBorderOptions { get }
@@ -235,7 +235,21 @@ enum PagingMenuTransition {
 }
 ```
 
-Default: .scrollAlongside
+_Default: .scrollAlongside_
+
+#### `menuInteraction`
+
+Determine how users can interact with the menu items.
+
+```Swift
+enum PagingMenuInteraction {
+  case scrolling
+  case swipe
+  case none
+}
+```
+
+_Default: .scrolling_
 
 #### `selectedScrollPosition`
 
