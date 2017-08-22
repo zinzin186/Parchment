@@ -1,13 +1,21 @@
 import Foundation
 
-struct PagingDataStructure<T: PagingItem> where T: Equatable {
+struct PagingDataStructure<T: PagingItem> where T: Hashable, T: Comparable {
   
-  let visibleItems: [T]
-  let totalWidth: CGFloat
+  let visibleItems: Set<T>
+  let sortedItems: [T]
+  let hasItemsBefore: Bool
+  let hasItemsAfter: Bool
   
-  init(visibleItems: [T], totalWidth: CGFloat) {
+  init(
+    visibleItems: Set<T>,
+    hasItemsBefore: Bool = false,
+    hasItemsAfter: Bool = false) {
+    
     self.visibleItems = visibleItems
-    self.totalWidth = totalWidth
+    self.sortedItems = Array(visibleItems).sorted()
+    self.hasItemsBefore = hasItemsBefore
+    self.hasItemsAfter = hasItemsAfter
   }
   
   func directionForIndexPath(_ indexPath: IndexPath, currentPagingItem: T) -> PagingDirection {
@@ -22,12 +30,12 @@ struct PagingDataStructure<T: PagingItem> where T: Equatable {
   }
   
   func indexPathForPagingItem(_ pagingItem: T) -> IndexPath? {
-    guard let index = visibleItems.index(of: pagingItem) else { return nil }
+    guard let index = sortedItems.index(of: pagingItem) else { return nil }
     return IndexPath(item: index, section: 0)
   }
   
   func pagingItemForIndexPath(_ indexPath: IndexPath) -> T {
-    return visibleItems[indexPath.item]
+    return sortedItems[indexPath.item]
   }
   
 }

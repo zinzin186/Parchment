@@ -18,4 +18,9 @@ class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
     frame.size.width = tween(from: from.width, to: to.width, progress: progress)
   }
   
+  func update(to metric: PagingIndicatorMetric) {
+    frame.origin.x = metric.x
+    frame.size.width = metric.width
+  }
+  
 }

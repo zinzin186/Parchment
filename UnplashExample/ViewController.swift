@@ -6,10 +6,15 @@ import Parchment
 // image that will be displayed in the menu and the title will be
 // overlayed above that.  We also need to store the array of images
 // that we want to show when the item is tapped.
-struct ImageItem: PagingItem, Equatable {
+struct ImageItem: PagingItem, Hashable, Comparable {
+  let index: Int
   let title: String
   let headerImage: UIImage
   let images: [UIImage]
+  
+  var hashValue: Int {
+    return title.hashValue + headerImage.hashValue
+  }
 }
 
 func ==(lhs: ImageItem, rhs: ImageItem) -> Bool {
@@ -17,6 +22,10 @@ func ==(lhs: ImageItem, rhs: ImageItem) -> Bool {
     lhs.title == rhs.title &&
     lhs.headerImage == rhs.headerImage &&
     lhs.images == rhs.images)
+}
+
+func <(lhs: ImageItem, rhs: ImageItem) -> Bool {
+  return lhs.index < rhs.index
 }
 
 // Lets create our own custom theme.

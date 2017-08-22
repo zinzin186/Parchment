@@ -11,7 +11,11 @@ open class FixedPagingViewController: PagingViewController<ViewControllerItem> {
   open weak var itemDelegate: FixedPagingViewControllerDelegate?
   
   public init(viewControllers: [UIViewController], options: PagingOptions = DefaultPagingOptions()) {
-    items = viewControllers.map { ViewControllerItem(viewController: $0) }
+    
+    items = viewControllers.enumerated().map {
+      ViewControllerItem(viewController: $1, index: $0)
+    }
+    
     super.init(options: options)
     dataSource = self
     
