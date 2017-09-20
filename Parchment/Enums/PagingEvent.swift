@@ -4,6 +4,7 @@ enum PagingEvent<T: PagingItem> where T: Equatable {
   case scroll(progress: CGFloat)
   case select(pagingItem: T, direction: PagingDirection, animated: Bool)
   case finishScrolling
+  case transitionSize
   case cancelScrolling
 }
 

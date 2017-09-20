@@ -131,7 +131,7 @@ open class PagingViewController<T: PagingItem>:
     guard let stateMachine = stateMachine else { return }
     
     coordinator.animate(alongsideTransition: { context in
-      stateMachine.fire(.cancelScrolling)
+      stateMachine.fire(.transitionSize)
       let pagingItem = stateMachine.state.currentPagingItem
       self.reloadItems(around: pagingItem)
       self.selectCollectionViewItem(for: pagingItem)
@@ -175,7 +175,7 @@ open class PagingViewController<T: PagingItem>:
     case let .selected(pagingItem):
       if let event = event {
         switch event {
-        case .finishScrolling, .cancelScrolling:
+        case .finishScrolling, .transitionSize:
           
           // We only want to select the current paging item
           // if the user is not scrolling the collection view.
@@ -462,9 +462,16 @@ open class PagingViewController<T: PagingItem>:
     guard let state = stateMachine?.state else { return }
     
     if transitionSuccessful {
-      // EMPageViewController will trigger didFinishScrolling even
-      // when your are scrolling towards an item that doesn't exist.
-      if state.upcomingPagingItem != nil {
+      // If a transition finishes scrolling, but the upcoming paging
+      // item is nil it means that the user scrolled away from one of
+      // the items at the very edge. In this case, we don't want to
+      // fire a .finishScrolling event as this will select the current
+      // paging item, causing it to jump to that item even if it's
+      // scrolled out of view. We still need to fire an event that
+      // will reset the state to .selected.
+      if state.upcomingPagingItem == nil {
+        stateMachine?.fire(.cancelScrolling)
+      } else {
         stateMachine?.fire(.finishScrolling)
       }
     }
