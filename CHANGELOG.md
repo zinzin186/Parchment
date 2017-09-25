@@ -2,6 +2,16 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.0](https://github.com/rechsteiner/Parchment/compare/v0.5.0...v0.6.0) - 2017-09-25
+
+### Changes
+
+- Upgrade to Swift 4.0 #54
+
+### Fixes
+
+- Fix bug where selecting items was not working #55
+
 ## [0.5.0](https://github.com/rechsteiner/Parchment/compare/v0.4.0...v0.5.0) - 2017-08-22
 
 ### Added
