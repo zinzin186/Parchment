@@ -70,7 +70,7 @@ extension ViewController: PagingViewControllerDelegate {
     let options = pagingViewController.options
     let insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     let size = CGSize(width: CGFloat.greatestFiniteMagnitude, height: options.menuItemSize.height)
-    let attributes = [NSFontAttributeName: options.theme.font]
+    let attributes = [NSAttributedStringKey.font: options.theme.font]
     
     let rect = item.title.boundingRect(with: size,
       options: .usesLineFragmentOrigin,
