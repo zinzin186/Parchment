@@ -108,6 +108,35 @@ class PagingStateMachineSpec: QuickSpec {
         
       }
       
+      describe("transition size") {
+        
+        describe("is in the selected state") {
+          it("does not updated the state") {
+            stateMachine.fire(.transitionSize)
+            let expectedState: PagingState = .selected(pagingItem: Item(index: 0))
+            expect(stateMachine.state).to(equal(expectedState))
+          }
+        }
+        
+        describe("is in the scrolling state") {
+          
+          beforeEach {
+            let state: PagingState = .scrolling(
+              pagingItem: Item(index: 0),
+              upcomingPagingItem: Item(index: 1),
+              progress: 0.5)
+            stateMachine = PagingStateMachine(initialState: state)
+          }
+          
+          it("selects the current paging item") {
+            stateMachine.fire(.transitionSize)
+            expect(stateMachine.state).to(equal(PagingState.selected(pagingItem: Item(index: 0))))
+          }
+          
+        }
+        
+      }
+      
       describe("cancel scrolling") {
         
         describe("is in the selected state") {
