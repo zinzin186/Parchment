@@ -11,7 +11,7 @@ class ImagePagingCell: PagingCell {
   
   fileprivate lazy var titleLabel: UILabel = {
     let label = UILabel(frame: .zero)
-    label.font = UIFont.systemFont(ofSize: 13, weight: UIFontWeightSemibold)
+    label.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.semibold)
     label.textColor = UIColor.white
     label.backgroundColor = UIColor(white: 0, alpha: 0.6)
     label.numberOfLines = 0
@@ -44,7 +44,7 @@ class ImagePagingCell: PagingCell {
     imageView.image = item.headerImage
     titleLabel.attributedText = NSAttributedString(
       string: item.title,
-      attributes: [NSParagraphStyleAttributeName: paragraphStyle])
+      attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
     
     if selected {
       imageView.transform = CGAffineTransform(scaleX: 2, y: 2)
