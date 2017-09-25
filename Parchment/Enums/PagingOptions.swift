@@ -117,7 +117,7 @@ extension PagingOptions {
 public extension PagingTheme {
   
   var font: UIFont {
-    return UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
+    return UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
   }
   
   var textColor: UIColor {
@@ -200,5 +200,9 @@ public extension PagingOptions {
   }
 }
 
-struct DefaultPagingTheme: PagingTheme {}
-struct DefaultPagingOptions: PagingOptions {}
+public struct DefaultPagingTheme: PagingTheme {}
+public struct DefaultPagingOptions: PagingOptions {
+  public init() {
+    
+  }
+}
