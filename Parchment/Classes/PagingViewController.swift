@@ -151,7 +151,7 @@ open class PagingViewController<T: PagingItem>:
     collectionView.addGestureRecognizer(recognizerRight)
   }
   
-  fileprivate dynamic func handleSwipeGestureRecognizer(_ recognizer: UISwipeGestureRecognizer) {
+  @objc fileprivate dynamic func handleSwipeGestureRecognizer(_ recognizer: UISwipeGestureRecognizer) {
     guard let stateMachine = stateMachine else { return }
     
     let currentPagingItem = stateMachine.state.currentPagingItem

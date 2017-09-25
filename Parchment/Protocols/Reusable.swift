@@ -14,7 +14,7 @@ extension UICollectionReusableView: Reusable {}
 
 extension UICollectionViewLayout {
   
-  func registerDecorationView<T: UICollectionReusableView>(_: T.Type) where T: Reusable {
+  func registerDecorationView<T: UICollectionReusableView>(_: T.Type) {
     register(T.self, forDecorationViewOfKind: T.reuseIdentifier)
   }
   
@@ -22,11 +22,11 @@ extension UICollectionViewLayout {
 
 extension UICollectionView {
   
-  func registerReusableCell<T: UICollectionViewCell>(_ cellType: T.Type) where T: Reusable {
+  func registerReusableCell<T: UICollectionViewCell>(_ cellType: T.Type) {
     self.register(cellType.self, forCellWithReuseIdentifier: cellType.reuseIdentifier)
   }
   
-  func dequeueReusableCell<T: UICollectionViewCell>(indexPath: IndexPath, cellType: T.Type = T.self) -> T where T: Reusable {
+  func dequeueReusableCell<T: UICollectionViewCell>(indexPath: IndexPath, cellType: T.Type = T.self) -> T {
     guard let cell = self.dequeueReusableCell(withReuseIdentifier: cellType.reuseIdentifier, for: indexPath) as? T else {
       fatalError("could not dequeue reusable cell with identifier \(cellType.reuseIdentifier)")
     }
