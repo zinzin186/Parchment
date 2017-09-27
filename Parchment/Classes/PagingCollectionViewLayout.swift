@@ -1,5 +1,20 @@
 import UIKit
 
+/// A custom `UICollectionViewLayout` subclass responsible for
+/// defining the layout for all the `PagingItem` cells. You can
+/// subclass this type if you need further customization outside what
+/// is provided by the `PagingOptions` protocol.
+///
+/// To create your own `PagingViewControllerLayout` you need to
+/// override the `collectionViewLayout` property in
+/// `PagingViewController`. Then you can override
+/// `layoutAttributesForItem:` and `layoutAttributesForElementsInRect:`
+/// to update the layout attributes for each cell.
+///
+/// This layout has two decoration views; one for the border at the
+/// bottom and one for the view that indicates the currently selected
+/// `PagingItem`. You can customize their layout attributes by
+/// overriding `layoutAttributesForDecorationView:`.
 open class PagingCollectionViewLayout<T: PagingItem>:
   UICollectionViewLayout where T: Hashable, T: Comparable {
   
@@ -280,10 +295,10 @@ open class PagingCollectionViewLayout<T: PagingItem>:
           previousFrame = attributes.frame
         }
         
-        // When using sizeToFit the content will always be as wide as
-        // the bounds so there is not possible to center the items. In
-        // all the other cases we want to center them if the menu
-        // alignment is set to .center
+      // When using sizeToFit the content will always be as wide as
+      // the bounds so there is not possible to center the items. In
+      // all the other cases we want to center them if the menu
+      // alignment is set to .center
       default:
         if case .center = options.menuHorizontalAlignment {
           

@@ -1,5 +1,10 @@
 import UIKit
 
+/// A custom `PagingCell` implementation that only displays a text
+/// label. The title is based on the `PagingTitleItem` and the colors
+/// are based on the `PagingTheme` passed into `setPagingItem:`. When
+/// applying layout attributes it will interpolate between the default
+/// and selected text color based on the `progress` property.
 open class PagingTitleCell: PagingCell {
   
   fileprivate var viewModel: PagingTitleCellViewModel?

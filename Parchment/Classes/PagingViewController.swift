@@ -1,5 +1,18 @@
 import UIKit
 
+/// A view controller that lets you to page between views while
+/// showing menu items that scrolls along with the content. When using
+/// this class you need to provide a generic type that conforms to the
+/// `PagingItem` protocol.
+///
+/// The data source object is responsible for actually generating the
+/// `PagingItem` as well as allocating the view controller that
+/// corresponds to each item. See `PagingViewControllerDataSource`.
+///
+/// After providing a data source you need to call
+/// `selectPagingItem(pagingItem:animated:)` to set the initial view
+/// controller. You can also use the same method to programmatically
+/// navigate to other view controllers.
 open class PagingViewController<T: PagingItem>:
   UIViewController,
   UICollectionViewDataSource,
@@ -8,27 +21,40 @@ open class PagingViewController<T: PagingItem>:
   EMPageViewControllerDelegate,
   PagingCollectionViewLayoutDelegate,
   PagingStateMachineDelegate where T: Hashable, T: Comparable {
-  
+
+  /// PagingOptions allows you to customize the look and feel of the
+  /// paging view controller. You need create your own struct that
+  /// conforms to this protocol, and override the default values.
   open let options: PagingOptions
+
+  /// The data source is responsible for providing the `PagingItem`s
+  /// that are displayed in the menu. The `PagingItem` protocol is
+  /// used to generate menu items for all the view controllers,
+  /// without having to actually allocate them before they are needed.
   open weak var dataSource: PagingViewControllerDataSource?
-  fileprivate var dataStructure: PagingDataStructure<T>
-  
-  internal var stateMachine: PagingStateMachine<T>? {
-    didSet {
-      handleStateMachineUpdate()
-    }
-  }
-  
+
+  /// Use this delegate if you want to manually control the width of
+  /// your menu items. Self-sizing cells is not supported at the
+  /// moment, so you have to use this if you have a custom cell that
+  /// you want to size based on its content.
   open weak var delegate: PagingViewControllerDelegate? {
     didSet {
       collectionViewLayout.delegate = self
     }
   }
-  
+
+  /// A custom collection view layout that lays out all the menu items
+  /// horizontally. See the `PagingOptions` protocol on how you can
+  /// customize the layout.
   open lazy var collectionViewLayout: PagingCollectionViewLayout<T> = {
     return PagingCollectionViewLayout(options: self.options, dataStructure: self.dataStructure)
   }()
-  
+
+  /// Used to display the menu items that scrolls along with the
+  /// content. Using a collection view means you can create custom
+  /// cells that display pretty much anything. By default, scrolling
+  /// is enabled in the collection view. See `PagingOptions` for more
+  /// details on what you can customize.
   open lazy var collectionView: UICollectionView = {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
     collectionView.backgroundColor = .white
@@ -36,23 +62,81 @@ open class PagingViewController<T: PagingItem>:
     collectionView.isScrollEnabled = false
     return collectionView
   }()
-  
+
+  /// Used to display the view controller that you are paging
+  /// between. Instead of using UIPageViewController we use a library
+  /// called EMPageViewController which fixes a lot of the common
+  /// issues with using UIPageViewController.
   open let pageViewController: EMPageViewController = {
     return EMPageViewController(navigationOrientation: .horizontal)
   }()
-  
+
+  fileprivate var dataStructure: PagingDataStructure<T>
+  fileprivate var stateMachine: PagingStateMachine<T>? {
+    didSet {
+      handleStateMachineUpdate()
+    }
+  }
+
+  /// Creates an instance of `PagingViewController`. You need to call
+  /// `selectPagingItem(pagingItem:animated:)` in order to set the
+  /// initial view controller before any items become visible.
+  ///
+  /// - Parameter options: An instance used to customize how the
+  /// paging view controller should look and behave.
   public init(options: PagingOptions = DefaultPagingOptions()) {
     self.options = options
     self.dataStructure = PagingDataStructure(visibleItems: [])
     super.init(nibName: nil, bundle: nil)
   }
 
+  /// Creates an instance of `PagingViewController` with the
+  /// properties defined in `DefaultPagingOptions`.
+  ///
+  /// - Parameter coder: An unarchiver object.
   required public init?(coder: NSCoder) {
     self.options = DefaultPagingOptions()
     self.dataStructure = PagingDataStructure(visibleItems: [])
     super.init(coder: coder)
   }
-  
+
+  /// Selects a given paging item. This need to be called after you
+  /// initilize the `PagingViewController` to set the initial
+  /// `PagingItem`. This can be called both before and after the view
+  /// has been loaded. You can also use this to programmatically
+  /// navigate to another `PagingItem`.
+  ///
+  /// - Parameter pagingItem: The `PagingItem` to be displayed.
+  /// - Parameter animated: A boolean value that indicates whether
+  /// the transtion should be animated. Default is false.
+  open func selectPagingItem(_ pagingItem: T, animated: Bool = false) {
+
+    if let stateMachine = stateMachine {
+      if let indexPath = dataStructure.indexPathForPagingItem(pagingItem) {
+        let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: pagingItem)
+        stateMachine.fire(.select(
+          pagingItem: pagingItem,
+          direction: direction,
+          animated: animated))
+      }
+    } else {
+      let state: PagingState = .selected(pagingItem: pagingItem)
+      stateMachine = PagingStateMachine(initialState: state)
+      collectionViewLayout.state = state
+
+      if isViewLoaded {
+        selectViewController(
+          state.currentPagingItem,
+          direction: .none,
+          animated: false)
+
+        if view.window != nil {
+          reloadItems(around: state.currentPagingItem)
+        }
+      }
+    }
+  }
+
   open override func loadView() {
     view = PagingView(
       pageView: pageViewController.view,
@@ -89,35 +173,7 @@ open class PagingViewController<T: PagingItem>:
         animated: false)
     }
   }
-  
-  open func selectPagingItem(_ pagingItem: T, animated: Bool = false) {
-    
-    if let stateMachine = stateMachine {
-      if let indexPath = dataStructure.indexPathForPagingItem(pagingItem) {
-        let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: pagingItem)
-        stateMachine.fire(.select(
-          pagingItem: pagingItem,
-          direction: direction,
-          animated: animated))
-      }
-    } else {
-      let state: PagingState = .selected(pagingItem: pagingItem)
-      stateMachine = PagingStateMachine(initialState: state)
-      collectionViewLayout.state = state
-      
-      if isViewLoaded {
-        selectViewController(
-          state.currentPagingItem,
-          direction: .none,
-          animated: false)
-        
-        if view.window != nil {
-          reloadItems(around: state.currentPagingItem)
-        }
-      }
-    }
-  }
-  
+
   open override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     guard let state = stateMachine?.state else { return }
