@@ -1,5 +1,7 @@
 import UIKit
 
+/// A custom `UICollectionViewLayoutAttributes` subclass that adds a
+/// `progress` property indicating how far the user has scrolled.
 open class PagingCellLayoutAttributes: UICollectionViewLayoutAttributes {
   
   open var progress: CGFloat = 0.0
