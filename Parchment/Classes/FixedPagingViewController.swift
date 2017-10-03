@@ -48,15 +48,17 @@ open class FixedPagingViewController: PagingViewController<ViewControllerItem> {
   open override func em_pageViewController(_ pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
     super.em_pageViewController(pageViewController, didFinishScrollingFrom: startingViewController, destinationViewController: destinationViewController, transitionSuccessful: transitionSuccessful)
     
-    if let index = items.index(where: { $0.viewController == destinationViewController }) {
-      itemDelegate?.fixedPagingViewController(
-        fixedPagingViewController: self,
-        didScrollToItem: items[index],
-        atIndex: index)
+    if transitionSuccessful {
+      if let index = items.index(where: { $0.viewController == destinationViewController }) {
+        itemDelegate?.fixedPagingViewController(
+          fixedPagingViewController: self,
+          didScrollToItem: items[index],
+          atIndex: index)
+      }
     }
   }
   
-  public func em_pageViewController(_ pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController) {
+  open override func em_pageViewController(_ pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController) {
     if let index = items.index(where: { $0.viewController == destinationViewController }) {
       itemDelegate?.fixedPagingViewController(
         fixedPagingViewController: self,

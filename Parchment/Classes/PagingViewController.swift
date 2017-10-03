@@ -514,6 +514,10 @@ open class PagingViewController<T: PagingItem>:
     stateMachine?.fire(.scroll(progress: progress))
   }
   
+  public func em_pageViewController(_ pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController) {
+    return
+  }
+  
   open func em_pageViewController(_ pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
     guard let state = stateMachine?.state else { return }
     
