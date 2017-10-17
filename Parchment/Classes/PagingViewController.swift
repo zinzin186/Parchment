@@ -77,6 +77,8 @@ open class PagingViewController<T: PagingItem>:
       handleStateMachineUpdate()
     }
   }
+  
+  fileprivate let PagingCellReuseIdentifier = "PagingCellReuseIdentifier"
 
   /// Creates an instance of `PagingViewController`. You need to call
   /// `selectPagingItem(pagingItem:animated:)` in order to set the
@@ -154,7 +156,7 @@ open class PagingViewController<T: PagingItem>:
     
     collectionView.delegate = self
     collectionView.dataSource = self
-    collectionView.registerReusableCell(options.menuItemClass)
+    collectionView.register(options.menuItemClass, forCellWithReuseIdentifier: PagingCellReuseIdentifier)
     
     switch (options.menuInteraction) {
     case .scrolling:
@@ -477,7 +479,7 @@ open class PagingViewController<T: PagingItem>:
   // MARK: UICollectionViewDataSource
   
   public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(indexPath: indexPath, cellType: options.menuItemClass)
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PagingCellReuseIdentifier, for: indexPath) as! PagingCell
     let pagingItem = dataStructure.sortedItems[indexPath.item]
     let selected = stateMachine?.state.currentPagingItem == pagingItem
     cell.setPagingItem(pagingItem, selected: selected, theme: options.theme)

@@ -46,18 +46,20 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private var contentSize: CGSize = .zero
   private var invalidationSummary: InvalidationSummary = .everything
   private var currentTransition: PagingTransition? = nil
-  
+  private let PagingIndicatorKind = "PagingIndicatorKind"
+  private let PagingBorderKind = "PagingBorderKind"
+
   init(options: PagingOptions, dataStructure: PagingDataStructure<T>) {
     
     self.options = options
     self.dataStructure = dataStructure
     
     indicatorLayoutAttributes = PagingIndicatorLayoutAttributes(
-      forDecorationViewOfKind: PagingIndicatorView.reuseIdentifier,
+      forDecorationViewOfKind: PagingIndicatorKind,
       with: IndexPath(item: 0, section: 0))
     
     borderLayoutAttributes = PagingBorderLayoutAttributes(
-      forDecorationViewOfKind: PagingBorderView.reuseIdentifier,
+      forDecorationViewOfKind: PagingBorderKind,
       with: IndexPath(item: 1, section: 0))
     
     super.init()
@@ -70,8 +72,8 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   fileprivate func configure() {
-    registerDecorationView(PagingIndicatorView.self)
-    registerDecorationView(PagingBorderView.self)
+    register(options.indicatorClass, forDecorationViewOfKind: PagingIndicatorKind)
+    register(options.borderClass, forDecorationViewOfKind: PagingBorderKind)
     indicatorLayoutAttributes.configure(options)
     borderLayoutAttributes.configure(options)
   }
@@ -111,9 +113,9 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   
   open override func layoutAttributesForDecorationView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
     switch (elementKind) {
-    case PagingIndicatorView.reuseIdentifier:
+    case PagingIndicatorKind:
       return indicatorLayoutAttributes
-    case PagingBorderView.reuseIdentifier:
+    case PagingBorderKind:
       return borderLayoutAttributes
     default:
       return super.layoutAttributesForDecorationView(ofKind: elementKind, at: indexPath)
@@ -130,11 +132,11 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     }
     
     let indicatorAttributes = layoutAttributesForDecorationView(
-      ofKind: PagingIndicatorView.reuseIdentifier,
+      ofKind: PagingIndicatorKind,
       at: IndexPath(item: 0, section: 0))
     
     let borderAttributes = layoutAttributesForDecorationView(
-      ofKind: PagingBorderView.reuseIdentifier,
+      ofKind: PagingBorderKind,
       at: IndexPath(item: 1, section: 0))
     
     if let indicatorAttributes = indicatorAttributes {
