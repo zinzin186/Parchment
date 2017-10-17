@@ -163,7 +163,9 @@ protocol PagingOptions {
   var menuInteraction: PagingMenuInteraction { get }
   var selectedScrollPosition: PagingSelectedScrollPosition { get }
   var indicatorOptions: PagingIndicatorOptions { get }
+  var indicatorClass: PagingIndicatorView.Type { get }
   var borderOptions: PagingBorderOptions { get }
+  var borderClass: PagingBorderView.Type { get }
   var theme: PagingTheme { get }
 }
 ```
@@ -294,6 +296,12 @@ _Default:_
   insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
 ```
 
+#### `indicatorClass`
+
+The class type for the indicator view. Override this if you want your use your own subclass of `PagingIndicatorView`.
+
+_Default: `PagingIndicatorView.self`_
+
 #### `borderOptions`
 
 Add a border at the bottom of the menu items. The border will be as wide as all the menu items. Insets only apply horizontally.
@@ -316,6 +324,12 @@ _Default:_
   zIndex: Int.max - 1,
   insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
 ```
+
+#### `borderClass`
+
+The class type for the border view. Override this if you want your use your own subclass of `PagingBorderView`.
+
+_Default: `PagingBorderView.self`_
 
 #### `theme`
 

@@ -82,7 +82,9 @@ public protocol PagingOptions {
   var menuInteraction: PagingMenuInteraction { get }
   var selectedScrollPosition: PagingSelectedScrollPosition { get }
   var indicatorOptions: PagingIndicatorOptions { get }
+  var indicatorClass: PagingIndicatorView.Type { get }
   var borderOptions: PagingBorderOptions { get }
+  var borderClass: PagingBorderView.Type { get }
   var theme: PagingTheme { get }
 }
 
@@ -176,11 +178,19 @@ public extension PagingOptions {
       insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
   }
   
+  var indicatorClass: PagingIndicatorView.Type {
+    return PagingIndicatorView.self
+  }
+  
   var borderOptions: PagingBorderOptions {
     return .visible(
       height: 1,
       zIndex: Int.max - 1,
       insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
+  }
+  
+  var borderClass: PagingBorderView.Type {
+    return PagingBorderView.self
   }
   
   var menuItemClass: PagingCell.Type {
