@@ -7,6 +7,14 @@ import Parchment
 // since that is required by PagingViewController
 struct CalendarItem: PagingItem, Equatable, Hashable, Comparable {
   let date: Date
+  let dateText: String
+  let weekdayText: String
+  
+  init(date: Date) {
+    self.date = date
+    self.dateText = DateFormatters.dateFormatter.string(from: date)
+    self.weekdayText = DateFormatters.weekdayFormatter.string(from: date)
+  }
   
   var hashValue: Int {
     return date.hashValue

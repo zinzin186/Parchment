@@ -4,7 +4,11 @@ import UIKit
 /// items. When creating your own custom cells, you need to subclass
 /// this type instead of `UICollectionViewCell` directly.
 open class PagingCell: UICollectionViewCell {
-
+  
+  open override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
+    return layoutAttributes
+  }
+  
   /// Called by the `PagingViewControllerDataSource` to customize the
   /// cell with an instance conforming to `PagingItem`. You have to
   /// override this method when creating your own subclass – the
@@ -19,4 +23,5 @@ open class PagingCell: UICollectionViewCell {
   open func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
     fatalError("setPagingItem: not implemented")
   }
+  
 }

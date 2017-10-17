@@ -38,7 +38,11 @@ open class PagingTitleCell: PagingCell {
   
   open func configure() {
     contentView.addSubview(titleLabel)
-    contentView.constrainToEdges(titleLabel)
+  }
+  
+  open override func layoutSubviews() {
+    super.layoutSubviews()
+    titleLabel.frame = contentView.bounds
   }
   
   open func configureTitleLabel() {

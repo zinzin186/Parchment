@@ -27,55 +27,31 @@ class CalendarPagingCell: PagingCell {
     configure()
   }
   
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    let insets = UIEdgeInsets(top: 10, left: 0, bottom: 5, right: 0)
+    
+    dateLabel.frame = CGRect(
+      x: 0,
+      y: insets.top,
+      width: contentView.bounds.width,
+      height: contentView.bounds.midY - insets.top)
+    
+    weekdayLabel.frame = CGRect(
+      x: 0,
+      y: contentView.bounds.midY,
+      width: contentView.bounds.width,
+      height: contentView.bounds.midY - insets.bottom)
+  }
+  
   fileprivate func configure() {
-    addSubview(dateLabel)
+    weekdayLabel.backgroundColor = .white
+    weekdayLabel.textAlignment = .center
+    dateLabel.backgroundColor = .white
+    dateLabel.textAlignment = .center
+    
     addSubview(weekdayLabel)
-    
-    dateLabel.translatesAutoresizingMaskIntoConstraints = false
-    weekdayLabel.translatesAutoresizingMaskIntoConstraints = false
-    
-    let verticalDateLabelContraint = NSLayoutConstraint(
-      item: dateLabel,
-      attribute: .centerY,
-      relatedBy: .equal,
-      toItem: self,
-      attribute: .centerY,
-      multiplier: 1.0,
-      constant: -9)
-    
-    let horizontalDateLabelContraint = NSLayoutConstraint(
-      item: dateLabel,
-      attribute: .centerX,
-      relatedBy: .equal,
-      toItem: self,
-      attribute: .centerX,
-      multiplier: 1.0,
-      constant: 0)
-    
-    let verticalWeekdayLabelContraint = NSLayoutConstraint(
-      item: weekdayLabel,
-      attribute: .centerY,
-      relatedBy: .equal,
-      toItem: self,
-      attribute: .centerY,
-      multiplier: 1.0,
-      constant: 12)
-    
-    let horizontalWeekdayLabelContraint = NSLayoutConstraint(
-      item: weekdayLabel,
-      attribute: .centerX,
-      relatedBy: .equal,
-      toItem: self,
-      attribute: .centerX,
-      multiplier: 1.0,
-      constant: 0)
-    
-    addConstraints([
-      verticalDateLabelContraint,
-      horizontalDateLabelContraint,
-      verticalWeekdayLabelContraint,
-      horizontalWeekdayLabelContraint
-    ])
+    addSubview(dateLabel)
   }
   
   fileprivate func updateSelectedState(selected: Bool) {
@@ -91,8 +67,8 @@ class CalendarPagingCell: PagingCell {
   
   override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
     let calendarItem = pagingItem as! CalendarItem
-    dateLabel.text = DateFormatters.dateFormatter.string(from: calendarItem.date)
-    weekdayLabel.text = DateFormatters.weekdayFormatter.string(from: calendarItem.date)
+    dateLabel.text = calendarItem.dateText
+    weekdayLabel.text = calendarItem.weekdayText
     
     self.theme = theme
     updateSelectedState(selected: selected)
