@@ -2,6 +2,15 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.7.0](https://github.com/rechsteiner/Parchment/compare/v0.6.0...v0.7.0) - 2017-11-07
+
+### Changes
+
+- Change access for EMPageViewController delegate method #72
+- Improve performance by using manual frames for menu cells #68
+- Add option to customize indicator and border view #67
+- Update documentation #60
+
 ## [0.6.0](https://github.com/rechsteiner/Parchment/compare/v0.5.0...v0.6.0) - 2017-09-25
 
 ### Changes
