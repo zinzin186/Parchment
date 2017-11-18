@@ -113,14 +113,13 @@ open class PagingViewController<T: PagingItem>:
   /// the transtion should be animated. Default is false.
   open func selectPagingItem(_ pagingItem: T, animated: Bool = false) {
 
-    if let stateMachine = stateMachine {
-      if let indexPath = dataStructure.indexPathForPagingItem(pagingItem) {
-        let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: pagingItem)
-        stateMachine.fire(.select(
-          pagingItem: pagingItem,
-          direction: direction,
-          animated: animated))
-      }
+    if let stateMachine = stateMachine,
+      let indexPath = dataStructure.indexPathForPagingItem(pagingItem) {
+      let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: pagingItem)
+      stateMachine.fire(.select(
+        pagingItem: pagingItem,
+        direction: direction,
+        animated: animated))
     } else {
       let state: PagingState = .selected(pagingItem: pagingItem)
       stateMachine = PagingStateMachine(initialState: state)
@@ -513,7 +512,11 @@ open class PagingViewController<T: PagingItem>:
   // MARK: EMPageViewControllerDelegate
 
   open func em_pageViewController(_ pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
-    stateMachine?.fire(.scroll(progress: progress))
+    // EMPageViewController will trigger a scrolling event even if the
+    // view has not appeared, causing the wrong initial paging item.
+    if view.window != nil {
+      stateMachine?.fire(.scroll(progress: progress))
+    }
   }
   
   open func em_pageViewController(_ pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController) {
