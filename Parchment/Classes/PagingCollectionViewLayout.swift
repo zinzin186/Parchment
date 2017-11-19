@@ -40,6 +40,22 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return 0..<view.numberOfItems(inSection: 0)
   }
   
+  private var adjustedMenuInsets: UIEdgeInsets {
+    return UIEdgeInsets(
+      top: options.menuInsets.top + safeAreaInsets.top,
+      left: options.menuInsets.left + safeAreaInsets.left,
+      bottom: options.menuInsets.bottom + safeAreaInsets.bottom,
+      right: options.menuInsets.right + safeAreaInsets.right)
+  }
+  
+  private var safeAreaInsets: UIEdgeInsets {
+    if options.includeSafeAreaInsets, #available(iOS 11.0, *) {
+      return view.safeAreaInsets
+    } else {
+      return .zero
+    }
+  }
+  
   private let options: PagingOptions
   private let indicatorLayoutAttributes: PagingIndicatorLayoutAttributes
   private let borderLayoutAttributes: PagingBorderLayoutAttributes
@@ -253,14 +269,14 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     
     var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
     var previousFrame: CGRect = .zero
-    previousFrame.origin.x = options.menuInsets.left - options.menuItemSpacing
+    previousFrame.origin.x = adjustedMenuInsets.left - options.menuItemSpacing
     
     for index in 0..<self.view.numberOfItems(inSection: 0) {
       
       let indexPath = IndexPath(item: index, section: 0)
       let attributes = PagingCellLayoutAttributes(forCellWith: indexPath)
       let x = previousFrame.maxX + options.menuItemSpacing
-      let y = options.menuInsets.top
+      let y = adjustedMenuInsets.top
       
       if let delegate = delegate {
         let width = delegate.pagingCollectionViewLayout(self, widthForIndexPath: indexPath)
@@ -280,19 +296,19 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     
     // When the menu items all can fit inside the bounds we need to
     // reposition the items based on the current options
-    if previousFrame.maxX - options.menuInsets.left < view.bounds.width {
+    if previousFrame.maxX - adjustedMenuInsets.left < view.bounds.width {
       
       switch (options.menuItemSize) {
       case let .sizeToFit(_, height):
-        let insets = options.menuInsets.left + options.menuInsets.right
+        let insets = adjustedMenuInsets.left + adjustedMenuInsets.right
         let spacing = (options.menuItemSpacing * CGFloat(range.upperBound - 1))
         let width = (view.bounds.width - insets - spacing) / CGFloat(range.upperBound)
         previousFrame = .zero
-        previousFrame.origin.x = options.menuInsets.left - options.menuItemSpacing
+        previousFrame.origin.x = adjustedMenuInsets.left - options.menuItemSpacing
         
         for attributes in layoutAttributes.values.sorted(by: { $0.indexPath < $1.indexPath }) {
           let x = previousFrame.maxX + options.menuItemSpacing
-          let y = options.menuInsets.top
+          let y = adjustedMenuInsets.top
           attributes.frame = CGRect(x: x, y: y, width: width, height: height)
           previousFrame = attributes.frame
         }
@@ -306,7 +322,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
           
           // Subtract the menu insets as they should not have an effect on
           // whether or not we should center the items.
-          let offset = (view.bounds.width - previousFrame.maxX - options.menuInsets.left) / 2
+          let offset = (view.bounds.width - previousFrame.maxX - adjustedMenuInsets.left) / 2
           for attributes in layoutAttributes.values {
             attributes.frame = attributes.frame.offsetBy(dx: offset, dy: 0)
           }
@@ -315,7 +331,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     }
     
     contentSize = CGSize(
-      width: previousFrame.maxX + options.menuInsets.right,
+      width: previousFrame.maxX + adjustedMenuInsets.right,
       height: view.bounds.height)
     
     self.layoutAttributes = layoutAttributes
@@ -324,7 +340,8 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private func updateBorderLayoutAttributes() {
     borderLayoutAttributes.update(
       contentSize: collectionViewContentSize,
-      bounds: collectionView?.bounds ?? .zero)
+      bounds: collectionView?.bounds ?? .zero,
+      safeAreaInsets: safeAreaInsets)
   }
   
   private func updateIndicatorLayoutAttributes() {

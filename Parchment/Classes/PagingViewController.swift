@@ -71,6 +71,7 @@ open class PagingViewController<T: PagingItem>:
     return EMPageViewController(navigationOrientation: .horizontal)
   }()
 
+  fileprivate var didLayoutSubviews: Bool = false
   fileprivate var dataStructure: PagingDataStructure<T>
   fileprivate var stateMachine: PagingStateMachine<T>? {
     didSet {
@@ -173,14 +174,24 @@ open class PagingViewController<T: PagingItem>:
         direction: .none,
         animated: false)
     }
+    
+    if #available(iOS 11.0, *) {
+      collectionView.contentInsetAdjustmentBehavior = .never
+    }
   }
-
-  open override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
+  
+  open override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
     guard let state = stateMachine?.state else { return }
-    view.layoutIfNeeded()
-    reloadItems(around: state.currentPagingItem)
-    selectCollectionViewItem(for: state.currentPagingItem)
+    
+    // We need generate the menu items when the view appears for the
+    // first time. Doing it in viewWillAppear does not work as the
+    // safeAreaInsets will not be updated yet.
+    if didLayoutSubviews == false {
+      reloadItems(around: state.currentPagingItem)
+      selectCollectionViewItem(for: state.currentPagingItem)
+      didLayoutSubviews = true
+    }
   }
   
   open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

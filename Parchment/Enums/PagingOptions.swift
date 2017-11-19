@@ -86,6 +86,7 @@ public protocol PagingOptions {
   var borderOptions: PagingBorderOptions { get }
   var borderClass: PagingBorderView.Type { get }
   var theme: PagingTheme { get }
+  var includeSafeAreaInsets: Bool { get }
 }
 
 extension PagingOptions {
@@ -207,6 +208,10 @@ public extension PagingOptions {
   
   var menuHorizontalAlignment: PagingMenuHorizontalAlignment {
     return .default
+  }
+  
+  var includeSafeAreaInsets: Bool {
+    return true
   }
 }
 
