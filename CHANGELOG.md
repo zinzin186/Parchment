@@ -2,6 +2,13 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.8.0](https://github.com/rechsteiner/Parchment/compare/v0.7.0...v0.8.0) - 2017-11-19
+
+### Fixes
+
+* Fix selecting paging items before view appears #79
+* Fix issues with safe area insets #81
+
 ## [0.7.0](https://github.com/rechsteiner/Parchment/compare/v0.6.0...v0.7.0) - 2017-11-07
 
 ### Changes
