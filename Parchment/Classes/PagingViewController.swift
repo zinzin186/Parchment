@@ -176,6 +176,7 @@ open class PagingViewController<T: PagingItem>:
     }
     
     if #available(iOS 11.0, *) {
+      pageViewController.scrollView.contentInsetAdjustmentBehavior = .never
       collectionView.contentInsetAdjustmentBehavior = .never
     }
   }
