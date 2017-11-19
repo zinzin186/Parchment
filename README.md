@@ -367,6 +367,13 @@ subclass of `PagingBorderView`.
 
 _Default: `PagingBorderView.self`_
 
+#### `includeSafeAreaInsets`
+
+Updates the content inset for the menu items based on the `.safeAreaInsets`
+property.
+
+_Default: `true`_
+
 #### `theme`
 
 The visual theme of the paging view controller.
