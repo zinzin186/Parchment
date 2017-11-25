@@ -12,6 +12,7 @@ enum InvalidationSummary {
   case dataSourceCounts
   case contentOffset
   case transition
+  case sizes
   
   init(_ invalidationContext: UICollectionViewLayoutInvalidationContext) {
     if invalidationContext.invalidateEverything {
@@ -21,6 +22,8 @@ enum InvalidationSummary {
     } else if let context = invalidationContext as? PagingInvalidationContext {
       if context.invalidateTransition {
         self = .transition
+      } else if context.invalidateSizes {
+        self = .sizes
       } else if context.invalidateContentOffset {
         self = .contentOffset
       } else {
@@ -39,6 +42,8 @@ enum InvalidationSummary {
       return .everything
     case (.dataSourceCounts, _), (_, .dataSourceCounts):
       return .dataSourceCounts
+    case (.sizes, _), (_, .sizes):
+      return .sizes
     case (.transition, _), (_, .transition):
       return .transition
     case (.contentOffset, _), (_, .contentOffset):

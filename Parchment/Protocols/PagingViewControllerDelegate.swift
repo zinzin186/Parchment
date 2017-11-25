@@ -11,8 +11,11 @@ public protocol PagingViewControllerDelegate: class {
   /// - Parameter pagingViewController: The `PagingViewController`
   /// instance
   /// - Parameter pagingItem: The `PagingItem` instance
+  /// - Parameter isSelected: A boolean that indicates whether the
+  /// given `PagingItem` is selected
   /// - Returns: The width for the `PagingItem`
   func pagingViewController<T>(
     _ pagingViewController: PagingViewController<T>,
-    widthForPagingItem pagingItem: T) -> CGFloat
+    widthForPagingItem pagingItem: T,
+    isSelected: Bool) -> CGFloat
 }
