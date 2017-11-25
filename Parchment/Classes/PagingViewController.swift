@@ -19,7 +19,7 @@ open class PagingViewController<T: PagingItem>:
   UICollectionViewDelegate,
   EMPageViewControllerDataSource,
   EMPageViewControllerDelegate,
-  PagingCollectionViewLayoutDelegate,
+  PagingSizeCacheDelegate,
   PagingStateMachineDelegate where T: Hashable, T: Comparable {
 
   /// PagingOptions allows you to customize the look and feel of the
@@ -39,7 +39,8 @@ open class PagingViewController<T: PagingItem>:
   /// you want to size based on its content.
   open weak var delegate: PagingViewControllerDelegate? {
     didSet {
-      collectionViewLayout.delegate = self
+      sizeCache.delegate = self
+      sizeCache.implementsWidthDelegate = true
     }
   }
 
@@ -47,7 +48,10 @@ open class PagingViewController<T: PagingItem>:
   /// horizontally. See the `PagingOptions` protocol on how you can
   /// customize the layout.
   open lazy var collectionViewLayout: PagingCollectionViewLayout<T> = {
-    return PagingCollectionViewLayout(options: self.options, dataStructure: self.dataStructure)
+    return PagingCollectionViewLayout(
+      options: self.options,
+      dataStructure: self.dataStructure,
+      sizeCache: self.sizeCache)
   }()
 
   /// Used to display the menu items that scrolls along with the
@@ -72,6 +76,7 @@ open class PagingViewController<T: PagingItem>:
   }()
 
   fileprivate var didLayoutSubviews: Bool = false
+  fileprivate let sizeCache: PagingSizeCache<T>
   fileprivate var dataStructure: PagingDataStructure<T>
   fileprivate var stateMachine: PagingStateMachine<T>? {
     didSet {
@@ -90,6 +95,7 @@ open class PagingViewController<T: PagingItem>:
   public init(options: PagingOptions = DefaultPagingOptions()) {
     self.options = options
     self.dataStructure = PagingDataStructure(visibleItems: [])
+    self.sizeCache = PagingSizeCache(options: options)
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -100,6 +106,7 @@ open class PagingViewController<T: PagingItem>:
   required public init?(coder: NSCoder) {
     self.options = DefaultPagingOptions()
     self.dataStructure = PagingDataStructure(visibleItems: [])
+    self.sizeCache = PagingSizeCache(options: self.options)
     super.init(coder: coder)
   }
 
@@ -285,6 +292,10 @@ open class PagingViewController<T: PagingItem>:
         }
         
         invalidationContext.invalidateContentOffset = true
+        
+        if sizeCache.implementsWidthDelegate {
+          invalidationContext.invalidateSizes = true
+        }
       }
       
       // We don't want to update the content offset while the
@@ -426,11 +437,12 @@ open class PagingViewController<T: PagingItem>:
   }
   
   fileprivate func itemWidth(pagingItem: T) -> CGFloat {
-    if let indexPath = dataStructure.indexPathForPagingItem(pagingItem) {
-      let layoutAttributes = collectionViewLayout.layoutAttributesForItem(at: indexPath)
-      return layoutAttributes?.frame.width ?? options.estimatedItemWidth
+    guard let state = stateMachine?.state else { return options.estimatedItemWidth }
+
+    if state.currentPagingItem == pagingItem {
+      return sizeCache.itemWidthSelected(for: pagingItem)
     } else {
-      return options.estimatedItemWidth
+      return sizeCache.itemWidth(for: pagingItem)
     }
   }
   
@@ -566,10 +578,11 @@ open class PagingViewController<T: PagingItem>:
     return dataSource?.pagingViewController(self, pagingItemAfterPagingItem: pagingItem) as? U
   }
   
-  // MARK: PagingCollectionViewLayoutDelegate
+  // MARK: PagingSizeCacheDelegate
   
-  func pagingCollectionViewLayout<U>(_ pagingCollectionViewLayout: PagingCollectionViewLayout<U>, widthForIndexPath indexPath: IndexPath) -> CGFloat {
-    return delegate?.pagingViewController(self, widthForPagingItem: dataStructure.pagingItemForIndexPath(indexPath)) ?? 0
+  func pagingSizeCache<U>(_ pagingSizeCache: PagingSizeCache<U>, widthForPagingItem pagingItem: U, isSelected: Bool) -> CGFloat? {
+    guard let pagingItem = pagingItem as? T else { return nil }
+    return delegate?.pagingViewController(self, widthForPagingItem: pagingItem, isSelected: isSelected)
   }
   
 }

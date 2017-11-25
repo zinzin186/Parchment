@@ -63,10 +63,10 @@ extension ViewController: PagingViewControllerDelegate {
   // can access the title string by casting the paging item to a
   // PagingTitleItem, which is the PagingItem type used by
   // FixedPagingViewController.
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, widthForPagingItem pagingItem: T) -> CGFloat {
+  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, widthForPagingItem pagingItem: T, isSelected: Bool) -> CGFloat {
     
-    guard let item = pagingItem as? PagingTitleItem else { return 0 }
-    
+    guard let item = pagingItem as? ViewControllerItem else { return 0 }
+
     let options = pagingViewController.options
     let insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     let size = CGSize(width: CGFloat.greatestFiniteMagnitude, height: options.menuItemSize.height)
@@ -76,8 +76,14 @@ extension ViewController: PagingViewControllerDelegate {
       options: .usesLineFragmentOrigin,
       attributes: attributes,
       context: nil)
+
+    let width = ceil(rect.width) + insets.left + insets.right
     
-    return ceil(rect.width) + insets.left + insets.right
+    if isSelected {
+      return width * 1.5
+    } else {
+      return width
+    }
   }
   
 }
