@@ -22,11 +22,143 @@ open class PagingViewController<T: PagingItem>:
   PagingSizeCacheDelegate,
   PagingStateMachineDelegate where T: Hashable, T: Comparable {
 
-  /// PagingOptions allows you to customize the look and feel of the
-  /// paging view controller. You need create your own struct that
-  /// conforms to this protocol, and override the default values.
-  open let options: PagingOptions
+  /// The size for each of the menu items. _Default:
+  /// .sizeToFit(minWidth: 150, height: 40)_
+  open var menuItemSize: PagingMenuItemSize {
+    get { return options.menuItemSize }
+    set { options.menuItemSize = newValue }
+  }
 
+  /// The class type for the menu item. Override this if you want
+  /// your own custom menu items. _Default: PagingTitleCell.self_
+  open var menuItemClass: PagingCell.Type {
+    get { return options.menuItemClass }
+    set { options.menuItemClass = newValue }
+  }
+
+  /// Determine the spacing between the menu items. _Default: 0_
+  open var menuItemSpacing: CGFloat {
+    get { return options.menuItemSpacing }
+    set { options.menuItemSpacing = newValue }
+  }
+
+  /// Determine the insets at around all the menu items. _Default:
+  /// UIEdgeInsets.zero_
+  open var menuInsets: UIEdgeInsets {
+    get { return options.menuInsets }
+    set { options.menuInsets = newValue }
+  }
+
+  /// Determine whether the menu items should be centered when all the
+  /// items can fit within the bounds of the view. _Default: .left_
+  open var menuHorizontalAlignment: PagingMenuHorizontalAlignment {
+    get { return options.menuHorizontalAlignment }
+    set { options.menuHorizontalAlignment = newValue }
+  }
+
+  /// Determine the transition behaviour of menu items while scrolling
+  /// the content. _Default: .scrollAlongside_
+  open var menuTransition: PagingMenuTransition {
+    get { return options.menuTransition }
+    set { options.menuTransition = newValue }
+  }
+
+  /// Determine how users can interact with the menu items.
+  /// _Default: .scrolling_
+  open var menuInteraction: PagingMenuInteraction {
+    get { return options.menuInteraction }
+    set { options.menuInteraction = newValue }
+  }
+
+  /// Determine how the selected menu item should be aligned when it
+  /// is selected. Effectivly the same as the
+  /// `UICollectionViewScrollPosition`. _Default: .preferCentered_
+  open var selectedScrollPosition: PagingSelectedScrollPosition {
+    get { return options.selectedScrollPosition }
+    set { options.selectedScrollPosition = newValue }
+  }
+
+  /// Add a indicator view to the selected menu item. The indicator
+  /// width will be equal to the selected menu items width. Insets
+  /// only apply horizontally. _Default: .visible_
+  open var indicatorOptions: PagingIndicatorOptions {
+    get { return options.indicatorOptions }
+    set { options.indicatorOptions = newValue }
+  }
+
+  /// The class type for the indicator view. Override this if you want
+  /// your use your own subclass of PagingIndicatorView. _Default:
+  /// PagingIndicatorView.self_
+  open var indicatorClass: PagingIndicatorView.Type {
+    get { return options.indicatorClass }
+    set { options.indicatorClass = newValue }
+  }
+
+  /// Determine the color of the indicator view.
+  open var indicatorColor: UIColor {
+    get { return options.theme.indicatorColor }
+    set { options.theme.indicatorColor = newValue }
+  }
+  
+  /// Add a border at the bottom of the menu items. The border will be
+  /// as wide as all the menu items. Insets only apply horizontally.
+  /// _Default: .visible_
+  open var borderOptions: PagingBorderOptions {
+    get { return options.borderOptions }
+    set { options.borderOptions = newValue }
+  }
+
+  /// The class type for the border view. Override this if you want
+  /// your use your own subclass of PagingBorderView. _Default:
+  /// PagingBorderView.self_
+  open var borderClass: PagingBorderView.Type {
+    get { return options.borderClass }
+    set { options.borderClass = newValue }
+  }
+  
+  /// Determine the color of the border view.
+  open var borderColor: UIColor {
+    get { return options.theme.borderColor }
+    set { options.theme.borderColor = newValue }
+  }
+
+  /// Updates the content inset for the menu items based on the
+  /// .safeAreaInsets property. _Default: true_
+  open var includeSafeAreaInsets: Bool {
+    get { return options.includeSafeAreaInsets }
+    set { options.includeSafeAreaInsets = newValue }
+  }
+
+  /// The font used for title label on the menu items.
+  open var font: UIFont {
+    get { return options.theme.font }
+    set { options.theme.font = newValue }
+  }
+
+  /// The color of the title label on the menu items.
+  open var textColor: UIColor {
+    get { return options.theme.textColor }
+    set { options.theme.textColor = newValue }
+  }
+
+  /// The text color for the currently selected menu item.
+  open var selectedTextColor: UIColor {
+    get { return options.theme.selectedTextColor }
+    set { options.theme.selectedTextColor = newValue }
+  }
+
+  /// The background color for the menu items.
+  open var backgroundColor: UIColor {
+    get { return options.theme.backgroundColor }
+    set { options.theme.backgroundColor = newValue }
+  }
+
+  /// The background color for the header view behind the menu items.
+  open var headerBackgroundColor: UIColor {
+    get { return options.theme.headerBackgroundColor }
+    set { options.theme.headerBackgroundColor = newValue }
+  }
+  
   /// The data source is responsible for providing the `PagingItem`s
   /// that are displayed in the menu. The `PagingItem` protocol is
   /// used to generate menu items for all the view controllers,
@@ -75,6 +207,7 @@ open class PagingViewController<T: PagingItem>:
     return EMPageViewController(navigationOrientation: .horizontal)
   }()
 
+  fileprivate let options: PagingOptions
   fileprivate var didLayoutSubviews: Bool = false
   fileprivate let sizeCache: PagingSizeCache<T>
   fileprivate var dataStructure: PagingDataStructure<T>
@@ -89,22 +222,18 @@ open class PagingViewController<T: PagingItem>:
   /// Creates an instance of `PagingViewController`. You need to call
   /// `selectPagingItem(pagingItem:animated:)` in order to set the
   /// initial view controller before any items become visible.
-  ///
-  /// - Parameter options: An instance used to customize how the
-  /// paging view controller should look and behave.
-  public init(options: PagingOptions = DefaultPagingOptions()) {
-    self.options = options
+  public init() {
+    self.options = PagingOptions()
     self.dataStructure = PagingDataStructure(visibleItems: [])
     self.sizeCache = PagingSizeCache(options: options)
     super.init(nibName: nil, bundle: nil)
   }
 
-  /// Creates an instance of `PagingViewController` with the
-  /// properties defined in `DefaultPagingOptions`.
+  /// Creates an instance of `PagingViewController`.
   ///
   /// - Parameter coder: An unarchiver object.
   required public init?(coder: NSCoder) {
-    self.options = DefaultPagingOptions()
+    self.options = PagingOptions()
     self.dataStructure = PagingDataStructure(visibleItems: [])
     self.sizeCache = PagingSizeCache(options: self.options)
     super.init(coder: coder)

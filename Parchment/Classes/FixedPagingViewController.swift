@@ -25,13 +25,13 @@ open class FixedPagingViewController: PagingViewController<ViewControllerItem> {
   /// - Parameter viewControllers: An array of view controllers
   /// - Parameter options: An instance used to customize how the
   /// paging view controller should look and behave.
-  public init(viewControllers: [UIViewController], options: PagingOptions = DefaultPagingOptions()) {
+  public init(viewControllers: [UIViewController]) {
     
     items = viewControllers.enumerated().map {
       ViewControllerItem(viewController: $1, index: $0)
     }
     
-    super.init(options: options)
+    super.init()
     dataSource = self
     
     if let item = items.first {
