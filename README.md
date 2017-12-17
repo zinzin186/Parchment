@@ -3,9 +3,9 @@
 </p>
 
 <p align="center">
-    **[Usage](#usage)** |
-    **[Customization](#customization)** |
-    **[Installation](#installation)**
+    <strong><a href="#usage">Usage</a></strong> |
+    <strong><a href="#customization">Customization</a></strong> |
+    <strong><a href="#installation">Installation</a></strong>
 </p>
 
 <p align="center">
