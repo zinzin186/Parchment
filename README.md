@@ -1,5 +1,11 @@
 <p align="center">
-  <img src="https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-header.png" width="260" height="120" />
+  <img src="https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-header-2.png" width="270" height="120" />
+</p>
+
+<p align="center">
+    **[Usage](#usage)** |
+    **[Customization](#customization)** |
+    **[Installation](#installation)**
 </p>
 
 <p align="center">
@@ -15,23 +21,18 @@
 ![](https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-calendar.gif "Calendar Example")
 ![](https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-delegate.gif "Cities Example")
 
-Parchment allows you to page between view controllers while showing menu items
-that scrolls along with the content. It’s build to be very customizable, it’s
-well-tested and written fully in Swift.
+## Features	
 
-* **Memory-efficient**: Parchment only allocates view controllers when they’re
-  needed, meaning you don’t have to initialize all your view controllers
-  up-front.
+Parchment is a very flexible paging view controller. It let’s you page between view controllers while showing any type of generic indicator that scrolls along with the content. Some benefits of using Parchment:
 
-* **Infinite scrolling**: Because view controllers are only allocated as you are
-  scrolling, you can create data sources that are infinitely large. This is
-  perfect for things like [calendars](#calendar-example).
+* **Memory-efficient**: <br/> Parchment only allocates view controllers when they’re needed, meaning if you have a lot of view <br/> controllers you don’t have to initialize them all up-front.
 
-* **Customizable**: The menu items are built using `UICollectionView`, which
-  means you create custom cells that display pretty much anything you want.
-  Check out the [`PagingOptions`]() protocol on how to customize the layout.
+* **Infinite scrolling**: <br /> Because view controllers are only allocated as you are scrolling, you can create data sources that are <br/> infinitely large. This is perfect for things like [calendars](#calendar-example).
 
-## Getting Started
+* **Highly customizable** <br/> The menu items are built using
+`UICollectionView`, which means you can display pretty much whatever you want. Check out the [`PagingOptions`]() protocol on how to customize the layout.
+
+## Usage
 
 The easiest way to use Parchment is using the `FixedPagingViewController`. Just
 pass in an array of view controllers and it will set up everything for you.
@@ -46,7 +47,7 @@ let pagingViewController = FixedPagingViewController(viewControllers: [
 ])
 ```
 
-Then add the paging view controller to you view controller:
+Then add the paging view controller as a child view controller:
 
 ```Swift
 addChildViewController(pagingViewController)
@@ -429,29 +430,39 @@ extension PagingTheme {
 
 ## Installation
 
-Parchment will be compatible with the lastest public release of Swift. Older
-releases will be available, but bug fixes won’t be issued.
+Parchment will be compatible with the lastest public release of Swift.
 
-### [Carthage](https://github.com/carthage/carthage)
+### CocoaPods
+
+Parchment is available through [CocoaPods](https://cocoapods.org). To install it, add the following to your `Podfile`:
+
+`pod 'Parchment'`
+
+### Carthage
+
+Parchment also supports [Carthage](https://github.com/Carthage/Carthage). To install it, you need to do the following steps: 
 
 1. Add `github "rechsteiner/Parchment"` to your `Cartfile`
 2. Run `carthage update`
 3. Link `Parchment.framework` with you target
 4. Add `$(SRCROOT)/Carthage/Build/iOS/Parchment.framework` to your
    `copy-frameworks` script phase
+   
+See [this guide](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application) for more details on using Carthage.
 
-### [CocoaPods](https://cocoapods.org)
+## Requirements
+* iOS 8.2+
+* Xcode 8.0+
 
-1. Add `pod "Parchment"` to your `Podfile`
-2. Make sure `use_frameworks!` is included. Adding this means your dependencies
-   will be included as a dynamic framework (this is necessary since Swift cannot
-   be included as a static library).
-3. Run `pod install`
+## Acknowledgements
+* Parchment uses [`EMPageViewController`](https://github.com/emalyak/EMPageViewController) as a replacement for `UIPageViewController`.
 
-## Credits
+## Author
+* Martin Rechsteiner ([@rechsteiner]())
 
-A big thanks to @emalyak for the `EMPageViewController` library 🙌
-
+## Changelog
+This can be found in the CHANGELOG file.
+ 
 ## Licence
 
-`Parchment` is released under the MIT license. See LICENSE for details.
+Parchment is released under the MIT license. See LICENSE for details.
