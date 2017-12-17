@@ -180,30 +180,7 @@ _Check out `DelegateExample` to see how to create dynamically sized cells._
 
 ## Customization
 
-Parchment is build to be very flexible. All customization is handled by the
-`PagingOptions` protocol. Just create your own struct that conforms to this
-protocol, and override the values you want.
-
-```Swift
-protocol PagingOptions {
-  var menuItemSize: PagingMenuItemSize { get }
-  var menuItemClass: PagingCell.Type { get }
-  var menuItemSpacing: CGFloat { get }
-  var menuInsets: UIEdgeInsets { get }
-  var menuHorizontalAlignment: PagingMenuHorizontalAlignment { get }
-  var menuTransition: PagingMenuTransition { get }
-  var menuInteraction: PagingMenuInteraction { get }
-  var selectedScrollPosition: PagingSelectedScrollPosition { get }
-  var indicatorOptions: PagingIndicatorOptions { get }
-  var indicatorClass: PagingIndicatorView.Type { get }
-  var borderOptions: PagingBorderOptions { get }
-  var borderClass: PagingBorderView.Type { get }
-  var theme: PagingTheme { get }
-}
-```
-
-If you have any requests for additional customizations, issues and pull-requests
-are very much welcome 🙌.
+Parchment is build to be very flexible. You can customize the behaviour by changing the following properties on `PagingViewController`:
 
 #### `menuItemSize`
 
@@ -221,25 +198,6 @@ enum PagingMenuItemSize {
 ```
 
 _Default: `.sizeToFit(minWidth: 150, height: 40)`_
-
-#### `menuItemClass`
-
-The class type for the menu item. Override this if you want your own custom menu
-items.
-
-_Default: `PagingTitleCell.self`_
-
-#### `menuItemSpacing`
-
-The spacing between the menu items.
-
-_Default: `0`_
-
-#### `menuInsets`
-
-The insets around all of the menu items.
-
-_Default: `UIEdgeInsets()`_
 
 #### `menuHorizontalAlignment`
 
@@ -271,7 +229,7 @@ enum PagingMenuTransition {
 }
 ```
 
-_Default: .scrollAlongside_
+_Default: `.scrollAlongside`_
 
 #### `menuInteraction`
 
@@ -285,7 +243,26 @@ enum PagingMenuInteraction {
 }
 ```
 
-_Default: .scrolling_
+_Default: `.scrolling`_
+
+#### `menuItemClass`
+
+The class type for the menu item. Override this if you want your own custom menu
+items.
+
+_Default: `PagingTitleCell.self`_
+
+#### `menuItemSpacing`
+
+The spacing between the menu items.
+
+_Default: `0`_
+
+#### `menuInsets`
+
+The insets around all of the menu items.
+
+_Default: `UIEdgeInsets()`_
 
 #### `selectedScrollPosition`
 
@@ -376,57 +353,35 @@ property.
 
 _Default: `true`_
 
-#### `theme`
+#### `font`
 
-The visual theme of the paging view controller.
+The font used for title label on the menu items.
 
-```Swift
-protocol PagingTheme {
-  var font: UIFont { get }
-  var textColor: UIColor { get }
-  var selectedTextColor: UIColor { get }
-  var backgroundColor: UIColor { get }
-  var headerBackgroundColor: UIColor { get }
-  var borderColor: UIColor { get }
-  var indicatorColor: UIColor { get }
-}
-```
+_Default: `UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)`_
 
-_Default:_
+#### `textColor`
 
-```Swift
-extension PagingTheme {
+The color of the title label on the menu items.
 
-  var font: UIFont {
-    return UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
-  }
+_Default: `UIColor.black`_
 
-  var textColor: UIColor {
-    return UIColor.black
-  }
+#### `selectedTextColor`
 
-  var selectedTextColor: UIColor {
-    return UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)
-  }
+The text color for the currently selected menu item.
 
-  var backgroundColor: UIColor {
-    return UIColor.white
-  }
+_Default: `UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)`_
 
-  var headerBackgroundColor: UIColor {
-    return UIColor.white
-  }
+#### `backgroundColor`
 
-  var indicatorColor: UIColor {
-    return UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)
-  }
+The background color for the menu items.
 
-  var borderColor: UIColor {
-    return UIColor(white: 0.9, alpha: 1)
-  }
+_Default: `UIColor.white`_
 
-}
-```
+#### `headerBackgroundColor`
+
+The background color for the header view behind the menu items.
+
+_Default: `UIColor.white`_
 
 ## Installation
 
