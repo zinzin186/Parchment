@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-header-2.png" width="270" height="120" />
+  <img src="https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-header-3.png" width="270" height="100" />
 </p>
 
 <p align="center">
