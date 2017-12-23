@@ -109,6 +109,22 @@ open class PagingViewController<T: PagingItem>:
     self.sizeCache = PagingSizeCache(options: self.options)
     super.init(coder: coder)
   }
+  
+  /// Reload data around given paging item. This will set the given
+  /// paging item as selected and generate new items around it. This
+  /// will also reload the view controllers displayed in the page view
+  /// controller.
+  ///
+  /// - Parameter pagingItem: The `PagingItem` that will be selected
+  /// after the data reloads.
+  open func reloadData(around pagingItem: T) {
+    guard let stateMachine = stateMachine else { return }
+    stateMachine.fire(.select(
+      pagingItem: pagingItem,
+      direction: .none,
+      animated: false))
+    reloadItems(around: pagingItem)
+  }
 
   /// Selects a given paging item. This need to be called after you
   /// initilize the `PagingViewController` to set the initial
