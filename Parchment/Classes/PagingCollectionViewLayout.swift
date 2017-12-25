@@ -252,7 +252,6 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     } else if view.near(edge: .right, clearance: distance) && distance > 0 &&
       dataStructure.hasItemsAfter == false {
       
-      let originalDistance = distance
       distance = view.contentSize.width - (view.contentOffset.x + view.bounds.width)
       
       if sizeCache.implementsWidthDelegate {
