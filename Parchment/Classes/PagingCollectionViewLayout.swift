@@ -272,7 +272,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
           let center = view.bounds.midX
           let centerAfterTransition = to.frame.midX - distance
           if centerAfterTransition < center {
-            distance = originalDistance
+            distance = view.contentSize.width - (view.contentOffset.x + view.bounds.width)
           }
         }
       }
