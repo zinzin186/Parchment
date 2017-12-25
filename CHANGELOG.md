@@ -2,6 +2,13 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.9.0](https://github.com/rechsteiner/Parchment/compare/v0.8.0...v0.9.0) - 2017-12-25
+
+### Added
+
+* Add method for reloading data #94
+* Allow setting different width for selected cell #85
+
 ## [0.8.0](https://github.com/rechsteiner/Parchment/compare/v0.7.0...v0.8.0) - 2017-11-19
 
 ### Fixes
