@@ -79,19 +79,10 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       with: IndexPath(item: 1, section: 0))
     
     super.init()
-    
-    configure()
   }
   
   public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
-  }
-  
-  fileprivate func configure() {
-    register(options.indicatorClass, forDecorationViewOfKind: PagingIndicatorKind)
-    register(options.borderClass, forDecorationViewOfKind: PagingBorderKind)
-    indicatorLayoutAttributes.configure(options)
-    borderLayoutAttributes.configure(options)
   }
   
   open override func prepare() {
@@ -190,6 +181,11 @@ open class PagingCollectionViewLayout<T: PagingItem>:
         contentOffset: contentOffset,
         distance: oldTransition.distance)
     }
+  }
+  
+  func registerDecorationViews() {
+    register(options.indicatorClass, forDecorationViewOfKind: PagingIndicatorKind)
+    register(options.borderClass, forDecorationViewOfKind: PagingBorderKind)
   }
 
   // MARK: Private

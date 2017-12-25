@@ -319,6 +319,7 @@ open class PagingViewController<T: PagingItem>:
     case .none:
       break
     }
+    collectionViewLayout.registerDecorationViews()
     
     if let state = stateMachine?.state {
       selectViewController(
