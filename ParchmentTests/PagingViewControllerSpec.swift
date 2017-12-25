@@ -30,20 +30,16 @@ class DataSource: PagingViewControllerDataSource {
   
 }
 
-struct CustomOptions: PagingOptions {
-  let menuItemSize: PagingMenuItemSize = .fixed(width: 100, height: 50)
-}
-
 class PagingViewControllerSpec: QuickSpec {
   
   override func spec() {
     
-    let options = CustomOptions()
     let dataSource = DataSource()
     var viewController: PagingViewController<Item>!
     
     beforeEach {
-      viewController = PagingViewController(options: options)
+      viewController = PagingViewController()
+      viewController.menuItemSize = .fixed(width: 100, height: 50)
       viewController.dataSource = dataSource
       
       UIApplication.shared.keyWindow!.rootViewController = viewController
