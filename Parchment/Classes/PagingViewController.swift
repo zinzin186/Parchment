@@ -67,7 +67,10 @@ open class PagingViewController<T: PagingItem>:
   /// _Default: .scrolling_
   open var menuInteraction: PagingMenuInteraction {
     get { return options.menuInteraction }
-    set { options.menuInteraction = newValue }
+    set {
+      options.menuInteraction = newValue
+      configureMenuInteraction()
+    }
   }
 
   /// Determine how the selected menu item should be aligned when it
@@ -195,7 +198,6 @@ open class PagingViewController<T: PagingItem>:
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
     collectionView.backgroundColor = .white
     collectionView.showsHorizontalScrollIndicator = false
-    collectionView.isScrollEnabled = false
     return collectionView
   }()
 
@@ -208,9 +210,12 @@ open class PagingViewController<T: PagingItem>:
   }()
 
   fileprivate let options: PagingOptions
-  fileprivate var didLayoutSubviews: Bool = false
   fileprivate let sizeCache: PagingSizeCache<T>
+  fileprivate var swipeGestureRecognizerLeft: UISwipeGestureRecognizer?
+  fileprivate var swipeGestureRecognizerRight: UISwipeGestureRecognizer?
+  fileprivate var didLayoutSubviews: Bool = false
   fileprivate var dataStructure: PagingDataStructure<T>
+  
   fileprivate var stateMachine: PagingStateMachine<T>? {
     didSet {
       handleStateMachineUpdate()
@@ -309,17 +314,8 @@ open class PagingViewController<T: PagingItem>:
     collectionView.delegate = self
     collectionView.dataSource = self
     collectionView.register(options.menuItemClass, forCellWithReuseIdentifier: PagingCellReuseIdentifier)
-    
-    switch (options.menuInteraction) {
-    case .scrolling:
-      collectionView.isScrollEnabled = true
-      collectionView.alwaysBounceHorizontal = true
-    case .swipe:
-      setupGestureRecognizers()
-    case .none:
-      break
-    }
     collectionViewLayout.registerDecorationViews()
+    configureMenuInteraction()
     
     if let state = stateMachine?.state {
       selectViewController(
@@ -362,15 +358,41 @@ open class PagingViewController<T: PagingItem>:
   
   // MARK: Private
   
+  fileprivate func configureMenuInteraction() {
+    collectionView.isScrollEnabled = false
+    collectionView.alwaysBounceHorizontal = false
+    
+    if let swipeGestureRecognizerLeft = swipeGestureRecognizerLeft {
+      collectionView.removeGestureRecognizer(swipeGestureRecognizerLeft)
+    }
+    
+    if let swipeGestureRecognizerRight = swipeGestureRecognizerRight {
+      collectionView.removeGestureRecognizer(swipeGestureRecognizerRight)
+    }
+    
+    switch (options.menuInteraction) {
+    case .scrolling:
+      collectionView.isScrollEnabled = true
+      collectionView.alwaysBounceHorizontal = true
+    case .swipe:
+      setupGestureRecognizers()
+    case .none:
+      break
+    }
+  }
+  
   fileprivate func setupGestureRecognizers() {
-    let recognizerLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer))
-    recognizerLeft.direction = .left
+    let swipeGestureRecognizerLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer))
+    swipeGestureRecognizerLeft.direction = .left
     
-    let recognizerRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer))
-    recognizerRight.direction = .right
+    let swipeGestureRecognizerRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer))
+    swipeGestureRecognizerRight.direction = .right
     
-    collectionView.addGestureRecognizer(recognizerLeft)
-    collectionView.addGestureRecognizer(recognizerRight)
+    collectionView.addGestureRecognizer(swipeGestureRecognizerLeft)
+    collectionView.addGestureRecognizer(swipeGestureRecognizerRight)
+    
+    self.swipeGestureRecognizerLeft = swipeGestureRecognizerLeft
+    self.swipeGestureRecognizerRight = swipeGestureRecognizerRight
   }
   
   @objc fileprivate dynamic func handleSwipeGestureRecognizer(_ recognizer: UISwipeGestureRecognizer) {
