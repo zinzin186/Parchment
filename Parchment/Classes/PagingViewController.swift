@@ -209,13 +209,17 @@ open class PagingViewController<T: PagingItem>:
     return EMPageViewController(navigationOrientation: .horizontal)
   }()
 
-  fileprivate let options: PagingOptions
+  /// An instance that stores all the customization so that it's
+  /// easier to share between other classes. You should use the
+  /// customization properties on PagingViewController, instead of
+  /// setting values on this class directly.
+  open let options: PagingOptions
+  
   fileprivate let sizeCache: PagingSizeCache<T>
   fileprivate var swipeGestureRecognizerLeft: UISwipeGestureRecognizer?
   fileprivate var swipeGestureRecognizerRight: UISwipeGestureRecognizer?
   fileprivate var didLayoutSubviews: Bool = false
   fileprivate var dataStructure: PagingDataStructure<T>
-  
   fileprivate var stateMachine: PagingStateMachine<T>? {
     didSet {
       handleStateMachineUpdate()
