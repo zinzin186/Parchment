@@ -15,56 +15,20 @@ struct ImageItem: PagingItem, Hashable, Comparable {
   var hashValue: Int {
     return title.hashValue + headerImage.hashValue
   }
-}
-
-func ==(lhs: ImageItem, rhs: ImageItem) -> Bool {
-  return (
-    lhs.title == rhs.title &&
-    lhs.headerImage == rhs.headerImage &&
-    lhs.images == rhs.images)
-}
-
-func <(lhs: ImageItem, rhs: ImageItem) -> Bool {
-  return lhs.index < rhs.index
-}
-
-// Lets create our own custom theme.
-struct ImagePagingTheme: PagingTheme {
-  let borderColor: UIColor = UIColor(white: 0, alpha: 0.1)
-  let indicatorColor: UIColor = .black
-}
-
-// We need to create our own options struct in order to customize it
-// to our needs. First, we need to set our custom PagingCell class
-// which will display our images. We set the cells to be fixed and add
-// some spacing around them. We also customize the looks of the border
-// and the paging indicator.
-struct ImagePagingOptions: PagingOptions {
-  let menuItemClass: PagingCell.Type = ImagePagingCell.self
-  let menuItemSize: PagingMenuItemSize = .fixed(width: 70, height: 70)
-  let menuItemSpacing: CGFloat = 8
-  let menuInsets = UIEdgeInsets(top: 12, left: 18, bottom: 12, right: 18)
-  let theme: PagingTheme = ImagePagingTheme()
   
-  let indicatorOptions: PagingIndicatorOptions = .visible(
-    height: 1,
-    zIndex: Int.max,
-    spacing: UIEdgeInsets.zero,
-    insets: UIEdgeInsets.zero)
+  static func ==(lhs: ImageItem, rhs: ImageItem) -> Bool {
+    return (
+      lhs.title == rhs.title &&
+        lhs.headerImage == rhs.headerImage &&
+        lhs.images == rhs.images)
+  }
   
-  let borderOptions: PagingBorderOptions = .visible(
-    height: 1,
-    zIndex: Int.max - 1,
-    insets: UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18))
+  static func <(lhs: ImageItem, rhs: ImageItem) -> Bool {
+    return lhs.index < rhs.index
+  }
 }
 
 class ViewController: UIViewController {
-
-  // Initialize our PagingViewController with our custom options. Note
-  // that we also need to specify the generic type as our ImageItem
-  lazy var pagingViewController: PagingViewController<ImageItem> = {
-    return PagingViewController(options: ImagePagingOptions())
-  }()
 
   // Our data source is responsible for holding the paging items and
   // telling the paging view controller what paging item comes before
@@ -73,6 +37,25 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    let pagingViewController = PagingViewController<ImageItem>()
+    pagingViewController.menuItemClass = ImagePagingCell.self
+    pagingViewController.menuItemSize = .fixed(width: 70, height: 70)
+    pagingViewController.menuItemSpacing = 8
+    pagingViewController.menuInsets = UIEdgeInsets(top: 12, left: 18, bottom: 12, right: 18)
+    pagingViewController.borderColor = UIColor(white: 0, alpha: 0.1)
+    pagingViewController.indicatorColor = .black
+    
+    pagingViewController.indicatorOptions = .visible(
+      height: 1,
+      zIndex: Int.max,
+      spacing: UIEdgeInsets.zero,
+      insets: UIEdgeInsets.zero)
+    
+    pagingViewController.borderOptions = .visible(
+      height: 1,
+      zIndex: Int.max - 1,
+      insets: UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18))
     
     // Add the paging view controller as a child view controller and
     // contrain it to all edges.

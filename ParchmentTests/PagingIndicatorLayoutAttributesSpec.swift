@@ -3,23 +3,6 @@ import Quick
 import Nimble
 @testable import Parchment
 
-struct CustomPagingTheme: PagingTheme {
-  let font: UIFont = UIFont.systemFont(ofSize: 15)
-  let textColor: UIColor = .blue
-  let selectedTextColor: UIColor = .red
-  let indicatorColor: UIColor = .green
-}
-
-struct CustomPagingOptions: PagingOptions {
-  let headerHeight: CGFloat = 40
-  var theme: PagingTheme = CustomPagingTheme()
-  let indicatorOptions: PagingIndicatorOptions = .visible(
-    height: 20,
-    zIndex: Int.max,
-    spacing: UIEdgeInsets(),
-    insets: UIEdgeInsets())
-}
-
 class PagingIndicatorLayoutAttributesSpec: QuickSpec {
   
   override func spec() {
@@ -27,9 +10,19 @@ class PagingIndicatorLayoutAttributesSpec: QuickSpec {
     describe("PagingIndicatorLayoutAttributes") {
       
       let layoutAttributes = PagingIndicatorLayoutAttributes()
-      let options: PagingOptions = CustomPagingOptions()
+      let options = PagingOptions()
       
       beforeEach {
+        options.theme.font = UIFont.systemFont(ofSize: 15)
+        options.theme.textColor = .blue
+        options.theme.selectedTextColor = .red
+        options.theme.indicatorColor = .green
+        options.indicatorOptions = .visible(
+          height: 20,
+          zIndex: Int.max,
+          spacing: UIEdgeInsets(),
+          insets: UIEdgeInsets())
+        
         layoutAttributes.configure(options)
       }
       

@@ -56,8 +56,8 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   
   private let options: PagingOptions
   private let sizeCache: PagingSizeCache<T>
-  private let indicatorLayoutAttributes: PagingIndicatorLayoutAttributes
-  private let borderLayoutAttributes: PagingBorderLayoutAttributes
+  private var indicatorLayoutAttributes: PagingIndicatorLayoutAttributes?
+  private var borderLayoutAttributes: PagingBorderLayoutAttributes?
   private var contentSize: CGSize = .zero
   private var invalidationSummary: InvalidationSummary = .everything
   private var currentTransition: PagingTransition? = nil
@@ -70,28 +70,11 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     self.dataStructure = dataStructure
     self.sizeCache = sizeCache
     
-    indicatorLayoutAttributes = PagingIndicatorLayoutAttributes(
-      forDecorationViewOfKind: PagingIndicatorKind,
-      with: IndexPath(item: 0, section: 0))
-    
-    borderLayoutAttributes = PagingBorderLayoutAttributes(
-      forDecorationViewOfKind: PagingBorderKind,
-      with: IndexPath(item: 1, section: 0))
-    
     super.init()
-    
-    configure()
   }
   
   public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
-  }
-  
-  fileprivate func configure() {
-    register(options.indicatorClass, forDecorationViewOfKind: PagingIndicatorKind)
-    register(options.borderClass, forDecorationViewOfKind: PagingBorderKind)
-    indicatorLayoutAttributes.configure(options)
-    borderLayoutAttributes.configure(options)
   }
   
   open override func prepare() {
@@ -100,7 +83,10 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     switch invalidationSummary {
     case .everything, .dataSourceCounts:
       layoutAttributes = [:]
+      borderLayoutAttributes = nil
+      indicatorLayoutAttributes = nil
       createLayoutAttributes()
+      createDecorationLayoutAttributes()
     case .contentOffset:
       invalidateContentOffset()
     case .transition:
@@ -190,6 +176,11 @@ open class PagingCollectionViewLayout<T: PagingItem>:
         contentOffset: contentOffset,
         distance: oldTransition.distance)
     }
+  }
+  
+  func registerDecorationViews() {
+    register(options.indicatorClass, forDecorationViewOfKind: PagingIndicatorKind)
+    register(options.borderClass, forDecorationViewOfKind: PagingBorderKind)
   }
 
   // MARK: Private
@@ -454,8 +445,24 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     self.layoutAttributes = layoutAttributes
   }
   
+  private func createDecorationLayoutAttributes() {
+    if case .visible = options.indicatorOptions {
+      indicatorLayoutAttributes = PagingIndicatorLayoutAttributes(
+        forDecorationViewOfKind: PagingIndicatorKind,
+        with: IndexPath(item: 0, section: 0))
+      indicatorLayoutAttributes?.configure(options)
+    }
+    
+    if case .visible = options.borderOptions {
+      borderLayoutAttributes = PagingBorderLayoutAttributes(
+        forDecorationViewOfKind: PagingBorderKind,
+        with: IndexPath(item: 1, section: 0))
+      borderLayoutAttributes?.configure(options)
+    }
+  }
+  
   private func updateBorderLayoutAttributes() {
-    borderLayoutAttributes.update(
+    borderLayoutAttributes?.update(
       contentSize: collectionViewContentSize,
       bounds: collectionView?.bounds ?? .zero,
       safeAreaInsets: safeAreaInsets)
@@ -480,16 +487,16 @@ open class PagingCollectionViewLayout<T: PagingItem>:
           insets: indicatorInsetsForIndex(currentIndexPath.item),
           spacing: indicatorSpacingForIndex(currentIndexPath.item))
         
-        indicatorLayoutAttributes.update(from: from, to: to, progress: progress)
+        indicatorLayoutAttributes?.update(from: from, to: to, progress: progress)
       } else if let from = indicatorMetricForFirstItem() {
-        indicatorLayoutAttributes.update(from: from, to: to, progress: progress)
+        indicatorLayoutAttributes?.update(from: from, to: to, progress: progress)
       } else if let from = indicatorMetricForLastItem() {
-        indicatorLayoutAttributes.update(from: from, to: to, progress: progress)
+        indicatorLayoutAttributes?.update(from: from, to: to, progress: progress)
       }
     } else if let metric = indicatorMetricForFirstItem() {
-      indicatorLayoutAttributes.update(to: metric)
+      indicatorLayoutAttributes?.update(to: metric)
     } else if let metric = indicatorMetricForLastItem() {
-      indicatorLayoutAttributes.update(to: metric)
+      indicatorLayoutAttributes?.update(to: metric)
     }
   }
   

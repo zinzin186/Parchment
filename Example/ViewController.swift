@@ -8,15 +8,14 @@ import Parchment
 // Parchment when you only have a fixed array of view controllers. It
 // will create a data source for us and set up the paging items to
 // display the view controllers title.
-
 class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    let viewControllers = (0...30).map { IndexViewController(index: $0) }
+    
+    let viewControllers = (0...10).map { IndexViewController(index: $0) }
     let pagingViewController = FixedPagingViewController(viewControllers: viewControllers)
-
+    
     // Make sure you add the PagingViewController as a child view
     // controller and contrain it to the edges of the view.
     addChildViewController(pagingViewController)
