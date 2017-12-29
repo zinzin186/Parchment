@@ -1,47 +1,41 @@
 import UIKit
 
-/// The `PagingViewControllerDataSource` protocol is used to
-/// provide the `PagingItem` you want to display and which view
-/// controller it is associated with.
+/// The `PagingViewControllerDataSource` protocol is used to provide
+/// the `PagingItem` you want to display and which view controller it
+/// is associated with. Using this data sources requires you to have a
+/// fixed number of view controllers.
 ///
-/// In order for these methods to be called, you first need to set
-/// the initial `PagingItem` by calling `selectPagingItem:` on
+/// In order for these methods to be called, you first need to set the
+/// initial `PagingItem` by calling `selectPagingItem:` on
 /// `PagingViewController`.
 public protocol PagingViewControllerDataSource: class {
-                                                    
-  /// Return the view controller accociated with a `PagingItem`. This
+  
+  /// Return the total number of view controllers
+  ///
+  /// - Parameter pagingViewController: The `PagingViewController`
+  /// instance
+  /// - Returns: The number of view controllers
+  func numberOfViewControllers<T>(
+    in pagingViewController: PagingViewController<T>) -> Int
+  
+  /// Return the view controller accociated with a given index. This
   /// method is only called for the currently selected `PagingItem`,
   /// and its two possible siblings.
   ///
   /// - Parameter pagingViewController: The `PagingViewController`
   /// instance
-  /// - Parameter viewControllerForPagingItem: A `PagingItem` instance
-  /// - Returns: The view controller for the `PagingItem` instance
+  /// - Parameter index: The index of a given `PagingItem`
+  /// - Returns: The view controller for the given index
   func pagingViewController<T>(
     _ pagingViewController: PagingViewController<T>,
-    viewControllerForPagingItem: T) -> UIViewController
-
-  /// The `PagingItem` that comes before a given `PagingItem`
-  ///
-  /// - Parameter pagingViewController: The `PagingViewController`
-  /// instance
-  /// - Parameter pagingItemBeforePagingItem: A `PagingItem` instance
-  /// - Returns: The `PagingItem` that appears before the given
-  /// `PagingItem`, or `nil` to indicate that no more progress can be
-  /// made in that direction.
-  func pagingViewController<T>(
-    _ pagingViewController: PagingViewController<T>,
-    pagingItemBeforePagingItem: T) -> T?
+    viewControllerForIndex index: Int) -> UIViewController
   
-  /// The `PagingItem` that comes after a given `PagingItem`
+  /// Return the `PagingItem` instance for a given index
   ///
   /// - Parameter pagingViewController: The `PagingViewController`
   /// instance
-  /// - Parameter pagingItemAfterPagingItem: A `PagingItem` instance
-  /// - Returns: The `PagingItem` that appears after the given
-  /// `PagingItem`, or `nil` to indicate that no more progress can be
-  /// made in that direction.
+  /// - Returns: The `PagingItem` instance
   func pagingViewController<T>(
     _ pagingViewController: PagingViewController<T>,
-    pagingItemAfterPagingItem: T) -> T?
+    pagingItemForIndex index: Int) -> T
 }

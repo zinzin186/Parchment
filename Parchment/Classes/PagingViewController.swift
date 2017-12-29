@@ -166,7 +166,21 @@ open class PagingViewController<T: PagingItem>:
   /// that are displayed in the menu. The `PagingItem` protocol is
   /// used to generate menu items for all the view controllers,
   /// without having to actually allocate them before they are needed.
-  open weak var dataSource: PagingViewControllerDataSource?
+  /// Use this property when you have a fixed amount of view
+  /// controllers. If you need to support infinitely large data
+  /// sources, use the infiniteDataSource property instead.
+  open weak var dataSource: PagingViewControllerDataSource? {
+    didSet {
+      configureDataSource()
+    }
+  }
+  
+  /// A data source that can be used when you need to support
+  /// infinitely large data source by returning the `PagingItem`
+  /// before or after a given `PagingItem`. The `PagingItem` protocol
+  /// is used to generate menu items for all the view controllers,
+  /// without having to actually allocate them before they are needed.
+  open weak var infiniteDataSource: PagingViewControllerInfiniteDataSource?
 
   /// Use this delegate if you want to manually control the width of
   /// your menu items. Self-sizing cells is not supported at the
@@ -220,6 +234,8 @@ open class PagingViewController<T: PagingItem>:
   fileprivate var swipeGestureRecognizerRight: UISwipeGestureRecognizer?
   fileprivate var didLayoutSubviews: Bool = false
   fileprivate var dataStructure: PagingDataStructure<T>
+  fileprivate var indexedDataSource: IndexedPagingDataSource<T>?
+  
   fileprivate var stateMachine: PagingStateMachine<T>? {
     didSet {
       handleStateMachineUpdate()
@@ -362,6 +378,25 @@ open class PagingViewController<T: PagingItem>:
   
   // MARK: Private
   
+  fileprivate func configureDataSource() {
+    guard let dataSource = dataSource else { return }
+    
+    let numberOfItems = dataSource.numberOfViewControllers(in: self)
+    let items = (0..<numberOfItems).enumerated().map {
+      dataSource.pagingViewController(self, pagingItemForIndex: $0.offset)
+    }
+    
+    indexedDataSource = IndexedPagingDataSource(items: items) {
+      return dataSource.pagingViewController(self, viewControllerForIndex: $0)
+    }
+    
+    infiniteDataSource = indexedDataSource
+
+    if let firstItem = items.first {
+      selectPagingItem(firstItem)
+    }
+  }
+  
   fileprivate func configureMenuInteraction() {
     collectionView.isScrollEnabled = false
     collectionView.alwaysBounceHorizontal = false
@@ -406,9 +441,9 @@ open class PagingViewController<T: PagingItem>:
     var upcomingPagingItem: T? = nil
     
     if recognizer.direction.contains(.left) {
-      upcomingPagingItem = dataSource?.pagingViewController(self, pagingItemAfterPagingItem: currentPagingItem)
+      upcomingPagingItem = infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: currentPagingItem)
     } else if recognizer.direction.contains(.right) {
-      upcomingPagingItem = dataSource?.pagingViewController(self, pagingItemBeforePagingItem: currentPagingItem)
+      upcomingPagingItem = infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: currentPagingItem)
     }
     
     if let item = upcomingPagingItem {
@@ -510,7 +545,7 @@ open class PagingViewController<T: PagingItem>:
     // fill up the same width as the bounds.
     var widthBefore: CGFloat = collectionView.bounds.width
     while widthBefore > 0 {
-      if let item = dataSource?.pagingViewController(self, pagingItemBeforePagingItem: previousItem) {
+      if let item = infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: previousItem) {
         widthBefore -= itemWidth(pagingItem: item)
         previousItem = item
         items.insert(item)
@@ -523,7 +558,7 @@ open class PagingViewController<T: PagingItem>:
     // include any remaining space left before the current item.
     var widthAfter: CGFloat = collectionView.bounds.width + widthBefore
     while widthAfter > 0 {
-      if let item = dataSource?.pagingViewController(self, pagingItemAfterPagingItem: nextItem) {
+      if let item = infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: nextItem) {
         widthAfter -= itemWidth(pagingItem: item)
         nextItem = item
         items.insert(item)
@@ -536,7 +571,7 @@ open class PagingViewController<T: PagingItem>:
     // space available after filling items items after the current.
     var remainingWidth = widthAfter
     while remainingWidth > 0 {
-      if let item = dataSource?.pagingViewController(self, pagingItemBeforePagingItem: previousItem) {
+      if let item = infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: previousItem) {
         remainingWidth -= itemWidth(pagingItem: item)
         previousItem = item
         items.insert(item)
@@ -600,7 +635,7 @@ open class PagingViewController<T: PagingItem>:
   }
   
   fileprivate func selectViewController(_ pagingItem: T, direction: PagingDirection, animated: Bool = true) {
-    guard let dataSource = dataSource else { return }
+    guard let dataSource = infiniteDataSource else { return }
     pageViewController.selectViewController(
       dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem),
       direction: direction.pageViewControllerNavigationDirection,
@@ -620,12 +655,12 @@ open class PagingViewController<T: PagingItem>:
   
   fileprivate func hasItemBefore(pagingItem: T?) -> Bool {
     guard let item = pagingItem else { return false }
-    return dataSource?.pagingViewController(self, pagingItemBeforePagingItem: item) != nil
+    return infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: item) != nil
   }
   
   fileprivate func hasItemAfter(pagingItem: T?) -> Bool {
     guard let item = pagingItem else { return false }
-    return dataSource?.pagingViewController(self, pagingItemAfterPagingItem: item) != nil
+    return infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: item) != nil
   }
   
   fileprivate func stopScrolling() {
@@ -689,7 +724,7 @@ open class PagingViewController<T: PagingItem>:
   
   open func em_pageViewController(_ pageViewController: EMPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
     guard
-      let dataSource = dataSource,
+      let dataSource = infiniteDataSource,
       let state = stateMachine?.state.currentPagingItem,
       let pagingItem = dataSource.pagingViewController(self, pagingItemBeforePagingItem: state) else { return nil }
     
@@ -698,7 +733,7 @@ open class PagingViewController<T: PagingItem>:
   
   open func em_pageViewController(_ pageViewController: EMPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
     guard
-      let dataSource = dataSource,
+      let dataSource = infiniteDataSource,
       let state = stateMachine?.state.currentPagingItem,
       let pagingItem = dataSource.pagingViewController(self, pagingItemAfterPagingItem: state) else { return nil }
     
@@ -742,12 +777,12 @@ open class PagingViewController<T: PagingItem>:
   
   func pagingStateMachine<U>(_ pagingStateMachine: PagingStateMachine<U>, pagingItemBeforePagingItem pagingItem: U) -> U? {
     guard let pagingItem = pagingItem as? T else { return nil }
-    return dataSource?.pagingViewController(self, pagingItemBeforePagingItem: pagingItem) as? U
+    return infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: pagingItem) as? U
   }
   
   func pagingStateMachine<U>(_ pagingStateMachine: PagingStateMachine<U>, pagingItemAfterPagingItem pagingItem: U) -> U? {
     guard let pagingItem = pagingItem as? T else { return nil }
-    return dataSource?.pagingViewController(self, pagingItemAfterPagingItem: pagingItem) as? U
+    return infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: pagingItem) as? U
   }
   
   // MARK: PagingSizeCacheDelegate
