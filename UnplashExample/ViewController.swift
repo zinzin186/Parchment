@@ -30,10 +30,68 @@ struct ImageItem: PagingItem, Hashable, Comparable {
 
 class ViewController: UIViewController {
 
-  // Our data source is responsible for holding the paging items and
-  // telling the paging view controller what paging item comes before
-  // or after any given item.
-  fileprivate let dataSource = ImagePagingDataSource()
+  fileprivate let items = [
+    ImageItem(
+      index: 0,
+      title: "Green",
+      headerImage: UIImage(named: "green-1")!,
+      images: [
+        UIImage(named: "green-1")!,
+        UIImage(named: "green-2")!,
+        UIImage(named: "green-3")!,
+        UIImage(named: "green-4")!,
+        ]),
+    ImageItem(
+      index: 1,
+      title: "Food",
+      headerImage: UIImage(named: "food-1")!,
+      images: [
+        UIImage(named: "food-1")!,
+        UIImage(named: "food-2")!,
+        UIImage(named: "food-3")!,
+        UIImage(named: "food-4")!,
+        ]),
+    ImageItem(
+      index: 2,
+      title: "Succulents",
+      headerImage: UIImage(named: "succulents-1")!,
+      images: [
+        UIImage(named: "succulents-1")!,
+        UIImage(named: "succulents-2")!,
+        UIImage(named: "succulents-3")!,
+        UIImage(named: "succulents-4")!,
+        ]),
+    ImageItem(
+      index: 3,
+      title: "City",
+      headerImage: UIImage(named: "city-1")!,
+      images: [
+        UIImage(named: "city-3")!,
+        UIImage(named: "city-2")!,
+        UIImage(named: "city-1")!,
+        UIImage(named: "city-4")!,
+        ]),
+    ImageItem(
+      index: 4,
+      title: "Scenic",
+      headerImage: UIImage(named: "scenic-1")!,
+      images: [
+        UIImage(named: "scenic-1")!,
+        UIImage(named: "scenic-2")!,
+        UIImage(named: "scenic-3")!,
+        UIImage(named: "scenic-4")!,
+        ]),
+    ImageItem(
+      index: 5,
+      title: "Coffee",
+      headerImage: UIImage(named: "coffee-1")!,
+      images: [
+        UIImage(named: "coffee-1")!,
+        UIImage(named: "coffee-2")!,
+        UIImage(named: "coffee-3")!,
+        UIImage(named: "coffee-4")!,
+        ]),
+    ]
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -71,4 +129,20 @@ class ViewController: UIViewController {
     pagingViewController.selectPagingItem(dataSource.items.first!)
   }
 
+}
+
+extension ViewController: PagingViewControllerDataSource {
+  
+  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+    return ImagesViewController(images: items[index].images)
+  }
+  
+  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
+    return items[index] as! T
+  }
+  
+  func numberOfViewControllers<T>(in: PagingViewController<T>) -> Int{
+    return items.count
+  }
+  
 }

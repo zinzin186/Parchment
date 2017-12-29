@@ -68,7 +68,6 @@
 		3E5E94081CE8C2DA000762A1 /* ImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E94071CE8C2DA000762A1 /* ImagesViewController.swift */; };
 		3E5E940A1CE8C45D000762A1 /* UIView+constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E94091CE8C45D000762A1 /* UIView+constraints.swift */; };
 		3E5E940C1CE8C5CF000762A1 /* ImagePagingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E940B1CE8C5CF000762A1 /* ImagePagingCell.swift */; };
-		3E5E940E1CE8C68B000762A1 /* ImagePagingDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E940D1CE8C68B000762A1 /* ImagePagingDataSource.swift */; };
 		3E5E94101CE9E944000762A1 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E940F1CE9E944000762A1 /* ImageCollectionViewCell.swift */; };
 		3E9E8D141C70FDF900F265A4 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
 		3E9E8D151C70FDF900F265A4 /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -344,7 +343,6 @@
 		3E5E94071CE8C2DA000762A1 /* ImagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesViewController.swift; sourceTree = "<group>"; };
 		3E5E94091CE8C45D000762A1 /* UIView+constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+constraints.swift"; sourceTree = "<group>"; };
 		3E5E940B1CE8C5CF000762A1 /* ImagePagingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePagingCell.swift; sourceTree = "<group>"; };
-		3E5E940D1CE8C68B000762A1 /* ImagePagingDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePagingDataSource.swift; sourceTree = "<group>"; };
 		3E5E940F1CE9E944000762A1 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		3E73A8131C9A0AE40083C720 /* libInsightfulPager.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libInsightfulPager.a; path = ../../../Desktop/libInsightfulPager.a; sourceTree = "<group>"; };
 		3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Parchment.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -601,7 +599,6 @@
 			children = (
 				3E5E93F21CE8BA1E000762A1 /* AppDelegate.swift */,
 				3E5E93F41CE8BA1E000762A1 /* ViewController.swift */,
-				3E5E940D1CE8C68B000762A1 /* ImagePagingDataSource.swift */,
 				3E5E94071CE8C2DA000762A1 /* ImagesViewController.swift */,
 				3E5E940B1CE8C5CF000762A1 /* ImagePagingCell.swift */,
 				3E5E940F1CE9E944000762A1 /* ImageCollectionViewCell.swift */,
@@ -1181,7 +1178,6 @@
 				3E5E94101CE9E944000762A1 /* ImageCollectionViewCell.swift in Sources */,
 				3E5E93F51CE8BA1E000762A1 /* ViewController.swift in Sources */,
 				3E5E93F31CE8BA1E000762A1 /* AppDelegate.swift in Sources */,
-				3E5E940E1CE8C68B000762A1 /* ImagePagingDataSource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

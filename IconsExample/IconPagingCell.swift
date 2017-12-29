@@ -3,13 +3,13 @@ import Parchment
 
 struct IconPagingCellViewModel {
   
-  let title: String
+  let image: UIImage?
   let selected: Bool
   let tintColor: UIColor
   let selectedTintColor: UIColor
   
-  init(title: String, selected: Bool, theme: PagingTheme) {
-    self.title = title
+  init(image: UIImage?, selected: Bool, theme: PagingTheme) {
+    self.image = image
     self.selected = selected
     self.tintColor = theme.textColor
     self.selectedTintColor = theme.selectedTextColor
@@ -37,11 +37,24 @@ class IconPagingCell: PagingCell {
   }
   
   override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
-    if let item = pagingItem as? PagingTitleItem {
-      updateViewModel(viewModel: IconPagingCellViewModel(
-        title: item.title,
+    if let item = pagingItem as? IconItem {
+
+      let viewModel = IconPagingCellViewModel(
+        image: item.image,
         selected: selected,
-        theme: theme))
+        theme: theme)
+      
+      imageView.image = viewModel.image
+      
+      if viewModel.selected {
+        imageView.transform = CGAffineTransform(scaleX: 1, y: 1)
+        imageView.tintColor = viewModel.selectedTintColor
+      } else {
+        imageView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        imageView.tintColor = viewModel.tintColor
+      }
+      
+      self.viewModel = viewModel
     }
   }
   
@@ -54,19 +67,6 @@ class IconPagingCell: PagingCell {
         from: viewModel.tintColor,
         to: viewModel.selectedTintColor,
         with: attributes.progress)
-    }
-  }
-  
-  fileprivate func updateViewModel(viewModel: IconPagingCellViewModel) {
-    self.viewModel = viewModel
-    imageView.image = UIImage(named: viewModel.title)
-    
-    if viewModel.selected {
-      imageView.transform = CGAffineTransform(scaleX: 1, y: 1)
-      imageView.tintColor = viewModel.selectedTintColor
-    } else {
-      imageView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
-      imageView.tintColor = viewModel.tintColor
     }
   }
   

@@ -3,42 +3,55 @@ import Parchment
 
 class ViewController: UIViewController {
   
+  // Let's start by creating an array of citites that we
+  // will use to generate some view controllers.
+  fileprivate let cities = [
+    "Oslo",
+    "Stockholm",
+    "Tokyo",
+    "Barcelona",
+    "Vancouver",
+    "Berlin",
+    "Shanghai",
+    "London",
+    "Paris",
+    "Chicago",
+    "Madrid",
+    "Munich",
+    "Toronto",
+    "Sydney",
+    "Melbourne"
+  ]
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // Initialize an array of view controllers that we're going to display.
-    let viewControllers = [
-      CityViewController(title: "Oslo"),
-      CityViewController(title: "Stockholm"),
-      CityViewController(title: "Barcelona"),
-      CityViewController(title: "Vancouver"),
-      CityViewController(title: "Berlin"),
-      CityViewController(title: "Shanghai"),
-      CityViewController(title: "London"),
-      CityViewController(title: "Paris"),
-      CityViewController(title: "Chigago"),
-      CityViewController(title: "Madrid"),
-      CityViewController(title: "Munich"),
-      CityViewController(title: "Toronto")
-    ]
+    let pagingViewController = PagingViewController<PagingIndexItem>()
+    pagingViewController.dataSource = self
+    pagingViewController.delegate = self
     
-    // Initialize a PagingViewController with our array of view
-    // controllers. Note that we're using FixedPagingViewController,
-    // which is a subclass of PagingViewController that takes in an
-    // array view controllers and handles setting up the data source
-    // and paging items for us.
-    let pagingViewController = FixedPagingViewController(viewControllers: viewControllers)
-
     // Add the paging view controller as a child view controller and
     // contrain it to all edges.
     addChildViewController(pagingViewController)
     view.addSubview(pagingViewController.view)
     view.constrainToEdges(pagingViewController.view)
     pagingViewController.didMove(toParentViewController: self)
+  }
+  
+}
 
-    // Set the paging view controller delegate so that we can handle
-    // the width for the paging items.
-    pagingViewController.delegate = self
+extension ViewController: PagingViewControllerDataSource {
+  
+  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
+    return PagingIndexItem(index: index, title: cities[index]) as! T
+  }
+  
+  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+    return CityViewController(title: cities[index])
+  }
+  
+  func numberOfViewControllers<T>(in: PagingViewController<T>) -> Int {
+    return cities.count
   }
   
 }
@@ -52,8 +65,7 @@ extension ViewController: PagingViewControllerDelegate {
   // PagingTitleItem, which is the PagingItem type used by
   // FixedPagingViewController.
   func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, widthForPagingItem pagingItem: T, isSelected: Bool) -> CGFloat {
-    
-    guard let item = pagingItem as? ViewControllerItem else { return 0 }
+    guard let item = pagingItem as? PagingIndexItem else { return 0 }
 
     let insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     let size = CGSize(width: CGFloat.greatestFiniteMagnitude, height: pagingViewController.menuItemSize.height)
