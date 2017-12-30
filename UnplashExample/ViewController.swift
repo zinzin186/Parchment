@@ -123,10 +123,10 @@ class ViewController: UIViewController {
     pagingViewController.didMove(toParentViewController: self)
     
     // Set our custom data source.
-    pagingViewController.dataSource = dataSource
+    pagingViewController.dataSource = self
     
     // Set the first item as the selected paging item.
-    pagingViewController.selectPagingItem(dataSource.items.first!)
+    pagingViewController.selectPagingItem(items[0])
   }
 
 }
