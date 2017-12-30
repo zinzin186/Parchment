@@ -17,8 +17,6 @@ open class FixedPagingViewController: PagingViewController<PagingIndexItem> {
   /// want to select.
   open let viewControllers: [UIViewController]
   
-  open weak var itemDelegate: FixedPagingViewControllerDelegate?
-  
   /// Creates an instance of `FixedPagingViewController`. By default,
   /// it will select the first view controller in the array. You can
   /// also call `selectPagingItem:` if you need select something else.
@@ -33,36 +31,7 @@ open class FixedPagingViewController: PagingViewController<PagingIndexItem> {
 
   required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
-  }
-
-  // MARK: EMPageViewControllerDelegate
-  
-  open override func em_pageViewController(_ pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
-    super.em_pageViewController(pageViewController, didFinishScrollingFrom: startingViewController, destinationViewController: destinationViewController, transitionSuccessful: transitionSuccessful)
-    
-    if transitionSuccessful {
-      if let index = viewControllers.index(of: destinationViewController) {
-        let item = PagingIndexItem(index: index, title: destinationViewController.title ?? "")
-        itemDelegate?.fixedPagingViewController(
-          fixedPagingViewController: self,
-          didScrollToItem: item,
-          destinationViewController: destinationViewController,
-          atIndex: index)
-      }
-    }
-  }
-  
-  open override func em_pageViewController(_ pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController) {
-    if let index = viewControllers.index(of: destinationViewController) {
-      let item = PagingIndexItem(index: index, title: destinationViewController.title ?? "")
-      itemDelegate?.fixedPagingViewController(
-        fixedPagingViewController: self,
-        willScrollToItem: item,
-        destinationViewController: destinationViewController,
-        atIndex: index)
-    }
-  }
-  
+  }  
 }
 
 extension FixedPagingViewController: PagingViewControllerDataSource {

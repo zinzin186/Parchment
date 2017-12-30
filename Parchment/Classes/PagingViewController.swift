@@ -188,11 +188,10 @@ open class PagingViewController<T: PagingItem>:
   /// you want to size based on its content.
   open weak var delegate: PagingViewControllerDelegate? {
     didSet {
-      sizeCache.delegate = self
-      sizeCache.implementsWidthDelegate = true
+      configureSizeCache()
     }
   }
-
+  
   /// A custom collection view layout that lays out all the menu items
   /// horizontally. See the `PagingOptions` protocol on how you can
   /// customize the layout.
@@ -238,7 +237,7 @@ open class PagingViewController<T: PagingItem>:
   
   fileprivate var stateMachine: PagingStateMachine<T>? {
     didSet {
-      handleStateMachineUpdate()
+      configureStateMachine()
     }
   }
   
@@ -378,6 +377,15 @@ open class PagingViewController<T: PagingItem>:
   
   // MARK: Private
   
+  fileprivate func configureSizeCache() {
+    if let delegate = delegate, let stateMachine = stateMachine {
+      sizeCache.delegate = self
+      if let _ = delegate.pagingViewController(self, widthForPagingItem: stateMachine.state.currentPagingItem, isSelected: false) {
+        sizeCache.implementsWidthDelegate = true
+      }
+    }
+  }
+  
   fileprivate func configureDataSource() {
     guard let dataSource = dataSource else { return }
     
@@ -453,7 +461,7 @@ open class PagingViewController<T: PagingItem>:
   
   fileprivate func handleStateUpdate(_ oldState: PagingState<T>, state: PagingState<T>, event: PagingEvent<T>?) {
     collectionViewLayout.state = state
-    
+
     switch state {
     case let .selected(pagingItem):
       if let event = event {
@@ -513,7 +521,7 @@ open class PagingViewController<T: PagingItem>:
     }
   }
   
-  fileprivate func handleStateMachineUpdate() {
+  fileprivate func configureStateMachine() {
     stateMachine?.didSelectPagingItem = { [weak self] pagingItem, direction, animated in
       self?.selectViewController(pagingItem, direction: direction, animated: animated)
     }
@@ -523,6 +531,8 @@ open class PagingViewController<T: PagingItem>:
     }
     
     stateMachine?.delegate = self
+    
+    configureSizeCache()
   }
   
   fileprivate func selectCollectionViewItem(for pagingItem: T, animated: Bool = false) {
@@ -743,10 +753,32 @@ open class PagingViewController<T: PagingItem>:
   // MARK: EMPageViewControllerDelegate
 
   open func em_pageViewController(_ pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
+    guard let stateMachine = stateMachine else { return }
+    let oldState = stateMachine.state
+    
     // EMPageViewController will trigger a scrolling event even if the
     // view has not appeared, causing the wrong initial paging item.
     if view.window != nil {
-      stateMachine?.fire(.scroll(progress: progress))
+      stateMachine.fire(.scroll(progress: progress))
+      
+      if case .selected = oldState {
+        if let upcomingPagingItem = stateMachine.state.upcomingPagingItem,
+          let destinationViewController = destinationViewController {
+          delegate?.pagingViewController(
+            self,
+            willScrollToItem: upcomingPagingItem,
+            startingViewController: startingViewController,
+            destinationViewController: destinationViewController)
+        }
+      } else {
+        delegate?.pagingViewController(
+          self,
+          isScrollingFromItem: stateMachine.state.currentPagingItem,
+          toItem: stateMachine.state.upcomingPagingItem,
+          startingViewController: startingViewController,
+          destinationViewController: destinationViewController,
+          progress: progress)
+      }
     }
   }
   
@@ -770,6 +802,15 @@ open class PagingViewController<T: PagingItem>:
       } else {
         stateMachine?.fire(.finishScrolling)
       }
+    }
+    
+    if let currentPagingItem = stateMachine?.state.currentPagingItem {
+      delegate?.pagingViewController(
+        self,
+        didScrollToItem: currentPagingItem,
+        startingViewController: startingViewController,
+        destinationViewController: destinationViewController,
+        transitionSuccessful: transitionSuccessful)
     }
   }
   
