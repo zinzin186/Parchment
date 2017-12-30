@@ -9,13 +9,14 @@ import UIKit
 /// up-front, which in some cases might be to expensive. If that is
 /// the case, take a look at `PagingViewController` on how to create
 /// your own implementation that matches your needs.
-open class FixedPagingViewController: PagingViewController<ViewControllerItem> {
+open class FixedPagingViewController: PagingViewController<PagingIndexItem> {
   
   /// An array of `PagingItem`s that contains a reference to the view
   /// controller and title for that item. If you need to call
   /// `selectPagingItem:` you can read from this to get the item you
   /// want to select.
-  open let items: [ViewControllerItem]
+  open let viewControllers: [UIViewController]
+  
   open weak var itemDelegate: FixedPagingViewControllerDelegate?
   
   /// Creates an instance of `FixedPagingViewController`. By default,
@@ -23,20 +24,11 @@ open class FixedPagingViewController: PagingViewController<ViewControllerItem> {
   /// also call `selectPagingItem:` if you need select something else.
   ///
   /// - Parameter viewControllers: An array of view controllers
-  /// - Parameter options: An instance used to customize how the
-  /// paging view controller should look and behave.
   public init(viewControllers: [UIViewController]) {
-    
-    items = viewControllers.enumerated().map {
-      ViewControllerItem(viewController: $1, index: $0)
-    }
-    
+    self.viewControllers = viewControllers
     super.init()
     dataSource = self
-    
-    if let item = items.first {
-      selectPagingItem(item)
-    }
+    selectPagingItem(PagingIndexItem(index: 0, title: viewControllers[0].title ?? ""))
   }
 
   required public init?(coder: NSCoder) {
@@ -49,20 +41,24 @@ open class FixedPagingViewController: PagingViewController<ViewControllerItem> {
     super.em_pageViewController(pageViewController, didFinishScrollingFrom: startingViewController, destinationViewController: destinationViewController, transitionSuccessful: transitionSuccessful)
     
     if transitionSuccessful {
-      if let index = items.index(where: { $0.viewController == destinationViewController }) {
+      if let index = viewControllers.index(of: destinationViewController) {
+        let item = PagingIndexItem(index: index, title: destinationViewController.title ?? "")
         itemDelegate?.fixedPagingViewController(
           fixedPagingViewController: self,
-          didScrollToItem: items[index],
+          didScrollToItem: item,
+          destinationViewController: destinationViewController,
           atIndex: index)
       }
     }
   }
   
   open override func em_pageViewController(_ pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController) {
-    if let index = items.index(where: { $0.viewController == destinationViewController }) {
+    if let index = viewControllers.index(of: destinationViewController) {
+      let item = PagingIndexItem(index: index, title: destinationViewController.title ?? "")
       itemDelegate?.fixedPagingViewController(
         fixedPagingViewController: self,
-        willScrollToItem: items[index],
+        willScrollToItem: item,
+        destinationViewController: destinationViewController,
         atIndex: index)
     }
   }
@@ -71,25 +67,16 @@ open class FixedPagingViewController: PagingViewController<ViewControllerItem> {
 
 extension FixedPagingViewController: PagingViewControllerDataSource {
   
-  public func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForPagingItem pagingItem: T) -> UIViewController {
-    let index = items.index(of: pagingItem as! ViewControllerItem)!
-    return items[index].viewController
+  public func numberOfViewControllers<T>(in: PagingViewController<T>) -> Int {
+    return viewControllers.count
   }
   
-  public func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemBeforePagingItem pagingItem: T) -> T? {
-    guard let index = items.index(of: pagingItem as! ViewControllerItem) else { return nil }
-    if index > 0 {
-      return items[index - 1] as? T
-    }
-    return nil
+  public func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
+    return PagingIndexItem(index: index, title: viewControllers[index].title ?? "") as! T
   }
   
-  public func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem pagingItem: T) -> T? {
-    guard let index = items.index(of: pagingItem as! ViewControllerItem) else { return nil }
-    if index < items.count - 1 {
-      return items[index + 1] as? T
-    }
-    return nil
+  public func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+    return viewControllers[index]
   }
   
 }

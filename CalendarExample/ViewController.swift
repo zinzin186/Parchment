@@ -52,7 +52,7 @@ class ViewController: UIViewController {
     pagingViewController.didMove(toParentViewController: self)
     
     // Set our custom data source
-    pagingViewController.dataSource = self
+    pagingViewController.infiniteDataSource = self
     
     // Set the current date as the selected paging item
     pagingViewController.selectPagingItem(CalendarItem(date: Date()))
@@ -67,7 +67,7 @@ class ViewController: UIViewController {
 // the time interval equal to one day. This means our paging view
 // controller will show one menu item for each day.
 
-extension ViewController: PagingViewControllerDataSource {
+extension ViewController: PagingViewControllerInfiniteDataSource {
   
   func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForPagingItem pagingItem: T) -> UIViewController {
     let calendarItem = pagingItem as! CalendarItem

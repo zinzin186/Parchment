@@ -4,7 +4,7 @@ import Nimble
 import UIKit
 @testable import Parchment
 
-class DataSource: PagingViewControllerDataSource {
+class DataSource: PagingViewControllerInfiniteDataSource {
   
   func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem: T) -> T? {
     guard let item = pagingItemAfterPagingItem as? Item else { return nil }
@@ -40,7 +40,7 @@ class PagingViewControllerSpec: QuickSpec {
     beforeEach {
       viewController = PagingViewController()
       viewController.menuItemSize = .fixed(width: 100, height: 50)
-      viewController.dataSource = dataSource
+      viewController.infiniteDataSource = dataSource
       
       UIApplication.shared.keyWindow!.rootViewController = viewController
       let _ = viewController.view
