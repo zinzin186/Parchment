@@ -10,9 +10,9 @@ import UIKit
 /// corresponds to each item. See `PagingViewControllerDataSource`.
 ///
 /// After providing a data source you need to call
-/// `selectPagingItem(pagingItem:animated:)` to set the initial view
-/// controller. You can also use the same method to programmatically
-/// navigate to other view controllers.
+/// `select(pagingItem:animated:)` to set the initial view controller.
+/// You can also use the same method to programmatically navigate to
+/// other view controllers.
 open class PagingViewController<T: PagingItem>:
   UIViewController,
   UICollectionViewDataSource,
@@ -243,8 +243,8 @@ open class PagingViewController<T: PagingItem>:
   fileprivate let PagingCellReuseIdentifier = "PagingCellReuseIdentifier"
 
   /// Creates an instance of `PagingViewController`. You need to call
-  /// `selectPagingItem(pagingItem:animated:)` in order to set the
-  /// initial view controller before any items become visible.
+  /// `select(pagingItem:animated:)` in order to set the initial view
+  /// controller before any items become visible.
   public init() {
     self.options = PagingOptions()
     self.dataStructure = PagingDataStructure(visibleItems: [])
@@ -287,7 +287,7 @@ open class PagingViewController<T: PagingItem>:
   /// - Parameter pagingItem: The `PagingItem` to be displayed.
   /// - Parameter animated: A boolean value that indicates whether
   /// the transtion should be animated. Default is false.
-  open func selectPagingItem(_ pagingItem: T, animated: Bool = false) {
+  open func select(pagingItem: T, animated: Bool = false) {
 
     if let stateMachine = stateMachine,
       let indexPath = dataStructure.indexPathForPagingItem(pagingItem) {
@@ -410,7 +410,7 @@ open class PagingViewController<T: PagingItem>:
     infiniteDataSource = indexedDataSource
 
     if let firstItem = items.first {
-      selectPagingItem(firstItem)
+      select(pagingItem: firstItem)
     }
   }
   
@@ -464,7 +464,7 @@ open class PagingViewController<T: PagingItem>:
     }
     
     if let item = upcomingPagingItem {
-      selectPagingItem(item, animated: true)
+      select(pagingItem: item, animated: true)
     }
   }
   

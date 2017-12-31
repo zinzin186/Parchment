@@ -6,7 +6,7 @@ import UIKit
 /// fixed number of view controllers.
 ///
 /// In order for these methods to be called, you first need to set the
-/// initial `PagingItem` by calling `selectPagingItem:` on
+/// initial `PagingItem` by calling `select(pagingItem:)` on
 /// `PagingViewController`.
 public protocol PagingViewControllerDataSource: class {
   

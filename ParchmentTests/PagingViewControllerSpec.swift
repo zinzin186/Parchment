@@ -51,19 +51,19 @@ class PagingViewControllerSpec: QuickSpec {
     describe("PagingViewController") {
       
       it("reloadItems: at begining") {
-        viewController.selectPagingItem(Item(index: 0))
+        viewController.select(pagingItem: Item(index: 0))
         let items = viewController.collectionView!.numberOfItems(inSection: 0)
         expect(items).to(equal(21))
       }
       
       it("reloadItems: at center") {
-        viewController.selectPagingItem(Item(index: 20))
+        viewController.select(pagingItem: Item(index: 20))
         let items = viewController.collectionView!.numberOfItems(inSection: 0)
         expect(items).to(equal(21))
       }
       
       it("reloadItems: at end") {
-        viewController.selectPagingItem(Item(index: 50))
+        viewController.select(pagingItem: Item(index: 50))
         let items = viewController.collectionView!.numberOfItems(inSection: 0)
         expect(items).to(equal(21))
       }
