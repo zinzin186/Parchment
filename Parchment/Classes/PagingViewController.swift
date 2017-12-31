@@ -688,13 +688,13 @@ open class PagingViewController<T: PagingItem>:
       return
     }
     
-    if scrollView.near(edge: .left) {
+    if scrollView.near(edge: .left, clearance: collectionViewLayout.contentInsets.left) {
       if let firstPagingItem = dataStructure.sortedItems.first {
         if dataStructure.hasItemsBefore {
           reloadItems(around: firstPagingItem)
         }
       }
-    } else if scrollView.near(edge: .right) {
+    } else if scrollView.near(edge: .right, clearance: collectionViewLayout.contentInsets.right) {
       if let lastPagingItem = dataStructure.sortedItems.last {
         if dataStructure.hasItemsAfter {
           reloadItems(around: lastPagingItem)

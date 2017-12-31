@@ -22,7 +22,7 @@ open class PagingOptions {
       return .left
     case .right:
       return .right
-    case .preferCentered:
+    case .preferCentered, .center:
       return .centeredHorizontally
     }
   }

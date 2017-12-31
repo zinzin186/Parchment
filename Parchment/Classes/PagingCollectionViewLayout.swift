@@ -21,6 +21,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   var state: PagingState<T>?
   var dataStructure: PagingDataStructure<T>
   var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
+  var contentInsets: UIEdgeInsets = .zero
   
   open override var collectionViewContentSize: CGSize {
     return contentSize
@@ -232,7 +233,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       distance = distanceToLeftAlignedItem()
     case .right:
       distance = distanceToRightAlignedItem()
-    case .preferCentered:
+    case .preferCentered, .center:
       distance = distanceToCenteredItem()
     }
     
@@ -438,9 +439,35 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       }
     }
     
-    contentSize = CGSize(
-      width: previousFrame.maxX + adjustedMenuInsets.right,
-      height: view.bounds.height)
+    if case .center = options.selectedScrollPosition {
+      let attributes = layoutAttributes.values.sorted(by: { $0.indexPath < $1.indexPath })
+      
+      if let first = attributes.first, let last = attributes.last {
+        let insetLeft = (view.bounds.width / 2) - (first.bounds.width / 2)
+        let insetRight = (view.bounds.width / 2) - (last.bounds.width / 2)
+        
+        for attributes in layoutAttributes.values {
+          attributes.frame = attributes.frame.offsetBy(dx: insetLeft, dy: 0)
+        }
+        
+        contentInsets = UIEdgeInsets(
+          top: 0,
+          left: insetLeft + adjustedMenuInsets.left,
+          bottom: 0,
+          right: insetRight + adjustedMenuInsets.right)
+        
+        contentSize = CGSize(
+          width: previousFrame.maxX + insetLeft + insetRight + adjustedMenuInsets.right,
+          height: view.bounds.height)
+      }
+      
+    } else {
+      contentInsets = adjustedMenuInsets
+      contentSize = CGSize(
+        width: previousFrame.maxX + adjustedMenuInsets.right,
+        height: view.bounds.height)
+    }
+    
     
     self.layoutAttributes = layoutAttributes
   }
