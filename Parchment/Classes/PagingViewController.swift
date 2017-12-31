@@ -622,12 +622,12 @@ open class PagingViewController<T: PagingItem>:
     let diff = PagingDiff(from: oldDataStructure, to: dataStructure)
     
     for indexPath in diff.removed() {
-      offset += oldLayoutAttributes[indexPath]?.frame.width ?? 0
+      offset += oldLayoutAttributes[indexPath]?.bounds.width ?? 0
       offset += options.menuItemSpacing
     }
     
     for indexPath in diff.added() {
-      offset -= collectionViewLayout.layoutAttributes[indexPath]?.frame.width ?? 0
+      offset -= collectionViewLayout.layoutAttributes[indexPath]?.bounds.width ?? 0
       offset -= options.menuItemSpacing
     }
     
