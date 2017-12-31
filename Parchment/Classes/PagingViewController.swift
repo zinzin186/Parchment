@@ -557,6 +557,7 @@ open class PagingViewController<T: PagingItem>:
     while widthBefore > 0 {
       if let item = infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: previousItem) {
         widthBefore -= itemWidth(pagingItem: item)
+        widthBefore -= options.menuItemSpacing
         previousItem = item
         items.insert(item)
       } else {
@@ -570,6 +571,7 @@ open class PagingViewController<T: PagingItem>:
     while widthAfter > 0 {
       if let item = infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: nextItem) {
         widthAfter -= itemWidth(pagingItem: item)
+        widthAfter -= options.menuItemSpacing
         nextItem = item
         items.insert(item)
       } else {
@@ -583,6 +585,7 @@ open class PagingViewController<T: PagingItem>:
     while remainingWidth > 0 {
       if let item = infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: previousItem) {
         remainingWidth -= itemWidth(pagingItem: item)
+        remainingWidth -= options.menuItemSpacing
         previousItem = item
         items.insert(item)
       } else {
