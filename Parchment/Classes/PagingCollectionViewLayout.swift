@@ -248,12 +248,12 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       
       if sizeCache.implementsWidthDelegate {
         let toWidth = sizeCache.itemWidthSelected(for: upcomingPagingItem)
-        distance += toWidth - to.frame.width
+        distance += toWidth - to.bounds.width
         
         if let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem),
           let from = layoutAttributes[currentIndexPath] {
           let fromWidth = sizeCache.itemWidth(for: state.currentPagingItem)
-          distance -= from.frame.width - fromWidth
+          distance -= from.bounds.width - fromWidth
         }
         
         // If the selected cells grows so much that it will move
@@ -261,7 +261,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
         // distance after all.
         if options.selectedScrollPosition == .preferCentered {
           let center = view.bounds.midX
-          let centerAfterTransition = to.frame.midX - distance
+          let centerAfterTransition = to.center.x - distance
           if centerAfterTransition < center {
             distance = view.contentSize.width - (view.contentOffset.x + view.bounds.width)
           }
@@ -281,14 +281,14 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem),
       let to = layoutAttributes[upcomingIndexPath] else { return 0 }
     
-    var distance = to.frame.origin.x - view.contentOffset.x
+    var distance = to.center.x - (to.bounds.width / 2) - view.contentOffset.x
     
     if sizeCache.implementsWidthDelegate {
       if let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem),
         let from = layoutAttributes[currentIndexPath] {
         if upcomingPagingItem > state.currentPagingItem {
           let fromWidth = sizeCache.itemWidth(for: state.currentPagingItem)
-          let fromDiff = from.frame.width - fromWidth
+          let fromDiff = from.bounds.width - fromWidth
           distance -= fromDiff
         }
       }
@@ -304,7 +304,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       let to = layoutAttributes[upcomingIndexPath] else { return 0 }
     
     let toWidth = sizeCache.itemWidthSelected(for: upcomingPagingItem)
-    let currentPosition = to.frame.origin.x + to.frame.width
+    let currentPosition = to.center.x + (to.bounds.width / 2)
     let width = view.contentOffset.x + view.bounds.width
     var distance = currentPosition - width
     
@@ -312,17 +312,17 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       if let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem),
         let from = layoutAttributes[currentIndexPath] {
         if upcomingPagingItem < state.currentPagingItem {
-          let toDiff = toWidth - to.frame.width
+          let toDiff = toWidth - to.bounds.width
           distance += toDiff
         } else {
           let fromWidth = sizeCache.itemWidth(for: state.currentPagingItem)
-          let fromDiff = from.frame.width - fromWidth
-          let toDiff = toWidth - to.frame.width
+          let fromDiff = from.bounds.width - fromWidth
+          let toDiff = toWidth - to.bounds.width
           distance -= fromDiff
           distance += toDiff
         }
       } else {
-        distance += toWidth - to.frame.width
+        distance += toWidth - to.bounds.width
       }
     }
     
@@ -337,27 +337,27 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       let to = layoutAttributes[upcomingIndexPath] else { return 0 }
     
     let toWidth = sizeCache.itemWidthSelected(for: upcomingPagingItem)
-    var distance = to.frame.midX - view.bounds.midX
+    var distance = to.center.x - view.bounds.midX
     
     if let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem),
       let from = layoutAttributes[currentIndexPath] {
       
-      let distanceToCenter = view.bounds.midX - from.frame.midX
-      let distanceBetweenCells = to.frame.midX - from.frame.midX
+      let distanceToCenter = view.bounds.midX - from.center.x
+      let distanceBetweenCells = to.center.x - from.center.x
       distance = distanceBetweenCells - distanceToCenter
       
       if sizeCache.implementsWidthDelegate {
         let fromWidth = sizeCache.itemWidth(for: state.currentPagingItem)
         
         if upcomingPagingItem < state.currentPagingItem {
-          distance = -(to.frame.width + (from.frame.midX - to.frame.maxX) - (toWidth / 2)) - distanceToCenter
+          distance = -(to.bounds.width + (from.center.x - to.center.x + (to.bounds.width / 2)) - (toWidth / 2)) - distanceToCenter
         } else {
-          let toDiff = (toWidth - to.frame.width) / 2
-          distance = fromWidth + (to.frame.midX - from.frame.maxX) + toDiff - (from.frame.width / 2) - distanceToCenter
+          let toDiff = (toWidth - to.bounds.width) / 2
+          distance = fromWidth + (to.center.x - from.center.x + (from.bounds.width / 2)) + toDiff - (from.bounds.width / 2) - distanceToCenter
         }
       }
     } else if sizeCache.implementsWidthDelegate {
-      let toDiff = toWidth - to.frame.width
+      let toDiff = toWidth - to.bounds.width
       distance += toDiff / 2
     }
     
@@ -619,9 +619,15 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   fileprivate func frameForIndex(_ index: Int) -> CGRect {
-    guard let state = state else { return .zero }
-    let currentIndexPath = IndexPath(item: index, section: 0)
-    var frame = layoutAttributes[currentIndexPath]?.frame ?? .zero
+    guard
+      let state = state,
+      let attributes = layoutAttributes[IndexPath(item: index, section: 0)] else { return .zero }
+    
+    var frame = CGRect(
+      x: attributes.center.x - attributes.bounds.midX,
+      y: attributes.center.y - attributes.bounds.midY,
+      width: attributes.bounds.width,
+      height: attributes.bounds.height)
 
     if sizeCache.implementsWidthDelegate {
       let indexPath = IndexPath(item: index, section: 0)
