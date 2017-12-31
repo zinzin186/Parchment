@@ -1,9 +1,9 @@
 import UIKit
 
-class PagingBorderLayoutAttributes: UICollectionViewLayoutAttributes {
+public class PagingBorderLayoutAttributes: UICollectionViewLayoutAttributes {
   
-  var backgroundColor: UIColor?
-  var insets: UIEdgeInsets = UIEdgeInsets()
+  public var backgroundColor: UIColor?
+  public var insets: UIEdgeInsets = UIEdgeInsets()
   
   func configure(_ options: PagingOptions, safeAreaInsets: UIEdgeInsets = .zero) {
     if case let .visible(height, index, borderInsets) = options.borderOptions {

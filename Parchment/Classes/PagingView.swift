@@ -9,24 +9,17 @@ import UIKit
 /// `loadView:` in `PagingViewController` to use your subclass.
 open class PagingView: UIView {
   
-  open let pageView: UIView
-  open let collectionView: UICollectionView
   open let options: PagingOptions
+  open var collectionView: UICollectionView?
+  open var pageView: UIView?
   
   /// Creates an instance of `PagingView`.
   ///
-  /// - Parameter pageView: The view assosicated with the
-  /// `EMPageViewController`.
-  /// - Parameter collectionView: The collection view used to display
-  /// the menu items.
   /// - Parameter options: The `PagingOptions` passed into the
   /// `PagingViewController`.
-  public init(pageView: UIView, collectionView: UICollectionView, options: PagingOptions) {
-    self.pageView = pageView
-    self.collectionView = collectionView
+  public init(options: PagingOptions) {
     self.options = options
     super.init(frame: .zero)
-    configure()
   }
   
   required public init?(coder: NSCoder) {
@@ -36,7 +29,10 @@ open class PagingView: UIView {
   /// Configures the view hierarchy, sets up the layout constraints
   /// and does any other customization based on the `PagingOptions`.
   /// Override this if you need any custom behavior.
-  open func configure() {
+  open func configure(collectionView: UICollectionView, pageView: UIView) {
+    self.collectionView = collectionView
+    self.pageView = pageView
+    
     collectionView.backgroundColor = options.theme.headerBackgroundColor
     addSubview(pageView)
     addSubview(collectionView)
@@ -46,6 +42,8 @@ open class PagingView: UIView {
   /// Sets up all the layout constraints. Override this if you need to
   /// make changes to how the views are layed out.
   open func setupConstraints() {
+    guard let pageView = pageView, let collectionView = collectionView else { return }
+    
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     pageView.translatesAutoresizingMaskIntoConstraints = false
     
