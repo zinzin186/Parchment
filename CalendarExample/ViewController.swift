@@ -55,7 +55,7 @@ class ViewController: UIViewController {
     pagingViewController.infiniteDataSource = self
     
     // Set the current date as the selected paging item
-    pagingViewController.selectPagingItem(CalendarItem(date: Date()))
+    pagingViewController.select(pagingItem: CalendarItem(date: Date()))
   }
   
 }

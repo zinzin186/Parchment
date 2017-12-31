@@ -126,7 +126,7 @@ class ViewController: UIViewController {
     pagingViewController.dataSource = self
     
     // Set the first item as the selected paging item.
-    pagingViewController.selectPagingItem(items[0])
+    pagingViewController.select(pagingItem: items[0])
   }
 
 }

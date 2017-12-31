@@ -11,22 +11,20 @@ import UIKit
 /// your own implementation that matches your needs.
 open class FixedPagingViewController: PagingViewController<PagingIndexItem> {
   
-  /// An array of `PagingItem`s that contains a reference to the view
-  /// controller and title for that item. If you need to call
-  /// `selectPagingItem:` you can read from this to get the item you
-  /// want to select.
+  /// An array of the content view controllers. If you need to call
+  /// `select(pagingItem:)` you can use the index of these view
+  /// controller to select the item you want.
   open let viewControllers: [UIViewController]
   
   /// Creates an instance of `FixedPagingViewController`. By default,
   /// it will select the first view controller in the array. You can
-  /// also call `selectPagingItem:` if you need select something else.
+  /// call `select(pagingItem:)` if you need select something else.
   ///
   /// - Parameter viewControllers: An array of view controllers
   public init(viewControllers: [UIViewController]) {
     self.viewControllers = viewControllers
     super.init()
     dataSource = self
-    selectPagingItem(PagingIndexItem(index: 0, title: viewControllers[0].title ?? ""))
   }
 
   required public init?(coder: NSCoder) {
