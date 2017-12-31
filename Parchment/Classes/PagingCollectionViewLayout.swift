@@ -16,12 +16,13 @@ import UIKit
 /// `PagingItem`. You can customize their layout attributes by
 /// overriding `layoutAttributesForDecorationView:`.
 open class PagingCollectionViewLayout<T: PagingItem>:
-  UICollectionViewLayout where T: Hashable, T: Comparable {
+  UICollectionViewLayout, PagingLayout where T: Hashable, T: Comparable {
   
-  var state: PagingState<T>?
-  var dataStructure: PagingDataStructure<T>
-  var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
-  var contentInsets: UIEdgeInsets = .zero
+  public let options: PagingOptions
+  public var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
+  public var indicatorLayoutAttributes: PagingIndicatorLayoutAttributes?
+  public var borderLayoutAttributes: PagingBorderLayoutAttributes?
+  public var invalidationSummary: InvalidationSummary = .everything
   
   open override var collectionViewContentSize: CGSize {
     return contentSize
@@ -30,6 +31,11 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   override open class var layoutAttributesClass: AnyClass {
     return PagingCellLayoutAttributes.self
   }
+  
+  var state: PagingState<T>?
+  var dataStructure: PagingDataStructure<T>?
+  var sizeCache: PagingSizeCache<T>?
+  var contentInsets: UIEdgeInsets = .zero
   
   private var view: UICollectionView {
     return collectionView!
@@ -55,22 +61,13 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     }
   }
   
-  private let options: PagingOptions
-  private let sizeCache: PagingSizeCache<T>
-  private var indicatorLayoutAttributes: PagingIndicatorLayoutAttributes?
-  private var borderLayoutAttributes: PagingBorderLayoutAttributes?
   private var contentSize: CGSize = .zero
-  private var invalidationSummary: InvalidationSummary = .everything
   private var currentTransition: PagingTransition? = nil
   private let PagingIndicatorKind = "PagingIndicatorKind"
   private let PagingBorderKind = "PagingBorderKind"
 
-  init(options: PagingOptions, dataStructure: PagingDataStructure<T>, sizeCache: PagingSizeCache<T>) {
-    
+  required public init(options: PagingOptions) {
     self.options = options
-    self.dataStructure = dataStructure
-    self.sizeCache = sizeCache
-    
     super.init()
   }
   
@@ -214,6 +211,8 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private func invalidateTransition() {
     guard
       let state = state,
+      let sizeCache = sizeCache,
+      let dataStructure = dataStructure,
       let upcomingPagingItem = state.upcomingPagingItem,
       let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem),
       let to = layoutAttributes[upcomingIndexPath] else {
@@ -277,6 +276,8 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private func distanceToLeftAlignedItem() -> CGFloat {
     guard
       let state = state,
+      let sizeCache = sizeCache,
+      let dataStructure = dataStructure,
       let upcomingPagingItem = state.upcomingPagingItem,
       let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem),
       let to = layoutAttributes[upcomingIndexPath] else { return 0 }
@@ -299,6 +300,8 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private func distanceToRightAlignedItem() -> CGFloat {
     guard
       let state = state,
+      let sizeCache = sizeCache,
+      let dataStructure = dataStructure,
       let upcomingPagingItem = state.upcomingPagingItem,
       let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem),
       let to = layoutAttributes[upcomingIndexPath] else { return 0 }
@@ -332,6 +335,8 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private func distanceToCenteredItem() -> CGFloat {
     guard
       let state = state,
+      let sizeCache = sizeCache,
+      let dataStructure = dataStructure,
       let upcomingPagingItem = state.upcomingPagingItem,
       let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem),
       let to = layoutAttributes[upcomingIndexPath] else { return 0 }
@@ -365,7 +370,10 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   private func createLayoutAttributes() {
-    guard let state = state else { return }
+    guard
+      let state = state,
+      let sizeCache = sizeCache,
+      let dataStructure = dataStructure else { return }
     
     var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
     var previousFrame: CGRect = .zero
@@ -496,7 +504,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   private func updateIndicatorLayoutAttributes() {
-    guard let state = state else { return }
+    guard let state = state, let dataStructure = dataStructure else { return }
     
     let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem)
     let upcomingIndexPath = upcomingIndexPathForIndexPath(currentIndexPath)
@@ -528,7 +536,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   fileprivate func indicatorMetricForFirstItem() -> PagingIndicatorMetric? {
-    guard let state = state else { return nil }
+    guard let state = state, let dataStructure = dataStructure else { return nil }
     if let first = dataStructure.sortedItems.first {
       if state.currentPagingItem < first {
         return PagingIndicatorMetric(
@@ -541,7 +549,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   fileprivate func indicatorMetricForLastItem() -> PagingIndicatorMetric? {
-    guard let state = state else { return nil }
+    guard let state = state, let dataStructure = dataStructure else { return nil }
     if let last = dataStructure.sortedItems.last {
       if state.currentPagingItem > last {
         return PagingIndicatorMetric(
@@ -554,7 +562,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   fileprivate func progressForItem(at indexPath: IndexPath) -> CGFloat {
-    guard let state = state else { return 0 }
+    guard let state = state, let dataStructure = dataStructure else { return 0 }
     
     let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem)
     
@@ -574,7 +582,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   fileprivate func upcomingIndexPathForIndexPath(_ indexPath: IndexPath?) -> IndexPath? {
-    guard let state = state else { return indexPath }
+    guard let state = state, let dataStructure = dataStructure else { return indexPath }
     
     if let upcomingPagingItem = state.upcomingPagingItem, let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem) {
       return upcomingIndexPath
@@ -607,6 +615,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   fileprivate func indicatorFrameForIndex(_ index: Int) -> CGRect {
+    guard let dataStructure = dataStructure else { return .zero }
     if index < range.lowerBound {
       let frame = frameForIndex(0)
       return frame.offsetBy(dx: -frame.width, dy: 0)
@@ -621,6 +630,8 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   fileprivate func frameForIndex(_ index: Int) -> CGRect {
     guard
       let state = state,
+      let sizeCache = sizeCache,
+      let dataStructure = dataStructure,
       let attributes = layoutAttributes[IndexPath(item: index, section: 0)] else { return .zero }
     
     var frame = CGRect(

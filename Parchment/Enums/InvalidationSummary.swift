@@ -6,7 +6,7 @@ import UIKit
 /// called and we can use we can use this to determine exactly how
 /// much we need to invalidate by adding together the summaries each
 /// time a new context is invalidated.
-enum InvalidationSummary {
+public enum InvalidationSummary {
   case partial
   case everything
   case dataSourceCounts
