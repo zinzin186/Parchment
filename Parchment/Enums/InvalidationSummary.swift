@@ -4,12 +4,11 @@ import UIKit
 /// layout. We need to be able to invalidate the layout multiple times
 /// with different invalidation contexts before `invalidateLayout` is
 /// called and we can use we can use this to determine exactly how
-/// much we need to invalidate by adding together the summaries each
+/// much we need to invalidate by adding together the states each
 /// time a new context is invalidated.
-public enum InvalidationSummary {
-  case partial
+public enum InvalidationState {
+  case nothing
   case everything
-  case dataSourceCounts
   case contentOffset
   case transition
   case sizes
@@ -18,7 +17,7 @@ public enum InvalidationSummary {
     if invalidationContext.invalidateEverything {
       self = .everything
     } else if invalidationContext.invalidateDataSourceCounts {
-      self = .dataSourceCounts
+      self = .everything
     } else if let context = invalidationContext as? PagingInvalidationContext {
       if context.invalidateTransition {
         self = .transition
@@ -27,29 +26,25 @@ public enum InvalidationSummary {
       } else if context.invalidateContentOffset {
         self = .contentOffset
       } else {
-        self = .partial
+        self = .nothing
       }
     } else {
-      self = .partial
+      self = .nothing
     }
   }
   
-  static func +(lhs: InvalidationSummary, rhs: InvalidationSummary) -> InvalidationSummary {
+  static func +(lhs: InvalidationState, rhs: InvalidationState) -> InvalidationState {
     switch (lhs, rhs) {
     case (.everything, _), (_, .everything):
       return .everything
-    case (.dataSourceCounts, .dataSourceCounts):
-      return .everything
-    case (.dataSourceCounts, _), (_, .dataSourceCounts):
-      return .dataSourceCounts
     case (.sizes, _), (_, .sizes):
       return .sizes
     case (.transition, _), (_, .transition):
       return .transition
     case (.contentOffset, _), (_, .contentOffset):
       return .contentOffset
-    case (.partial, _), (_, .partial):
-      return .partial
+    case (.nothing, _), (_, .nothing):
+      return .nothing
     default:
       return .everything
     }

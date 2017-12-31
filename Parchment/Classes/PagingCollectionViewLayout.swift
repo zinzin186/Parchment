@@ -22,7 +22,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   public var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
   public var indicatorLayoutAttributes: PagingIndicatorLayoutAttributes?
   public var borderLayoutAttributes: PagingBorderLayoutAttributes?
-  public var invalidationSummary: InvalidationSummary = .everything
+  public var invalidationState: InvalidationState = .everything
   
   open override var collectionViewContentSize: CGSize {
     return contentSize
@@ -78,8 +78,8 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   open override func prepare() {
     super.prepare()
     
-    switch invalidationSummary {
-    case .everything, .dataSourceCounts:
+    switch invalidationState {
+    case .everything:
       layoutAttributes = [:]
       borderLayoutAttributes = nil
       indicatorLayoutAttributes = nil
@@ -94,19 +94,19 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       layoutAttributes = [:]
       createLayoutAttributes()
       invalidateContentOffset()
-    case .partial:
+    case .nothing:
       break
     }
     
     updateBorderLayoutAttributes()
     updateIndicatorLayoutAttributes()
     
-    invalidationSummary = .partial
+    invalidationState = .nothing
   }
   
   override open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
     super.invalidateLayout(with: context)
-    invalidationSummary = invalidationSummary + InvalidationSummary(context)
+    invalidationState = invalidationState + InvalidationState(context)
   }
   
   override open func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
