@@ -9,8 +9,6 @@ import UIKit
 public enum InvalidationState {
   case nothing
   case everything
-  case contentOffset
-  case transition
   case sizes
   
   init(_ invalidationContext: UICollectionViewLayoutInvalidationContext) {
@@ -19,12 +17,8 @@ public enum InvalidationState {
     } else if invalidationContext.invalidateDataSourceCounts {
       self = .everything
     } else if let context = invalidationContext as? PagingInvalidationContext {
-      if context.invalidateTransition {
-        self = .transition
-      } else if context.invalidateSizes {
+      if context.invalidateSizes {
         self = .sizes
-      } else if context.invalidateContentOffset {
-        self = .contentOffset
       } else {
         self = .nothing
       }
@@ -39,10 +33,6 @@ public enum InvalidationState {
       return .everything
     case (.sizes, _), (_, .sizes):
       return .sizes
-    case (.transition, _), (_, .transition):
-      return .transition
-    case (.contentOffset, _), (_, .contentOffset):
-      return .contentOffset
     case (.nothing, _), (_, .nothing):
       return .nothing
     default:
