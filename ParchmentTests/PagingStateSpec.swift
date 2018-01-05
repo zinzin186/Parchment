@@ -15,7 +15,9 @@ class PagingStateSpec: QuickSpec {
           let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: Item(index: 1),
-            progress: 0)
+            progress: 0,
+            initialContentOffset: .zero,
+            distance: 0)
           expect(state.currentPagingItem).to(equal(Item(index: 0)))
         }
         
@@ -23,7 +25,9 @@ class PagingStateSpec: QuickSpec {
           let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: Item(index: 1),
-            progress: 0.5)
+            progress: 0.5,
+            initialContentOffset: .zero,
+            distance: 0)
           expect(state.progress).to(equal(0.5))
         }
         
@@ -33,7 +37,9 @@ class PagingStateSpec: QuickSpec {
             let state: PagingState = .scrolling(
               pagingItem: Item(index: 0),
               upcomingPagingItem: Item(index: 1),
-              progress: 0)
+              progress: 0,
+              initialContentOffset: .zero,
+              distance: 0)
             expect(state.upcomingPagingItem).to(equal(Item(index: 1)))
           }
           
@@ -44,7 +50,9 @@ class PagingStateSpec: QuickSpec {
                 let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: Item(index: 1),
-                  progress: 0.6)
+                  progress: 0.6,
+                  initialContentOffset: .zero,
+                  distance: 0)
                 expect(state.visuallySelectedPagingItem).to(equal(Item(index: 1)))
               }
             }
@@ -54,7 +62,9 @@ class PagingStateSpec: QuickSpec {
                 let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: Item(index: 1),
-                  progress: 0.3)
+                  progress: 0.3,
+                  initialContentOffset: .zero,
+                  distance: 0)
                 expect(state.visuallySelectedPagingItem).to(equal(Item(index: 0)))
               }
             }
@@ -69,7 +79,9 @@ class PagingStateSpec: QuickSpec {
             let state: PagingState = .scrolling(
               pagingItem: Item(index: 0),
               upcomingPagingItem: nil,
-              progress: 0)
+              progress: 0,
+              initialContentOffset: .zero,
+              distance: 0)
             expect(state.upcomingPagingItem).to(beNil())
           }
           
@@ -80,7 +92,9 @@ class PagingStateSpec: QuickSpec {
                 let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: nil,
-                  progress: 0.6)
+                  progress: 0.6,
+                  initialContentOffset: .zero,
+                  distance: 0)
                 expect(state.visuallySelectedPagingItem).to(equal(Item(index: 0)))
               }
             }
@@ -90,7 +104,9 @@ class PagingStateSpec: QuickSpec {
                 let state: PagingState = .scrolling(
                   pagingItem: Item(index: 0),
                   upcomingPagingItem: nil,
-                  progress: 0.3)
+                  progress: 0.3,
+                  initialContentOffset: .zero,
+                  distance: 0)
                 expect(state.visuallySelectedPagingItem).to(equal(Item(index: 0)))
               }
             }

@@ -24,6 +24,11 @@ private func beSelected() -> MatcherFunc<PagingState<Item>> {
 }
 
 private class Delegate: PagingStateMachineDelegate {
+  func pagingStateMachine<T>(
+    _ pagingStateMachine: PagingStateMachine<T>,
+    transitionFromPagingItem: T, toPagingItem: T?) -> PagingTransition {
+    return PagingTransition(contentOffset: .zero, distance: 0)
+  }
   
   func pagingStateMachine<T>(
     _ pagingStateMachine: PagingStateMachine<T>,
@@ -72,7 +77,9 @@ class PagingStateMachineSpec: QuickSpec {
             let state: PagingState = .scrolling(
               pagingItem: Item(index: 0),
               upcomingPagingItem: Item(index: 1),
-              progress: 0.5)
+              progress: 0.5,
+              initialContentOffset: .zero,
+              distance: 0)
             stateMachine = PagingStateMachine(initialState: state)
           }
           
@@ -94,7 +101,9 @@ class PagingStateMachineSpec: QuickSpec {
               let state: PagingState = .scrolling(
                 pagingItem: Item(index: 0),
                 upcomingPagingItem: nil,
-                progress: 0.5)
+                progress: 0.5,
+                initialContentOffset: .zero,
+                distance: 0)
               stateMachine = PagingStateMachine(initialState: state)
             }
             
@@ -124,7 +133,9 @@ class PagingStateMachineSpec: QuickSpec {
             let state: PagingState = .scrolling(
               pagingItem: Item(index: 0),
               upcomingPagingItem: Item(index: 1),
-              progress: 0.5)
+              progress: 0.5,
+              initialContentOffset: .zero,
+              distance: 0)
             stateMachine = PagingStateMachine(initialState: state)
           }
           
@@ -153,7 +164,9 @@ class PagingStateMachineSpec: QuickSpec {
             let state: PagingState = .scrolling(
               pagingItem: Item(index: 0),
               upcomingPagingItem: Item(index: 1),
-              progress: 0.5)
+              progress: 0.5,
+              initialContentOffset: .zero,
+              distance: 0)
             stateMachine = PagingStateMachine(initialState: state)
           }
           
@@ -170,13 +183,19 @@ class PagingStateMachineSpec: QuickSpec {
         
         describe("selected paging item is not equal current item") {
           
+          beforeEach {
+            stateMachine.delegate = stateMachineDelegate
+          }
+          
           describe("is in the scrolling state") {
             it("does not change the state") {
               
               let state: PagingState = .scrolling(
                 pagingItem: Item(index: 0),
                 upcomingPagingItem: nil,
-                progress: 0)
+                progress: 0,
+                initialContentOffset: .zero,
+                distance: 0)
               
               stateMachine = PagingStateMachine(initialState: state)
               
@@ -292,6 +311,7 @@ class PagingStateMachineSpec: QuickSpec {
         }
         
         it("sets the new progress") {
+          stateMachine.delegate = stateMachineDelegate
           stateMachine.fire(.scroll(progress: 0.5))
           expect(stateMachine.state.progress).to(equal(0.5))
         }
@@ -303,7 +323,9 @@ class PagingStateMachineSpec: QuickSpec {
               let initialState: PagingState = .scrolling(
                 pagingItem: Item(index: 0),
                 upcomingPagingItem: Item(index: 1),
-                progress: 0.1)
+                progress: 0.1,
+                initialContentOffset: .zero,
+                distance: 0)
               stateMachine = PagingStateMachine(initialState: initialState)
               stateMachine.fire(.scroll(progress: -0.1))
               expect(stateMachine.state).to(beSelected())
@@ -316,7 +338,9 @@ class PagingStateMachineSpec: QuickSpec {
               let initialState: PagingState = .scrolling(
                 pagingItem: Item(index: 0),
                 upcomingPagingItem: Item(index: 1),
-                progress: -0.1)
+                progress: -0.1,
+                initialContentOffset: .zero,
+                distance: 0)
               stateMachine = PagingStateMachine(initialState: initialState)
               stateMachine.fire(.scroll(progress: 0.1))
               expect(stateMachine.state).to(beSelected())
@@ -330,7 +354,9 @@ class PagingStateMachineSpec: QuickSpec {
               let initialState: PagingState = .scrolling(
                 pagingItem: Item(index: 0),
                 upcomingPagingItem: Item(index: 1),
-                progress: 0.5)
+                progress: 0.5,
+                initialContentOffset: .zero,
+                distance: 0)
               stateMachine = PagingStateMachine(initialState: initialState)
               stateMachine.fire(.scroll(progress: 0))
               expect(stateMachine.state).to(beSelected())
@@ -340,7 +366,9 @@ class PagingStateMachineSpec: QuickSpec {
               let initialState: PagingState = .scrolling(
                 pagingItem: Item(index: 0),
                 upcomingPagingItem: Item(index: 1),
-                progress: 0)
+                progress: 0,
+                initialContentOffset: .zero,
+                distance: 0)
               stateMachine = PagingStateMachine(initialState: initialState)
               stateMachine.fire(.scroll(progress: 0.1))
               expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: 1)))
