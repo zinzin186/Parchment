@@ -378,11 +378,11 @@ open class PagingViewController<T: PagingItem>:
   open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
     
-    coordinator.animate(alongsideTransition: { [weak self] context in
-      self?.stateMachine.fire(.transitionSize)
-      if let pagingItem = self?.state.currentPagingItem {
-        self?.reloadItems(around: pagingItem)
-        self?.selectCollectionViewItem(for: pagingItem)
+    coordinator.animate(alongsideTransition: { context in
+      self.stateMachine.fire(.transitionSize)
+      if let pagingItem = self.state.currentPagingItem {
+        self.reloadItems(around: pagingItem)
+        self.selectCollectionViewItem(for: pagingItem)
       }
     }, completion: nil)
   }
@@ -390,15 +390,15 @@ open class PagingViewController<T: PagingItem>:
   // MARK: Private
   
   fileprivate func configureSizeCache() {
-    if let delegate = delegate, let currentPagingItem = state.currentPagingItem {
+    if let _ = delegate, let currentPagingItem = state.currentPagingItem {
       
-      sizeCache.widthForPagingItem = { item, selected in
-        return delegate.pagingViewController(self,
+      sizeCache.widthForPagingItem = { [unowned self] item, selected in
+        return self.delegate?.pagingViewController(self,
           widthForPagingItem: item,
           isSelected: selected)
       }
       
-      if let _ = delegate.pagingViewController(self,
+      if let _ = delegate?.pagingViewController(self,
         widthForPagingItem: currentPagingItem,
         isSelected: false) {
         sizeCache.implementsWidthDelegate = true
@@ -407,15 +407,14 @@ open class PagingViewController<T: PagingItem>:
   }
   
   fileprivate func configureDataSource() {
-    guard let dataSource = dataSource else { return }
-    
-    let numberOfItems = dataSource.numberOfViewControllers(in: self)
-    let items = (0..<numberOfItems).enumerated().map {
-      dataSource.pagingViewController(self, pagingItemForIndex: $0.offset)
+    let numberOfItems = dataSource?.numberOfViewControllers(in: self) ?? 0
+    let items = (0..<numberOfItems).enumerated().flatMap {
+      dataSource?.pagingViewController(self, pagingItemForIndex: $0.offset)
     }
     
-    indexedDataSource = IndexedPagingDataSource(items: items) {
-      return dataSource.pagingViewController(self, viewControllerForIndex: $0)
+    indexedDataSource = IndexedPagingDataSource(items: items)
+    indexedDataSource?.viewControllerForIndex = { [unowned self] in
+      return self.dataSource?.pagingViewController(self, viewControllerForIndex: $0)
     }
     
     infiniteDataSource = indexedDataSource
