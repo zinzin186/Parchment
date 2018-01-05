@@ -3,7 +3,7 @@ import Foundation
 class PagingSizeCache<T: PagingItem>  where T: Hashable, T: Comparable {
   
   var implementsWidthDelegate: Bool = false
-  weak var delegate: PagingSizeCacheDelegate?
+  var widthForPagingItem: ((T, Bool) -> CGFloat?)?
   
   private let options: PagingOptions
   private var widthCache: [T: CGFloat] = [:]
@@ -36,7 +36,7 @@ class PagingSizeCache<T: PagingItem>  where T: Hashable, T: Comparable {
     if let width = widthCache[pagingItem] {
       return width
     } else {
-      let width = delegate?.pagingSizeCache(self, widthForPagingItem: pagingItem, isSelected: false)
+      let width = widthForPagingItem?(pagingItem, false)
       widthCache[pagingItem] = width
       return width ?? options.estimatedItemWidth
     }
@@ -46,7 +46,7 @@ class PagingSizeCache<T: PagingItem>  where T: Hashable, T: Comparable {
     if let width = selectedWidthCache[pagingItem] {
       return width
     } else {
-      let width = delegate?.pagingSizeCache(self, widthForPagingItem: pagingItem, isSelected: true)
+      let width = widthForPagingItem?(pagingItem, true)
       selectedWidthCache[pagingItem] = width
       return width ?? options.estimatedItemWidth
     }
