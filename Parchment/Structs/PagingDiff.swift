@@ -2,28 +2,28 @@ import Foundation
 
 struct PagingDiff<T: PagingItem> where T: Hashable, T: Comparable {
   
-  fileprivate let from: PagingDataStructure<T>
-  fileprivate let to: PagingDataStructure<T>
+  fileprivate let from: PagingItems<T>
+  fileprivate let to: PagingItems<T>
   fileprivate var fromCache: [Int: T]
   fileprivate var toCache: [Int: T]
   fileprivate var lastMatchingItem: T?
   
-  init(from: PagingDataStructure<T>, to: PagingDataStructure<T>) {
+  init(from: PagingItems<T>, to: PagingItems<T>) {
     self.from = from
     self.to = to
     self.fromCache = [:]
     self.toCache = [:]
     
-    for item in from.sortedItems {
+    for item in from.items {
       fromCache[item.hashValue] = item
     }
     
-    for item in to.sortedItems {
+    for item in to.items {
       toCache[item.hashValue] = item
     }
     
-    for toItem in to.sortedItems {
-      for fromItem in from.sortedItems {
+    for toItem in to.items {
+      for fromItem in from.items {
         if toItem == fromItem {
           lastMatchingItem = toItem
           break
@@ -33,12 +33,12 @@ struct PagingDiff<T: PagingItem> where T: Hashable, T: Comparable {
   }
   
   func removed() -> [IndexPath] {
-    let removed = diff(dataStructure: from, cache: toCache)
+    let removed = diff(visibleItems: from, cache: toCache)
     var items: [IndexPath] = []
     
     if let lastItem = lastMatchingItem {
       for indexPath in removed {
-        if let lastIndexPath = from.indexPathForPagingItem(lastItem) {
+        if let lastIndexPath = from.indexPath(for: lastItem) {
           if indexPath.item < lastIndexPath.item {
             items.append(indexPath)
           }
@@ -51,13 +51,13 @@ struct PagingDiff<T: PagingItem> where T: Hashable, T: Comparable {
   
   func added() -> [IndexPath] {
     let removedCount = removed().count
-    let added = diff(dataStructure: to, cache: fromCache)
+    let added = diff(visibleItems: to, cache: fromCache)
     
     var items: [IndexPath] = []
     
     if let lastItem = lastMatchingItem {
       for indexPath in added {
-        if let lastIndexPath = from.indexPathForPagingItem(lastItem) {
+        if let lastIndexPath = from.indexPath(for: lastItem) {
           if indexPath.item + removedCount <= lastIndexPath.item {
             items.append(indexPath)
           }
@@ -68,10 +68,10 @@ struct PagingDiff<T: PagingItem> where T: Hashable, T: Comparable {
     return items
   }
   
-  fileprivate func diff(dataStructure: PagingDataStructure<T>, cache: [Int: T]) -> [IndexPath] {
-    return dataStructure.sortedItems.flatMap { item in
+  fileprivate func diff(visibleItems: PagingItems<T>, cache: [Int: T]) -> [IndexPath] {
+    return visibleItems.items.flatMap { item in
       if cache[item.hashValue] == nil {
-        return dataStructure.indexPathForPagingItem(item)
+        return visibleItems.indexPath(for: item)
       }
       return nil
     }

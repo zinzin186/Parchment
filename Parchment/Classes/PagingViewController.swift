@@ -172,6 +172,8 @@ open class PagingViewController<T: PagingItem>:
   /// used to get the distance and progress of any ongoing transition.
   public private(set) var state: PagingState<T> = .empty
   
+  public private(set) var visibleItems: PagingItems<T>
+  
   /// The data source is responsible for providing the `PagingItem`s
   /// that are displayed in the menu. The `PagingItem` protocol is
   /// used to generate menu items for all the view controllers,
@@ -233,7 +235,6 @@ open class PagingViewController<T: PagingItem>:
   fileprivate var swipeGestureRecognizerLeft: UISwipeGestureRecognizer?
   fileprivate var swipeGestureRecognizerRight: UISwipeGestureRecognizer?
   fileprivate var didLayoutSubviews: Bool = false
-  fileprivate var dataStructure: PagingDataStructure<T>
   fileprivate var indexedDataSource: IndexedPagingDataSource<T>?
   
   private var pagingView: PagingView {
@@ -247,7 +248,7 @@ open class PagingViewController<T: PagingItem>:
   /// controller before any items become visible.
   public init() {
     self.options = PagingOptions()
-    self.dataStructure = PagingDataStructure(visibleItems: [])
+    self.visibleItems = PagingItems(items: [])
     self.sizeCache = PagingSizeCache(options: options)
     self.stateMachine = PagingStateMachine(initialState: .empty)
     super.init(nibName: nil, bundle: nil)
@@ -259,7 +260,7 @@ open class PagingViewController<T: PagingItem>:
   /// - Parameter coder: An unarchiver object.
   required public init?(coder: NSCoder) {
     self.options = PagingOptions()
-    self.dataStructure = PagingDataStructure(visibleItems: [])
+    self.visibleItems = PagingItems(items: [])
     self.sizeCache = PagingSizeCache(options: self.options)
     self.stateMachine = PagingStateMachine(initialState: .empty)
     super.init(coder: coder)
@@ -309,13 +310,11 @@ open class PagingViewController<T: PagingItem>:
         }
       }
     default:
-      if let indexPath = dataStructure.indexPathForPagingItem(pagingItem) {
-        let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: pagingItem)
-        stateMachine.fire(.select(
-          pagingItem: pagingItem,
-          direction: direction,
-          animated: animated))
-      }
+      let direction = visibleItems.direction(from: pagingItem, to: pagingItem)
+      stateMachine.fire(.select(
+        pagingItem: pagingItem,
+        direction: direction,
+        animated: animated))
     }
   }
 
@@ -327,7 +326,7 @@ open class PagingViewController<T: PagingItem>:
     super.viewDidLoad()
     
     let collectionViewLayout = createLayout(layout: menuLayoutClass.self, options: options)
-    collectionViewLayout.dataStructure = dataStructure
+    collectionViewLayout.visibleItems = visibleItems
     collectionViewLayout.sizeCache = sizeCache
     collectionViewLayout.state = state
     
@@ -529,7 +528,7 @@ open class PagingViewController<T: PagingItem>:
   }
   
   fileprivate func selectCollectionViewItem(for pagingItem: T, animated: Bool = false) {
-    let indexPath = dataStructure.indexPathForPagingItem(pagingItem)
+    let indexPath = visibleItems.indexPath(for: pagingItem)
     let scrollPosition = options.scrollPosition
     
     collectionView?.selectItem(
@@ -616,20 +615,20 @@ open class PagingViewController<T: PagingItem>:
     var toItems = generateItems(around: pagingItem)
     
     if keepExisting {
-      toItems = dataStructure.visibleItems.union(toItems)
+      toItems = visibleItems.itemsCache.union(toItems)
     }
   
     let oldLayoutAttributes = collectionViewLayout.layoutAttributes
     let oldContentOffset = collectionView.contentOffset
-    let oldDataStructure = dataStructure
+    let oldVisibleItems = visibleItems
     let sortedItems = Array(toItems).sorted()
     
-    dataStructure = PagingDataStructure(
-      visibleItems: toItems,
+    visibleItems = PagingItems(
+      items: sortedItems,
       hasItemsBefore: hasItemBefore(pagingItem: sortedItems.first),
       hasItemsAfter: hasItemAfter(pagingItem: sortedItems.last))
     
-    collectionViewLayout.dataStructure = dataStructure
+    collectionViewLayout.visibleItems = visibleItems
     collectionView.reloadData()
     collectionViewLayout.prepare()
     
@@ -638,7 +637,7 @@ open class PagingViewController<T: PagingItem>:
     // update the content offset so it looks it is the same as before
     // reloading. This gives the perception of a smooth scroll.
     var offset: CGFloat = 0
-    let diff = PagingDiff(from: oldDataStructure, to: dataStructure)
+    let diff = PagingDiff(from: oldVisibleItems, to: visibleItems)
     
     for indexPath in diff.removed() {
       offset += oldLayoutAttributes[indexPath]?.bounds.width ?? 0
@@ -713,14 +712,14 @@ open class PagingViewController<T: PagingItem>:
     }
     
     if scrollView.near(edge: .left, clearance: collectionViewLayout.contentInsets.left) {
-      if let firstPagingItem = dataStructure.sortedItems.first {
-        if dataStructure.hasItemsBefore {
+      if let firstPagingItem = visibleItems.items.first {
+        if visibleItems.hasItemsBefore {
           reloadItems(around: firstPagingItem)
         }
       }
     } else if scrollView.near(edge: .right, clearance: collectionViewLayout.contentInsets.right) {
-      if let lastPagingItem = dataStructure.sortedItems.last {
-        if dataStructure.hasItemsAfter {
+      if let lastPagingItem = visibleItems.items.last {
+        if visibleItems.hasItemsAfter {
           reloadItems(around: lastPagingItem)
         }
       }
@@ -730,8 +729,8 @@ open class PagingViewController<T: PagingItem>:
   open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard let currentPagingItem = state.currentPagingItem else { return }
     
-    let selectedPagingItem = dataStructure.pagingItemForIndexPath(indexPath)
-    let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: currentPagingItem)
+    let selectedPagingItem = visibleItems.pagingItem(for: indexPath)
+    let direction = visibleItems.direction(from: currentPagingItem, to: selectedPagingItem)
 
     stateMachine.fire(.select(
       pagingItem: selectedPagingItem,
@@ -743,14 +742,14 @@ open class PagingViewController<T: PagingItem>:
   
   public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PagingCellReuseIdentifier, for: indexPath) as! PagingCell
-    let pagingItem = dataStructure.sortedItems[indexPath.item]
+    let pagingItem = visibleItems.items[indexPath.item]
     let selected = state.currentPagingItem == pagingItem
     cell.setPagingItem(pagingItem, selected: selected, theme: options.theme)
     return cell
   }
   
   open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return dataStructure.visibleItems.count
+    return visibleItems.items.count
   }
   
   // MARK: EMPageViewControllerDataSource
@@ -849,7 +848,7 @@ open class PagingViewController<T: PagingItem>:
     // If the upcoming item is outside the currently visible
     // items we need to append the items that are around the
     // upcoming item so we can animate the transition.
-    if dataStructure.visibleItems.contains(upcomingPagingItem) == false {
+    if visibleItems.itemsCache.contains(upcomingPagingItem) == false {
       reloadItems(around: upcomingPagingItem, keepExisting: true)
     }
     
@@ -857,7 +856,7 @@ open class PagingViewController<T: PagingItem>:
       view: collectionView,
       currentPagingItem: currentPagingItem,
       upcomingPagingItem: upcomingPagingItem,
-      dataStructure: dataStructure,
+      visibleItems: visibleItems,
       sizeCache: sizeCache,
       selectedScrollPosition: options.selectedScrollPosition,
       layoutAttributes: collectionViewLayout.layoutAttributes)
