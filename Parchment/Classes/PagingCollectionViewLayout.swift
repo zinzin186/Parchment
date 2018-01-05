@@ -32,7 +32,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return PagingCellLayoutAttributes.self
   }
   
-  var state: PagingState<T>?
+  var state: PagingState<T> = .empty
   var dataStructure: PagingDataStructure<T>?
   var sizeCache: PagingSizeCache<T>?
   var contentInsets: UIEdgeInsets = .zero
@@ -156,7 +156,6 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   
   private func createLayoutAttributes() {
     guard
-      let state = state,
       let sizeCache = sizeCache,
       let dataStructure = dataStructure else { return }
     
@@ -289,9 +288,11 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   private func updateIndicatorLayoutAttributes() {
-    guard let state = state, let dataStructure = dataStructure else { return }
+    guard
+      let currentPagingItem = state.currentPagingItem,
+      let dataStructure = dataStructure else { return }
     
-    let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem)
+    let currentIndexPath = dataStructure.indexPathForPagingItem(currentPagingItem)
     let upcomingIndexPath = upcomingIndexPathForIndexPath(currentIndexPath)
     
     if let upcomingIndexPath = upcomingIndexPath {
@@ -321,9 +322,12 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   fileprivate func indicatorMetricForFirstItem() -> PagingIndicatorMetric? {
-    guard let state = state, let dataStructure = dataStructure else { return nil }
+    guard
+      let currentPagingItem = state.currentPagingItem,
+      let dataStructure = dataStructure else { return nil }
+    
     if let first = dataStructure.sortedItems.first {
-      if state.currentPagingItem < first {
+      if currentPagingItem < first {
         return PagingIndicatorMetric(
           frame: indicatorFrameForIndex(-1),
           insets: indicatorInsetsForIndex(-1),
@@ -334,9 +338,12 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   fileprivate func indicatorMetricForLastItem() -> PagingIndicatorMetric? {
-    guard let state = state, let dataStructure = dataStructure else { return nil }
+    guard
+      let currentPagingItem = state.currentPagingItem,
+      let dataStructure = dataStructure else { return nil }
+    
     if let last = dataStructure.sortedItems.last {
-      if state.currentPagingItem > last {
+      if currentPagingItem > last {
         return PagingIndicatorMetric(
           frame: indicatorFrameForIndex(dataStructure.visibleItems.count),
           insets: indicatorInsetsForIndex(dataStructure.visibleItems.count),
@@ -347,9 +354,11 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   fileprivate func progressForItem(at indexPath: IndexPath) -> CGFloat {
-    guard let state = state, let dataStructure = dataStructure else { return 0 }
+    guard
+      let currentPagingItem = state.currentPagingItem,
+      let dataStructure = dataStructure else { return 0 }
     
-    let currentIndexPath = dataStructure.indexPathForPagingItem(state.currentPagingItem)
+    let currentIndexPath = dataStructure.indexPathForPagingItem(currentPagingItem)
     
     if let currentIndexPath = currentIndexPath {
       if indexPath.item == currentIndexPath.item {
@@ -367,7 +376,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   }
   
   fileprivate func upcomingIndexPathForIndexPath(_ indexPath: IndexPath?) -> IndexPath? {
-    guard let state = state, let dataStructure = dataStructure else { return indexPath }
+    guard let dataStructure = dataStructure else { return indexPath }
     
     if let upcomingPagingItem = state.upcomingPagingItem, let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem) {
       return upcomingIndexPath
@@ -414,7 +423,6 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   
   fileprivate func frameForIndex(_ index: Int) -> CGRect {
     guard
-      let state = state,
       let sizeCache = sizeCache,
       let dataStructure = dataStructure,
       let attributes = layoutAttributes[IndexPath(item: index, section: 0)] else { return .zero }

@@ -1,6 +1,7 @@
 import Foundation
 
 enum PagingState<T: PagingItem>: Equatable where T: Equatable {
+  case empty
   case selected(pagingItem: T)
   case scrolling(
     pagingItem: T,
@@ -12,8 +13,10 @@ enum PagingState<T: PagingItem>: Equatable where T: Equatable {
 
 extension PagingState {
   
-  var currentPagingItem: T {
+  var currentPagingItem: T? {
     switch self {
+    case .empty:
+      return nil
     case let .scrolling(pagingItem, _, _, _, _):
       return pagingItem
     case let .selected(pagingItem):
@@ -23,6 +26,8 @@ extension PagingState {
   
   var upcomingPagingItem: T? {
     switch self {
+    case .empty:
+      return nil
     case let .scrolling(_, upcomingPagingItem, _, _, _):
       return upcomingPagingItem
     case .selected:
@@ -34,7 +39,7 @@ extension PagingState {
     switch self {
     case let .scrolling(_, _, progress, _, _):
       return progress
-    case .selected:
+    case .selected, .empty:
       return 0
     }
   }
@@ -43,7 +48,7 @@ extension PagingState {
     switch self {
     case let .scrolling(_, _, _, _, distance):
       return distance
-    case .selected:
+    case .selected, .empty:
       return 0
     }
   }
@@ -75,6 +80,8 @@ func ==<T>(lhs: PagingState<T>, rhs: PagingState<T>) -> Bool {
     }
     return false
   case (let .selected(a), let .selected(b)) where a == b:
+    return true
+  case (.empty, .empty):
     return true
   default:
     return false

@@ -167,6 +167,8 @@ open class PagingViewController<T: PagingItem>:
     set { options.theme.headerBackgroundColor = newValue }
   }
   
+  private var state: PagingState<T> = .empty
+  
   /// The data source is responsible for providing the `PagingItem`s
   /// that are displayed in the menu. The `PagingItem` protocol is
   /// used to generate menu items for all the view controllers,
@@ -224,17 +226,12 @@ open class PagingViewController<T: PagingItem>:
   open let options: PagingOptions
   
   fileprivate let sizeCache: PagingSizeCache<T>
+  fileprivate let stateMachine: PagingStateMachine<T>
   fileprivate var swipeGestureRecognizerLeft: UISwipeGestureRecognizer?
   fileprivate var swipeGestureRecognizerRight: UISwipeGestureRecognizer?
   fileprivate var didLayoutSubviews: Bool = false
   fileprivate var dataStructure: PagingDataStructure<T>
   fileprivate var indexedDataSource: IndexedPagingDataSource<T>?
-  
-  fileprivate var stateMachine: PagingStateMachine<T>? {
-    didSet {
-      configureStateMachine()
-    }
-  }
   
   private var pagingView: PagingView {
     return view as! PagingView
@@ -249,7 +246,9 @@ open class PagingViewController<T: PagingItem>:
     self.options = PagingOptions()
     self.dataStructure = PagingDataStructure(visibleItems: [])
     self.sizeCache = PagingSizeCache(options: options)
+    self.stateMachine = PagingStateMachine(initialState: .empty)
     super.init(nibName: nil, bundle: nil)
+    configureStateMachine()
   }
 
   /// Creates an instance of `PagingViewController`.
@@ -259,7 +258,9 @@ open class PagingViewController<T: PagingItem>:
     self.options = PagingOptions()
     self.dataStructure = PagingDataStructure(visibleItems: [])
     self.sizeCache = PagingSizeCache(options: self.options)
+    self.stateMachine = PagingStateMachine(initialState: .empty)
     super.init(coder: coder)
+    configureStateMachine()
   }
   
   /// Reload data around given paging item. This will set the given
@@ -270,7 +271,6 @@ open class PagingViewController<T: PagingItem>:
   /// - Parameter pagingItem: The `PagingItem` that will be selected
   /// after the data reloads.
   open func reloadData(around pagingItem: T) {
-    guard let stateMachine = stateMachine else { return }
     stateMachine.fire(.select(
       pagingItem: pagingItem,
       direction: .none,
@@ -288,28 +288,30 @@ open class PagingViewController<T: PagingItem>:
   /// - Parameter animated: A boolean value that indicates whether
   /// the transtion should be animated. Default is false.
   open func select(pagingItem: T, animated: Bool = false) {
-
-    if let stateMachine = stateMachine,
-      let indexPath = dataStructure.indexPathForPagingItem(pagingItem) {
-      let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: pagingItem)
+    switch (state) {
+    case .empty:
       stateMachine.fire(.select(
         pagingItem: pagingItem,
-        direction: direction,
-        animated: animated))
-    } else {
-      let state: PagingState = .selected(pagingItem: pagingItem)
-      stateMachine = PagingStateMachine(initialState: state)
-      collectionViewLayout?.state = state
-
+        direction: .none,
+        animated: false))
+      
       if isViewLoaded {
         selectViewController(
-          state.currentPagingItem,
+          pagingItem,
           direction: .none,
           animated: false)
-
+        
         if view.window != nil {
-          reloadItems(around: state.currentPagingItem)
+          reloadItems(around: pagingItem)
         }
+      }
+    default:
+      if let indexPath = dataStructure.indexPathForPagingItem(pagingItem) {
+        let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: pagingItem)
+        stateMachine.fire(.select(
+          pagingItem: pagingItem,
+          direction: direction,
+          animated: animated))
       }
     }
   }
@@ -324,7 +326,7 @@ open class PagingViewController<T: PagingItem>:
     let collectionViewLayout = createLayout(layout: menuLayoutClass.self, options: options)
     collectionViewLayout.dataStructure = dataStructure
     collectionViewLayout.sizeCache = sizeCache
-    collectionViewLayout.state = stateMachine?.state
+    collectionViewLayout.state = state
     
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
     collectionView.backgroundColor = .white
@@ -345,9 +347,9 @@ open class PagingViewController<T: PagingItem>:
     collectionViewLayout.registerDecorationViews()
     configureMenuInteraction()
     
-    if let state = stateMachine?.state {
+    if let currentPagingItem = state.currentPagingItem {
       selectViewController(
-        state.currentPagingItem,
+        currentPagingItem,
         direction: .none,
         animated: false)
     }
@@ -360,36 +362,36 @@ open class PagingViewController<T: PagingItem>:
   
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-    guard let state = stateMachine?.state else { return }
+    guard let currentPagingItem = state.currentPagingItem else { return }
     
     // We need generate the menu items when the view appears for the
     // first time. Doing it in viewWillAppear does not work as the
     // safeAreaInsets will not be updated yet.
     if didLayoutSubviews == false {
-      reloadItems(around: state.currentPagingItem)
-      selectCollectionViewItem(for: state.currentPagingItem)
+      reloadItems(around: currentPagingItem)
+      selectCollectionViewItem(for: currentPagingItem)
       didLayoutSubviews = true
     }
   }
   
   open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
-    guard let stateMachine = stateMachine else { return }
     
-    coordinator.animate(alongsideTransition: { context in
-      stateMachine.fire(.transitionSize)
-      let pagingItem = stateMachine.state.currentPagingItem
-      self.reloadItems(around: pagingItem)
-      self.selectCollectionViewItem(for: pagingItem)
+    coordinator.animate(alongsideTransition: { [weak self] context in
+      self?.stateMachine.fire(.transitionSize)
+      if let pagingItem = self?.state.currentPagingItem {
+        self?.reloadItems(around: pagingItem)
+        self?.selectCollectionViewItem(for: pagingItem)
+      }
     }, completion: nil)
   }
   
   // MARK: Private
   
   fileprivate func configureSizeCache() {
-    if let delegate = delegate, let stateMachine = stateMachine {
+    if let delegate = delegate, let currentPagingItem = state.currentPagingItem {
       sizeCache.delegate = self
-      if let _ = delegate.pagingViewController(self, widthForPagingItem: stateMachine.state.currentPagingItem, isSelected: false) {
+      if let _ = delegate.pagingViewController(self, widthForPagingItem: currentPagingItem, isSelected: false) {
         sizeCache.implementsWidthDelegate = true
       }
     }
@@ -452,9 +454,8 @@ open class PagingViewController<T: PagingItem>:
   }
   
   @objc fileprivate dynamic func handleSwipeGestureRecognizer(_ recognizer: UISwipeGestureRecognizer) {
-    guard let stateMachine = stateMachine else { return }
+    guard let currentPagingItem = state.currentPagingItem else { return }
     
-    let currentPagingItem = stateMachine.state.currentPagingItem
     var upcomingPagingItem: T? = nil
     
     if recognizer.direction.contains(.left) {
@@ -469,6 +470,7 @@ open class PagingViewController<T: PagingItem>:
   }
   
   fileprivate func handleStateUpdate(_ oldState: PagingState<T>, state: PagingState<T>, event: PagingEvent<T>?) {
+    self.state = state
     collectionViewLayout?.state = state
 
     switch state {
@@ -504,19 +506,21 @@ open class PagingViewController<T: PagingItem>:
       }
       
       collectionViewLayout?.invalidateLayout(with: invalidationContext)
+    case .empty:
+      break
     }
   }
   
   fileprivate func configureStateMachine() {
-    stateMachine?.didSelectPagingItem = { [weak self] pagingItem, direction, animated in
+    stateMachine.didSelectPagingItem = { [weak self] pagingItem, direction, animated in
       self?.selectViewController(pagingItem, direction: direction, animated: animated)
     }
     
-    stateMachine?.didChangeState = { [weak self] oldState, state, event in
+    stateMachine.didChangeState = { [weak self] oldState, state, event in
       self?.handleStateUpdate(oldState, state: state, event: event)
     }
     
-    stateMachine?.delegate = self
+    stateMachine.delegate = self
     
     configureSizeCache()
   }
@@ -532,7 +536,8 @@ open class PagingViewController<T: PagingItem>:
   }
 
   fileprivate func invalidateContentOffset() {
-    guard let state = stateMachine?.state, let collectionView = collectionView else { return }
+    guard let collectionView = collectionView else { return }
+    
     if options.menuTransition == .scrollAlongside {
       if case let .scrolling(_, _, progress, initialContentOffset, distance) = state {
         if collectionView.contentSize.width >= collectionView.bounds.width && state.progress != 0 {
@@ -655,7 +660,7 @@ open class PagingViewController<T: PagingItem>:
     // wrong. For instance, when hitting the edge of the collection view
     // while transitioning we need to reload all the paging items and
     // update the transition data.
-    stateMachine?.fire(.reload(contentOffset: collectionView.contentOffset))
+    stateMachine.fire(.reload(contentOffset: collectionView.contentOffset))
   }
   
   fileprivate func selectViewController(_ pagingItem: T, direction: PagingDirection, animated: Bool = true) {
@@ -668,9 +673,9 @@ open class PagingViewController<T: PagingItem>:
   }
   
   fileprivate func itemWidth(pagingItem: T) -> CGFloat {
-    guard let state = stateMachine?.state else { return options.estimatedItemWidth }
+    guard let currentPagingItem = state.currentPagingItem else { return options.estimatedItemWidth }
 
-    if state.currentPagingItem == pagingItem {
+    if currentPagingItem == pagingItem {
       return sizeCache.itemWidthSelected(for: pagingItem)
     } else {
       return sizeCache.itemWidth(for: pagingItem)
@@ -720,9 +725,8 @@ open class PagingViewController<T: PagingItem>:
   }
   
   open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    guard let stateMachine = stateMachine else { return }
+    guard let currentPagingItem = state.currentPagingItem else { return }
     
-    let currentPagingItem = stateMachine.state.currentPagingItem
     let selectedPagingItem = dataStructure.pagingItemForIndexPath(indexPath)
     let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: currentPagingItem)
 
@@ -737,7 +741,7 @@ open class PagingViewController<T: PagingItem>:
   public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PagingCellReuseIdentifier, for: indexPath) as! PagingCell
     let pagingItem = dataStructure.sortedItems[indexPath.item]
-    let selected = stateMachine?.state.currentPagingItem == pagingItem
+    let selected = state.currentPagingItem == pagingItem
     cell.setPagingItem(pagingItem, selected: selected, theme: options.theme)
     return cell
   }
@@ -751,8 +755,8 @@ open class PagingViewController<T: PagingItem>:
   open func em_pageViewController(_ pageViewController: EMPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
     guard
       let dataSource = infiniteDataSource,
-      let state = stateMachine?.state.currentPagingItem,
-      let pagingItem = dataSource.pagingViewController(self, pagingItemBeforePagingItem: state) else { return nil }
+      let currentPagingItem = state.currentPagingItem,
+      let pagingItem = dataSource.pagingViewController(self, pagingItemBeforePagingItem: currentPagingItem) else { return nil }
     
     return dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem)
   }
@@ -760,8 +764,8 @@ open class PagingViewController<T: PagingItem>:
   open func em_pageViewController(_ pageViewController: EMPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
     guard
       let dataSource = infiniteDataSource,
-      let state = stateMachine?.state.currentPagingItem,
-      let pagingItem = dataSource.pagingViewController(self, pagingItemAfterPagingItem: state) else { return nil }
+      let currentPagingItem = state.currentPagingItem,
+      let pagingItem = dataSource.pagingViewController(self, pagingItemAfterPagingItem: currentPagingItem) else { return nil }
     
     return dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem)
   }
@@ -769,8 +773,8 @@ open class PagingViewController<T: PagingItem>:
   // MARK: EMPageViewControllerDelegate
 
   open func em_pageViewController(_ pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
-    guard let stateMachine = stateMachine else { return }
-    let oldState = stateMachine.state
+    guard let currentPagingItem = state.currentPagingItem else { return }
+    let oldState = state
     
     // EMPageViewController will trigger a scrolling event even if the
     // view has not appeared, causing the wrong initial paging item.
@@ -778,7 +782,7 @@ open class PagingViewController<T: PagingItem>:
       stateMachine.fire(.scroll(progress: progress))
       
       if case .selected = oldState {
-        if let upcomingPagingItem = stateMachine.state.upcomingPagingItem,
+        if let upcomingPagingItem = state.upcomingPagingItem,
           let destinationViewController = destinationViewController {
           delegate?.pagingViewController(
             self,
@@ -789,8 +793,8 @@ open class PagingViewController<T: PagingItem>:
       } else {
         delegate?.pagingViewController(
           self,
-          isScrollingFromItem: stateMachine.state.currentPagingItem,
-          toItem: stateMachine.state.upcomingPagingItem,
+          isScrollingFromItem: currentPagingItem,
+          toItem: state.upcomingPagingItem,
           startingViewController: startingViewController,
           destinationViewController: destinationViewController,
           progress: progress)
@@ -803,8 +807,6 @@ open class PagingViewController<T: PagingItem>:
   }
   
   open func em_pageViewController(_ pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
-    guard let state = stateMachine?.state else { return }
-    
     if transitionSuccessful {
       // If a transition finishes scrolling, but the upcoming paging
       // item is nil it means that the user scrolled away from one of
@@ -814,13 +816,13 @@ open class PagingViewController<T: PagingItem>:
       // scrolled out of view. We still need to fire an event that
       // will reset the state to .selected.
       if state.upcomingPagingItem == nil {
-        stateMachine?.fire(.cancelScrolling)
+        stateMachine.fire(.cancelScrolling)
       } else {
-        stateMachine?.fire(.finishScrolling)
+        stateMachine.fire(.finishScrolling)
       }
     }
     
-    if let currentPagingItem = stateMachine?.state.currentPagingItem {
+    if let currentPagingItem = state.currentPagingItem {
       delegate?.pagingViewController(
         self,
         didScrollToItem: currentPagingItem,

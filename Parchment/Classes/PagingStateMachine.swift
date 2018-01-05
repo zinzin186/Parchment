@@ -68,6 +68,8 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     let oldState = state
     
     switch state {
+    case .empty:
+      return
     case let .scrolling(pagingItem, upcomingPagingItem, oldProgress, initialContentOffset, distance):
       if oldProgress < 0 && progress > 0 {
         state = .selected(pagingItem: pagingItem)
@@ -125,22 +127,30 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
   
   fileprivate func handleSelectEvent(_ event: PagingEvent<T>, selectedPagingItem: T, direction: PagingDirection, animated: Bool) {
     let oldState = state
-    
-    if selectedPagingItem != state.currentPagingItem {
-      if case .selected = state {
-        if let transition = delegate?.pagingStateMachine(self,
-          transitionFromPagingItem: state.currentPagingItem,
-          toPagingItem: selectedPagingItem) {
-          
-          state = .scrolling(
-            pagingItem: state.currentPagingItem,
-            upcomingPagingItem: selectedPagingItem,
-            progress: 0,
-            initialContentOffset: transition.contentOffset,
-            distance: transition.distance)
-          
-          didSelectPagingItem?(selectedPagingItem, direction, animated)
-          didChangeState?(oldState, state, event)
+
+    switch state {
+    case .empty:
+      state = .selected(pagingItem: selectedPagingItem)
+      didChangeState?(oldState, state, event)
+    default:
+      if let currentPagingItem = state.currentPagingItem {
+        if selectedPagingItem != state.currentPagingItem {
+          if case .selected = state {
+            if let transition = delegate?.pagingStateMachine(self,
+              transitionFromPagingItem:
+              currentPagingItem, toPagingItem: selectedPagingItem) {
+              
+              state = .scrolling(
+                pagingItem: currentPagingItem,
+                upcomingPagingItem: selectedPagingItem,
+                progress: 0,
+                initialContentOffset: transition.contentOffset,
+                distance: transition.distance)
+              
+              didSelectPagingItem?(selectedPagingItem, direction, animated)
+              didChangeState?(oldState, state, event)
+            }
+          }
         }
       }
     }
@@ -152,7 +162,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     case let .scrolling(currentPagingItem, upcomingPagingItem, _, _, _):
       state = .selected(pagingItem: upcomingPagingItem ?? currentPagingItem)
       didChangeState?(oldState, state, event)
-    case .selected:
+    case .selected, .empty:
       break
     }
   }
@@ -163,7 +173,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     case let .scrolling(currentPagingItem, _, _, _, _):
       state = .selected(pagingItem: currentPagingItem)
       didChangeState?(oldState, state, event)
-    case .selected:
+    case .selected, .empty:
       break
     }
   }
@@ -174,7 +184,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     case let .scrolling(currentPagingItem, _, _, _, _):
       state = .selected(pagingItem: currentPagingItem)
       didChangeState?(oldState, state, event)
-    case .selected:
+    case .selected, .empty:
       break
     }
   }
