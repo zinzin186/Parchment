@@ -21,7 +21,6 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   var state: PagingState<T>?
   var dataStructure: PagingDataStructure<T>
   var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
-  var currentTransition: PagingTransition? = nil
   
   open override var collectionViewContentSize: CGSize {
     return contentSize
