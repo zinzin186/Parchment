@@ -18,9 +18,7 @@ open class PagingViewController<T: PagingItem>:
   UICollectionViewDataSource,
   UICollectionViewDelegate,
   EMPageViewControllerDataSource,
-  EMPageViewControllerDelegate,
-  PagingSizeCacheDelegate,
-  PagingStateMachineDelegate where T: Hashable, T: Comparable {
+  EMPageViewControllerDelegate where T: Hashable & Comparable {
 
   /// The class type for collection view layout. Override this if you
   /// want to use your own subclass of the layout.
@@ -380,11 +378,11 @@ open class PagingViewController<T: PagingItem>:
   open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
     
-    coordinator.animate(alongsideTransition: { [weak self] context in
-      self?.stateMachine.fire(.transitionSize)
-      if let pagingItem = self?.state.currentPagingItem {
-        self?.reloadItems(around: pagingItem)
-        self?.selectCollectionViewItem(for: pagingItem)
+    coordinator.animate(alongsideTransition: { context in
+      self.stateMachine.fire(.transitionSize)
+      if let pagingItem = self.state.currentPagingItem {
+        self.reloadItems(around: pagingItem)
+        self.selectCollectionViewItem(for: pagingItem)
       }
     }, completion: nil)
   }
@@ -392,24 +390,31 @@ open class PagingViewController<T: PagingItem>:
   // MARK: Private
   
   fileprivate func configureSizeCache() {
-    if let delegate = delegate, let currentPagingItem = state.currentPagingItem {
-      sizeCache.delegate = self
-      if let _ = delegate.pagingViewController(self, widthForPagingItem: currentPagingItem, isSelected: false) {
+    if let _ = delegate, let currentPagingItem = state.currentPagingItem {
+      
+      sizeCache.widthForPagingItem = { [unowned self] item, selected in
+        return self.delegate?.pagingViewController(self,
+          widthForPagingItem: item,
+          isSelected: selected)
+      }
+      
+      if let _ = delegate?.pagingViewController(self,
+        widthForPagingItem: currentPagingItem,
+        isSelected: false) {
         sizeCache.implementsWidthDelegate = true
       }
     }
   }
   
   fileprivate func configureDataSource() {
-    guard let dataSource = dataSource else { return }
-    
-    let numberOfItems = dataSource.numberOfViewControllers(in: self)
-    let items = (0..<numberOfItems).enumerated().map {
-      dataSource.pagingViewController(self, pagingItemForIndex: $0.offset)
+    let numberOfItems = dataSource?.numberOfViewControllers(in: self) ?? 0
+    let items = (0..<numberOfItems).enumerated().flatMap {
+      dataSource?.pagingViewController(self, pagingItemForIndex: $0.offset)
     }
     
-    indexedDataSource = IndexedPagingDataSource(items: items) {
-      return dataSource.pagingViewController(self, viewControllerForIndex: $0)
+    indexedDataSource = IndexedPagingDataSource(items: items)
+    indexedDataSource?.viewControllerForIndex = { [unowned self] in
+      return self.dataSource?.pagingViewController(self, viewControllerForIndex: $0)
     }
     
     infiniteDataSource = indexedDataSource
@@ -515,15 +520,52 @@ open class PagingViewController<T: PagingItem>:
   }
   
   fileprivate func configureStateMachine() {
-    stateMachine.didSelectPagingItem = { [weak self] pagingItem, direction, animated in
-      self?.selectViewController(pagingItem, direction: direction, animated: animated)
+    stateMachine.onPagingItemSelect = { [unowned self] pagingItem, direction, animated in
+      self.selectViewController(pagingItem, direction: direction, animated: animated)
     }
     
-    stateMachine.didChangeState = { [weak self] oldState, state, event in
-      self?.handleStateUpdate(oldState, state: state, event: event)
+    stateMachine.onStateChange = { [unowned self] oldState, state, event in
+      self.handleStateUpdate(oldState, state: state, event: event)
     }
     
-    stateMachine.delegate = self
+    stateMachine.pagingItemBeforeItem = { [unowned self] pagingItem in
+      return self.infiniteDataSource?.pagingViewController(self,
+        pagingItemBeforePagingItem: pagingItem)
+    }
+    
+    stateMachine.pagingItemAfterItem = { [unowned self] pagingItem in
+      return self.infiniteDataSource?.pagingViewController(self,
+        pagingItemAfterPagingItem: pagingItem)
+    }
+    
+    stateMachine.transitionFromItem = { [unowned self] currentItem, upcomingItem in
+      guard
+        let upcomingItem = upcomingItem,
+        let collectionView = self.collectionView,
+        let collectionViewLayout = self.collectionViewLayout else {
+          return PagingTransition(contentOffset: .zero, distance: 0)
+      }
+      
+      // If the upcoming item is outside the currently visible
+      // items we need to append the items that are around the
+      // upcoming item so we can animate the transition.
+      if self.visibleItems.itemsCache.contains(upcomingItem) == false {
+        self.reloadItems(around: upcomingItem, keepExisting: true)
+      }
+      
+      let distance = PagingDistance(
+        view: collectionView,
+        currentPagingItem: currentItem,
+        upcomingPagingItem: upcomingItem,
+        visibleItems: self.visibleItems,
+        sizeCache: self.sizeCache,
+        selectedScrollPosition: self.options.selectedScrollPosition,
+        layoutAttributes: collectionViewLayout.layoutAttributes)
+      
+      return PagingTransition(
+        contentOffset: collectionView.contentOffset,
+        distance: distance.calculate())
+    }
     
     configureSizeCache()
   }
@@ -810,6 +852,7 @@ open class PagingViewController<T: PagingItem>:
   }
   
   open func em_pageViewController(_ pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
+    
     if transitionSuccessful {
       // If a transition finishes scrolling, but the upcoming paging
       // item is nil it means that the user scrolled away from one of
@@ -834,54 +877,4 @@ open class PagingViewController<T: PagingItem>:
         transitionSuccessful: transitionSuccessful)
     }
   }
-  
-  // MARK: PagingStateMachineDelegate
-  
-  func pagingStateMachine<U>(_ pagingStateMachine: PagingStateMachine<U>, transitionFromPagingItem currentPagingItem: U, toPagingItem upcomingPagingItem: U?) -> PagingTransition {
-    guard
-      let collectionView = collectionView,
-      let collectionViewLayout = collectionViewLayout,
-      let currentPagingItem = currentPagingItem as? T,
-      let upcomingPagingItem = upcomingPagingItem as? T else {
-      return PagingTransition(contentOffset: .zero, distance: 0)
-    }
-    
-    // If the upcoming item is outside the currently visible
-    // items we need to append the items that are around the
-    // upcoming item so we can animate the transition.
-    if visibleItems.itemsCache.contains(upcomingPagingItem) == false {
-      reloadItems(around: upcomingPagingItem, keepExisting: true)
-    }
-    
-    let distance = PagingDistance(
-      view: collectionView,
-      currentPagingItem: currentPagingItem,
-      upcomingPagingItem: upcomingPagingItem,
-      visibleItems: visibleItems,
-      sizeCache: sizeCache,
-      selectedScrollPosition: options.selectedScrollPosition,
-      layoutAttributes: collectionViewLayout.layoutAttributes)
-    
-    return PagingTransition(
-      contentOffset: collectionView.contentOffset,
-      distance: distance.calculate())
-  }
-  
-  func pagingStateMachine<U>(_ pagingStateMachine: PagingStateMachine<U>, pagingItemBeforePagingItem pagingItem: U) -> U? {
-    guard let pagingItem = pagingItem as? T else { return nil }
-    return infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: pagingItem) as? U
-  }
-  
-  func pagingStateMachine<U>(_ pagingStateMachine: PagingStateMachine<U>, pagingItemAfterPagingItem pagingItem: U) -> U? {
-    guard let pagingItem = pagingItem as? T else { return nil }
-    return infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: pagingItem) as? U
-  }
-  
-  // MARK: PagingSizeCacheDelegate
-  
-  func pagingSizeCache<U>(_ pagingSizeCache: PagingSizeCache<U>, widthForPagingItem pagingItem: U, isSelected: Bool) -> CGFloat? {
-    guard let pagingItem = pagingItem as? T else { return nil }
-    return delegate?.pagingViewController(self, widthForPagingItem: pagingItem, isSelected: isSelected)
-  }
-  
 }
