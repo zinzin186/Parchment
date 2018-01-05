@@ -78,6 +78,8 @@ open class PagingViewController<T: PagingItem>:
   fileprivate var didLayoutSubviews: Bool = false
   fileprivate let sizeCache: PagingSizeCache<T>
   fileprivate var dataStructure: PagingDataStructure<T>
+  fileprivate var currentTransition: PagingTransition? = nil
+  
   fileprivate var stateMachine: PagingStateMachine<T>? {
     didSet {
       handleStateMachineUpdate()
@@ -292,8 +294,8 @@ open class PagingViewController<T: PagingItem>:
         // When the old state is .selected it means that the user
         // just started scrolling.
         if case .selected = oldState {
-          invalidationContext.invalidateTransition = true
-          
+          invalidateTransition()
+
           // Stop any ongoing scrolling so that the isDragging
           // property is set to false in case the collection
           // view is still scrolling after a swipe.
@@ -307,7 +309,7 @@ open class PagingViewController<T: PagingItem>:
           }
         }
         
-        invalidationContext.invalidateContentOffset = true
+        invalidateContentOffset()
         
         if sizeCache.implementsWidthDelegate {
           invalidationContext.invalidateSizes = true
@@ -342,6 +344,62 @@ open class PagingViewController<T: PagingItem>:
       at: indexPath,
       animated: animated,
       scrollPosition: scrollPosition)
+  }
+  
+  fileprivate func invalidateTransition() {
+    guard let state = stateMachine?.state else { return }
+    
+    let distance = PagingDistance(
+      view: collectionView,
+      state: state,
+      dataStructure: dataStructure,
+      sizeCache: sizeCache,
+      selectedScrollPosition: options.selectedScrollPosition,
+      layoutAttributes: collectionViewLayout.layoutAttributes)
+    
+    currentTransition = PagingTransition(
+      contentOffset: collectionView.contentOffset,
+      distance: distance.calculate())
+  }
+  
+  fileprivate func invalidateContentOffset() {
+    guard let state = stateMachine?.state else { return }
+    
+    if options.menuTransition == .scrollAlongside {
+      if let transition = currentTransition {
+        if collectionView.contentSize.width >= collectionView.bounds.width && state.progress != 0 {
+          let contentOffset = CGPoint(
+            x: transition.contentOffset.x + (transition.distance * fabs(state.progress)),
+            y: transition.contentOffset.y)
+          
+          // We need to use setContentOffset with no animation in
+          // order to stop any ongoing scroll.
+          collectionView.setContentOffset(contentOffset, animated: false)
+        }
+      }
+    }
+  }
+  
+  // The content offset and distance between items can change while a
+  // transition is in progress meaning the current transition will be
+  // wrong. For instance, when hitting the edge of the collection view
+  // while transitioning we need to reload all the paging items and
+  // update the transition data.
+  fileprivate func updateCurrentTransition() {
+    let oldTransition = currentTransition
+    invalidateTransition()
+    
+    if let oldTransition = oldTransition,
+      let newTransition = currentTransition {
+      
+      let contentOffset = CGPoint(
+        x: collectionView.contentOffset.x - (oldTransition.distance - newTransition.distance),
+        y: collectionView.contentOffset.y)
+      
+      currentTransition = PagingTransition(
+        contentOffset: contentOffset,
+        distance: oldTransition.distance)
+    }
   }
   
   fileprivate func generateItems(around pagingItem: T) -> Set<T> {
@@ -436,7 +494,7 @@ open class PagingViewController<T: PagingItem>:
     
     // Update the transition state for the layout in case there is
     // already a transition in progress.
-    collectionViewLayout.updateCurrentTransition()
+    updateCurrentTransition()
     
     // We need to perform layout here, if not the collection view
     // seems to get in a weird state.
