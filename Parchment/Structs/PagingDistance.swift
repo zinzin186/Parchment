@@ -46,12 +46,12 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
       
       if sizeCache.implementsWidthDelegate {
         let toWidth = sizeCache.itemWidthSelected(for: upcomingPagingItem)
-        distance += toWidth - to.frame.width
+        distance += toWidth - to.bounds.width
         
         if let currentIndexPath = dataStructure.indexPathForPagingItem(currentPagingItem),
           let from = layoutAttributes[currentIndexPath] {
           let fromWidth = sizeCache.itemWidth(for: currentPagingItem)
-          distance -= from.frame.width - fromWidth
+          distance -= from.bounds.width - fromWidth
         }
         
         // If the selected cells grows so much that it will move
@@ -59,7 +59,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
         // distance after all.
         if selectedScrollPosition == .preferCentered {
           let center = view.bounds.midX
-          let centerAfterTransition = to.frame.midX - distance
+          let centerAfterTransition = to.center.x - distance
           if centerAfterTransition < center {
             distance = view.contentSize.width - (view.contentOffset.x + view.bounds.width)
           }
@@ -82,7 +82,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
         let from = layoutAttributes[currentIndexPath] {
         if upcomingPagingItem > currentPagingItem {
           let fromWidth = sizeCache.itemWidth(for: currentPagingItem)
-          let fromDiff = from.frame.width - fromWidth
+          let fromDiff = from.bounds.width - fromWidth
           distance -= fromDiff
         }
       }
@@ -96,7 +96,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
       let to = layoutAttributes[upcomingIndexPath] else { return 0 }
     
     let toWidth = sizeCache.itemWidthSelected(for: upcomingPagingItem)
-    let currentPosition = to.frame.origin.x + to.frame.width
+    let currentPosition = to.center.x + (to.bounds.width / 2)
     let width = view.contentOffset.x + view.bounds.width
     var distance = currentPosition - width
     
@@ -104,17 +104,17 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
       if let currentIndexPath = dataStructure.indexPathForPagingItem(currentPagingItem),
         let from = layoutAttributes[currentIndexPath] {
         if upcomingPagingItem < currentPagingItem {
-          let toDiff = toWidth - to.frame.width
+          let toDiff = toWidth - to.bounds.width
           distance += toDiff
         } else {
           let fromWidth = sizeCache.itemWidth(for: currentPagingItem)
-          let fromDiff = from.frame.width - fromWidth
-          let toDiff = toWidth - to.frame.width
+          let fromDiff = from.bounds.width - fromWidth
+          let toDiff = toWidth - to.bounds.width
           distance -= fromDiff
           distance += toDiff
         }
       } else {
-        distance += toWidth - to.frame.width
+        distance += toWidth - to.bounds.width
       }
     }
     
@@ -127,27 +127,27 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
       let to = layoutAttributes[upcomingIndexPath] else { return 0 }
     
     let toWidth = sizeCache.itemWidthSelected(for: upcomingPagingItem)
-    var distance = to.frame.midX - view.bounds.midX
+    var distance = to.center.x - view.bounds.midX
     
     if let currentIndexPath = dataStructure.indexPathForPagingItem(currentPagingItem),
       let from = layoutAttributes[currentIndexPath] {
       
-      let distanceToCenter = view.bounds.midX - from.frame.midX
-      let distanceBetweenCells = to.frame.midX - from.frame.midX
+      let distanceToCenter = view.bounds.midX - from.center.x
+      let distanceBetweenCells = to.center.x - from.center.x
       distance = distanceBetweenCells - distanceToCenter
       
       if sizeCache.implementsWidthDelegate {
         let fromWidth = sizeCache.itemWidth(for: currentPagingItem)
         
         if upcomingPagingItem < currentPagingItem {
-          distance = -(to.frame.width + (from.frame.midX - to.frame.maxX) - (toWidth / 2)) - distanceToCenter
+          distance = -(to.bounds.width + (from.center.x - (to.center.x + (to.bounds.width / 2))) - (toWidth / 2)) - distanceToCenter
         } else {
-          let toDiff = (toWidth - to.frame.width) / 2
-          distance = fromWidth + (to.frame.midX - from.frame.maxX) + toDiff - (from.frame.width / 2) - distanceToCenter
+          let toDiff = (toWidth - to.bounds.width) / 2
+          distance = fromWidth + (to.center.x - (from.center.x + (from.bounds.width / 2))) + toDiff - (from.bounds.width / 2) - distanceToCenter
         }
       }
     } else if sizeCache.implementsWidthDelegate {
-      let toDiff = toWidth - to.frame.width
+      let toDiff = toWidth - to.bounds.width
       distance += toDiff / 2
     }
     
