@@ -1,6 +1,6 @@
 import Foundation
 
-enum PagingDirection {
+public enum PagingDirection {
   case reverse
   case forward
   case none

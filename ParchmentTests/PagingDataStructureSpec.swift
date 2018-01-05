@@ -3,16 +3,16 @@ import Quick
 import Nimble
 @testable import Parchment
 
-class PagingDataStructureSpec: QuickSpec {
+class PagingDataSpec: QuickSpec {
   
   override func spec() {
     
-    describe("PagingDataStructure") {
+    describe("PagingData") {
       
-      var dataStructure: PagingDataStructure<Item>!
+      var visibleItems: PagingItems<Item>!
       
       beforeEach {
-        dataStructure = PagingDataStructure(visibleItems: [
+        visibleItems = PagingItems(items: [
           Item(index: 0),
           Item(index: 1),
           Item(index: 2)
@@ -22,12 +22,12 @@ class PagingDataStructureSpec: QuickSpec {
       describe("indexPathForPagingItem:") {
         
         it("returns the index path if the paging item exists") {
-          let indexPath = dataStructure.indexPathForPagingItem(Item(index: 0))!
+          let indexPath = visibleItems.indexPath(for: Item(index: 0))!
           expect(indexPath.item).to(equal(0))
         }
         
         it("returns nil if paging item is not in visible items") {
-          let indexPath = dataStructure.indexPathForPagingItem(Item(index: -1))
+          let indexPath = visibleItems.indexPath(for: Item(index: -1))
           expect(indexPath).to(beNil())
         }
         
@@ -36,7 +36,7 @@ class PagingDataStructureSpec: QuickSpec {
       describe("pagingItemForIndexPath:") {
         it("returns the paging item for a given index path") {
           let indexPath = IndexPath(item: 0, section: 0)
-          let pagingItem = dataStructure.pagingItemForIndexPath(indexPath)
+          let pagingItem = visibleItems.pagingItem(for: indexPath)
           expect(pagingItem).to(equal(Item(index: 0)))
         }
       }
@@ -47,18 +47,18 @@ class PagingDataStructureSpec: QuickSpec {
 
           describe("upcoming index path is larger than current index path") {
             it("returns forward") {
-              let indexPath = IndexPath(item: 1, section: 0)
               let currentPagingItem = Item(index: 0)
-              let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: currentPagingItem)
+              let upcomingPagingItem = Item(index: 1)
+              let direction = visibleItems.direction(from: currentPagingItem, to: upcomingPagingItem)
               expect(direction).to(equal(PagingDirection.forward))
             }
           }
           
           describe("upcoming index path is smaller than current index path") {
             it("returns reverse") {
-              let indexPath = IndexPath(item: 0, section: 0)
               let currentPagingItem = Item(index: 1)
-              let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: currentPagingItem)
+              let upcomingPagingItem = Item(index: 0)
+              let direction = visibleItems.direction(from: currentPagingItem, to: upcomingPagingItem)
               expect(direction).to(equal(PagingDirection.reverse))
             }
           }
@@ -67,9 +67,9 @@ class PagingDataStructureSpec: QuickSpec {
         
         describe("does not have a index path for the current item") {
           it("returns none") {
-            let indexPath = IndexPath(item: 0, section: 0)
             let currentPagingItem = Item(index: -1)
-            let direction = dataStructure.directionForIndexPath(indexPath, currentPagingItem: currentPagingItem)
+            let upcomingPagingItem = Item(index: 0)
+            let direction = visibleItems.direction(from: currentPagingItem, to: upcomingPagingItem)
             expect(direction).to(equal(PagingDirection.none))
           }
         }

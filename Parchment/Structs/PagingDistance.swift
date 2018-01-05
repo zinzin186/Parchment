@@ -5,7 +5,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
   let view: UIScrollView
   let currentPagingItem: T
   let upcomingPagingItem: T
-  let dataStructure: PagingDataStructure<T>
+  let visibleItems: PagingItems<T>
   let sizeCache: PagingSizeCache<T>
   let selectedScrollPosition: PagingSelectedScrollPosition
   let layoutAttributes: [IndexPath: PagingCellLayoutAttributes]
@@ -16,7 +16,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
   /// can update the content offset as the user is swiping.
   func calculate() -> CGFloat {
     guard
-      let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem),
+      let upcomingIndexPath = visibleItems.indexPath(for: upcomingPagingItem),
       let to = layoutAttributes[upcomingIndexPath] else {
         
         // When there is no upcomingIndexPath or any layout attributes
@@ -37,10 +37,10 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
     
     // Update the distance to account for cases where the user has
     // scrolled all the way over to the other edge.
-    if view.near(edge: .left, clearance: -distance) && distance < 0 && dataStructure.hasItemsBefore == false {
+    if view.near(edge: .left, clearance: -distance) && distance < 0 && visibleItems.hasItemsBefore == false {
       distance = -(view.contentOffset.x + view.contentInset.left)
     } else if view.near(edge: .right, clearance: distance) && distance > 0 &&
-      dataStructure.hasItemsAfter == false {
+      visibleItems.hasItemsAfter == false {
       
       distance = view.contentSize.width - (view.contentOffset.x + view.bounds.width)
       
@@ -48,7 +48,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
         let toWidth = sizeCache.itemWidthSelected(for: upcomingPagingItem)
         distance += toWidth - to.bounds.width
         
-        if let currentIndexPath = dataStructure.indexPathForPagingItem(currentPagingItem),
+        if let currentIndexPath = visibleItems.indexPath(for: currentPagingItem),
           let from = layoutAttributes[currentIndexPath] {
           let fromWidth = sizeCache.itemWidth(for: currentPagingItem)
           distance -= from.bounds.width - fromWidth
@@ -72,13 +72,13 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
   
   private func distanceLeft() -> CGFloat {
     guard
-      let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem),
+      let upcomingIndexPath = visibleItems.indexPath(for: upcomingPagingItem),
       let to = layoutAttributes[upcomingIndexPath] else { return 0 }
     
     var distance = to.center.x - (to.bounds.width / 2) - view.contentOffset.x
     
     if sizeCache.implementsWidthDelegate {
-      if let currentIndexPath = dataStructure.indexPathForPagingItem(currentPagingItem),
+      if let currentIndexPath = visibleItems.indexPath(for: currentPagingItem),
         let from = layoutAttributes[currentIndexPath] {
         if upcomingPagingItem > currentPagingItem {
           let fromWidth = sizeCache.itemWidth(for: currentPagingItem)
@@ -92,7 +92,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
   
   private func distanceRight() -> CGFloat {
     guard
-      let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem),
+      let upcomingIndexPath = visibleItems.indexPath(for: upcomingPagingItem),
       let to = layoutAttributes[upcomingIndexPath] else { return 0 }
     
     let toWidth = sizeCache.itemWidthSelected(for: upcomingPagingItem)
@@ -101,7 +101,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
     var distance = currentPosition - width
     
     if sizeCache.implementsWidthDelegate {
-      if let currentIndexPath = dataStructure.indexPathForPagingItem(currentPagingItem),
+      if let currentIndexPath = visibleItems.indexPath(for: currentPagingItem),
         let from = layoutAttributes[currentIndexPath] {
         if upcomingPagingItem < currentPagingItem {
           let toDiff = toWidth - to.bounds.width
@@ -123,13 +123,13 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
   
   private func distanceCentered() -> CGFloat {
     guard
-      let upcomingIndexPath = dataStructure.indexPathForPagingItem(upcomingPagingItem),
+      let upcomingIndexPath = visibleItems.indexPath(for: upcomingPagingItem),
       let to = layoutAttributes[upcomingIndexPath] else { return 0 }
     
     let toWidth = sizeCache.itemWidthSelected(for: upcomingPagingItem)
     var distance = to.center.x - view.bounds.midX
     
-    if let currentIndexPath = dataStructure.indexPathForPagingItem(currentPagingItem),
+    if let currentIndexPath = visibleItems.indexPath(for: currentPagingItem),
       let from = layoutAttributes[currentIndexPath] {
       
       let distanceToCenter = view.bounds.midX - from.center.x
