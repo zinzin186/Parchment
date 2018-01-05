@@ -310,7 +310,8 @@ open class PagingViewController<T: PagingItem>:
         }
       }
     default:
-      let direction = visibleItems.direction(from: pagingItem, to: pagingItem)
+      guard let currentPagingItem = state.currentPagingItem else { return }
+      let direction = visibleItems.direction(from: currentPagingItem, to: pagingItem)
       stateMachine.fire(.select(
         pagingItem: pagingItem,
         direction: direction,
