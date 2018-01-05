@@ -19,6 +19,12 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   UICollectionViewLayout, PagingLayout where T: Hashable, T: Comparable {
   
   public let options: PagingOptions
+  
+  /// The current state of the menu items. Indicates whether an item
+  /// is currently selected or is scrolling to another item. Can be
+  /// used to get the distance and progress of any ongoing transition.
+  public var state: PagingState<T> = .empty
+  
   public var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
   public var indicatorLayoutAttributes: PagingIndicatorLayoutAttributes?
   public var borderLayoutAttributes: PagingBorderLayoutAttributes?
@@ -32,7 +38,6 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return PagingCellLayoutAttributes.self
   }
   
-  var state: PagingState<T> = .empty
   var dataStructure: PagingDataStructure<T>?
   var sizeCache: PagingSizeCache<T>?
   var contentInsets: UIEdgeInsets = .zero

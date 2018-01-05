@@ -167,7 +167,10 @@ open class PagingViewController<T: PagingItem>:
     set { options.theme.headerBackgroundColor = newValue }
   }
   
-  private var state: PagingState<T> = .empty
+  /// The current state of the menu items. Indicates whether an item
+  /// is currently selected or is scrolling to another item. Can be
+  /// used to get the distance and progress of any ongoing transition.
+  public private(set) var state: PagingState<T> = .empty
   
   /// The data source is responsible for providing the `PagingItem`s
   /// that are displayed in the menu. The `PagingItem` protocol is

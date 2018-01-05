@@ -1,6 +1,6 @@
 import Foundation
 
-enum PagingState<T: PagingItem>: Equatable where T: Equatable {
+public enum PagingState<T: PagingItem>: Equatable where T: Equatable {
   case empty
   case selected(pagingItem: T)
   case scrolling(
@@ -11,7 +11,7 @@ enum PagingState<T: PagingItem>: Equatable where T: Equatable {
     distance: CGFloat)
 }
 
-extension PagingState {
+public extension PagingState {
   
   var currentPagingItem: T? {
     switch self {
@@ -63,7 +63,7 @@ extension PagingState {
   
 }
 
-func ==<T>(lhs: PagingState<T>, rhs: PagingState<T>) -> Bool {
+public func ==<T>(lhs: PagingState<T>, rhs: PagingState<T>) -> Bool {
   switch (lhs, rhs) {
   case
     (let .scrolling(lhsCurrent, lhsUpcoming, lhsProgress, lhsOffset, lhsDistance),
