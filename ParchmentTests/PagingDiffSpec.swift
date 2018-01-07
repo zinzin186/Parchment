@@ -110,7 +110,6 @@ class PagingDiffSpec: QuickSpec {
         ])
         
         let diff = PagingDiff(from: from, to: to)
-        let added = diff.added()
         let removed = diff.removed()
         
         expect(removed.count).to(equal(4))
