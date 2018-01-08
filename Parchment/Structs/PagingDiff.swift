@@ -2,11 +2,11 @@ import Foundation
 
 struct PagingDiff<T: PagingItem> where T: Hashable, T: Comparable {
   
-  fileprivate let from: PagingItems<T>
-  fileprivate let to: PagingItems<T>
-  fileprivate var fromCache: [Int: T]
-  fileprivate var toCache: [Int: T]
-  fileprivate var lastMatchingItem: T?
+  private let from: PagingItems<T>
+  private let to: PagingItems<T>
+  private var fromCache: [Int: T]
+  private var toCache: [Int: T]
+  private var lastMatchingItem: T?
   
   init(from: PagingItems<T>, to: PagingItems<T>) {
     self.from = from
@@ -68,7 +68,7 @@ struct PagingDiff<T: PagingItem> where T: Hashable, T: Comparable {
     return items
   }
   
-  fileprivate func diff(visibleItems: PagingItems<T>, cache: [Int: T]) -> [IndexPath] {
+  private func diff(visibleItems: PagingItems<T>, cache: [Int: T]) -> [IndexPath] {
     return visibleItems.items.flatMap { item in
       if cache[item.hashValue] == nil {
         return visibleItems.indexPath(for: item)

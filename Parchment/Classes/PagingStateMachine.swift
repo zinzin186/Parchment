@@ -8,7 +8,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
   var pagingItemAfterItem: ((T) -> T?)?
   var transitionFromItem: ((T, T?) -> PagingTransition)?
   
-  fileprivate(set) var state: PagingState<T>
+  private(set) var state: PagingState<T>
   
   init(initialState: PagingState<T>) {
     self.state = initialState
@@ -37,7 +37,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     }
   }
   
-  fileprivate func handleReloadEvent(contentOffset: CGPoint, _ event: PagingEvent<T>) {
+  private func handleReloadEvent(contentOffset: CGPoint, _ event: PagingEvent<T>) {
     let oldState = state
     if case let .scrolling(pagingItem, upcomingPagingItem, progress, _, distance) = state {
       if let transition = transitionFromItem?(pagingItem, upcomingPagingItem) {
@@ -58,8 +58,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     }
   }
   
-  fileprivate func handleScrollEvent(_ event: PagingEvent<T>, progress: CGFloat) {
-    
+  private func handleScrollEvent(_ event: PagingEvent<T>, progress: CGFloat) {
     let oldState = state
     
     switch state {
@@ -112,7 +111,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     
   }
   
-  fileprivate func handleSelectEvent(_ event: PagingEvent<T>, selectedPagingItem: T, direction: PagingDirection, animated: Bool) {
+  private func handleSelectEvent(_ event: PagingEvent<T>, selectedPagingItem: T, direction: PagingDirection, animated: Bool) {
     let oldState = state
 
     switch state {
@@ -140,7 +139,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     }
   }
   
-  fileprivate func handleFinishScrollingEvent(_ event: PagingEvent<T>) {
+  private func handleFinishScrollingEvent(_ event: PagingEvent<T>) {
     let oldState = state
     switch state {
     case let .scrolling(currentPagingItem, upcomingPagingItem, _, _, _):
@@ -151,7 +150,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     }
   }
   
-  fileprivate func handleTransitionSizeEvent(_ event: PagingEvent<T>) {
+  private func handleTransitionSizeEvent(_ event: PagingEvent<T>) {
     let oldState = state
     switch state {
     case let .scrolling(currentPagingItem, _, _, _, _):
@@ -162,7 +161,7 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     }
   }
   
-  fileprivate func handleCancelScrollingEvent(_ event: PagingEvent<T>) {
+  private func handleCancelScrollingEvent(_ event: PagingEvent<T>) {
     let oldState = state
     switch state {
     case let .scrolling(currentPagingItem, _, _, _, _):
