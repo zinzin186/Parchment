@@ -102,8 +102,8 @@ open class PagingViewController<T: PagingItem>:
 
   /// Determine the color of the indicator view.
   public var indicatorColor: UIColor {
-    get { return options.theme.indicatorColor }
-    set { options.theme.indicatorColor = newValue }
+    get { return options.indicatorColor }
+    set { options.indicatorColor = newValue }
   }
   
   /// Add a border at the bottom of the menu items. The border will be
@@ -124,8 +124,8 @@ open class PagingViewController<T: PagingItem>:
   
   /// Determine the color of the border view.
   public var borderColor: UIColor {
-    get { return options.theme.borderColor }
-    set { options.theme.borderColor = newValue }
+    get { return options.borderColor }
+    set { options.borderColor = newValue }
   }
 
   /// Updates the content inset for the menu items based on the
@@ -137,32 +137,32 @@ open class PagingViewController<T: PagingItem>:
 
   /// The font used for title label on the menu items.
   public var font: UIFont {
-    get { return options.theme.font }
-    set { options.theme.font = newValue }
+    get { return options.font }
+    set { options.font = newValue }
   }
 
   /// The color of the title label on the menu items.
   public var textColor: UIColor {
-    get { return options.theme.textColor }
-    set { options.theme.textColor = newValue }
+    get { return options.textColor }
+    set { options.textColor = newValue }
   }
 
   /// The text color for the currently selected menu item.
   public var selectedTextColor: UIColor {
-    get { return options.theme.selectedTextColor }
-    set { options.theme.selectedTextColor = newValue }
+    get { return options.selectedTextColor }
+    set { options.selectedTextColor = newValue }
   }
 
   /// The background color for the menu items.
   public var backgroundColor: UIColor {
-    get { return options.theme.backgroundColor }
-    set { options.theme.backgroundColor = newValue }
+    get { return options.backgroundColor }
+    set { options.backgroundColor = newValue }
   }
 
   /// The background color for the header view behind the menu items.
   public var headerBackgroundColor: UIColor {
-    get { return options.theme.headerBackgroundColor }
-    set { options.theme.headerBackgroundColor = newValue }
+    get { return options.headerBackgroundColor }
+    set { options.headerBackgroundColor = newValue }
   }
   
   /// The current state of the menu items. Indicates whether an item
@@ -837,7 +837,7 @@ open class PagingViewController<T: PagingItem>:
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PagingCellReuseIdentifier, for: indexPath) as! PagingCell
     let pagingItem = visibleItems.items[indexPath.item]
     let selected = state.currentPagingItem == pagingItem
-    cell.setPagingItem(pagingItem, selected: selected, theme: options.theme)
+    cell.setPagingItem(pagingItem, selected: selected, options: options)
     return cell
   }
   

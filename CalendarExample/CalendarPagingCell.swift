@@ -3,7 +3,7 @@ import Parchment
 
 class CalendarPagingCell: PagingCell {
   
-  fileprivate var theme: PagingTheme?
+  private var options: PagingOptions?
   
   lazy var dateLabel: UILabel = {
     let dateLabel = UILabel(frame: .zero)
@@ -55,38 +55,38 @@ class CalendarPagingCell: PagingCell {
   }
   
   fileprivate func updateSelectedState(selected: Bool) {
-    guard let theme = theme else { return }
+    guard let options = options else { return }
     if selected {
-      dateLabel.textColor = theme.selectedTextColor
-      weekdayLabel.textColor = theme.selectedTextColor
+      dateLabel.textColor = options.selectedTextColor
+      weekdayLabel.textColor = options.selectedTextColor
     } else {
-      dateLabel.textColor = theme.textColor
-      weekdayLabel.textColor = theme.textColor
+      dateLabel.textColor = options.textColor
+      weekdayLabel.textColor = options.textColor
     }
   }
   
-  override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
+  override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, options: PagingOptions) {
+    self.options = options
     let calendarItem = pagingItem as! CalendarItem
     dateLabel.text = calendarItem.dateText
     weekdayLabel.text = calendarItem.weekdayText
     
-    self.theme = theme
     updateSelectedState(selected: selected)
   }
   
   override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
     super.apply(layoutAttributes)
-    guard let theme = theme else { return }
+    guard let options = options else { return }
 
     if let attributes = layoutAttributes as? PagingCellLayoutAttributes {
       dateLabel.textColor = UIColor.interpolate(
-        from: theme.textColor,
-        to: theme.selectedTextColor,
+        from: options.textColor,
+        to: options.selectedTextColor,
         with: attributes.progress)
       
       weekdayLabel.textColor = UIColor.interpolate(
-        from: theme.textColor,
-        to: theme.selectedTextColor,
+        from: options.textColor,
+        to: options.selectedTextColor,
         with: attributes.progress)
     }
   }

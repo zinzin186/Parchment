@@ -18,9 +18,9 @@ open class PagingCell: UICollectionViewCell {
   /// data source.
   /// - Parameter selected: A boolean to indicate whether the cell is
   /// currently selected.
-  /// - Parameter theme: The `PagingTheme` used to customize the look
-  /// and feel of the `PagingViewController.
-  open func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
+  /// - Parameter options: The `PagingOptions` used to customize the
+  /// look and feel of the `PagingViewController.
+  open func setPagingItem(_ pagingItem: PagingItem, selected: Bool, options: PagingOptions) {
     fatalError("setPagingItem: not implemented")
   }
   

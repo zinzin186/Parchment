@@ -6,7 +6,7 @@ open class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
   
   func configure(_ options: PagingOptions) {
     if case let .visible(height, index, _, _) = options.indicatorOptions {
-      backgroundColor = options.theme.indicatorColor
+      backgroundColor = options.indicatorColor
       frame.size.height = height
       frame.origin.y = options.menuHeight - height
       zIndex = index
