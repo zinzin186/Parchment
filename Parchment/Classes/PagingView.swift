@@ -33,7 +33,7 @@ open class PagingView: UIView {
     self.collectionView = collectionView
     self.pageView = pageView
     
-    collectionView.backgroundColor = options.theme.headerBackgroundColor
+    collectionView.backgroundColor = options.headerBackgroundColor
     addSubview(pageView)
     addSubview(collectionView)
     setupConstraints()

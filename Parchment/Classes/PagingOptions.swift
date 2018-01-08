@@ -13,8 +13,14 @@ public class PagingOptions {
   public var indicatorClass: PagingIndicatorView.Type
   public var borderOptions: PagingBorderOptions
   public var borderClass: PagingBorderView.Type
-  public var theme: PagingTheme
   public var includeSafeAreaInsets: Bool
+  public var font: UIFont
+  public var textColor: UIColor
+  public var selectedTextColor: UIColor
+  public var backgroundColor: UIColor
+  public var headerBackgroundColor: UIColor
+  public var borderColor: UIColor
+  public var indicatorColor: UIColor
   
   public var scrollPosition: UICollectionViewScrollPosition {
     switch selectedScrollPosition {
@@ -41,7 +47,6 @@ public class PagingOptions {
   }
   
   public init() {
-    theme = PagingTheme()
     selectedScrollPosition = .preferCentered
     menuItemSize = .sizeToFit(minWidth: 150, height: 40)
     menuTransition = .scrollAlongside
@@ -64,5 +69,13 @@ public class PagingOptions {
         height: 1,
         zIndex: Int.max - 1,
         insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
+
+    font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
+    textColor = UIColor.black
+    selectedTextColor = UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)
+    backgroundColor = UIColor.white
+    headerBackgroundColor = UIColor.white
+    borderColor = UIColor(white: 0.9, alpha: 1)
+    indicatorColor = UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)
   }
 }

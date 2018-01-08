@@ -8,7 +8,7 @@ open class PagingBorderLayoutAttributes: UICollectionViewLayoutAttributes {
   func configure(_ options: PagingOptions, safeAreaInsets: UIEdgeInsets = .zero) {
     if case let .visible(height, index, borderInsets) = options.borderOptions {
       insets = borderInsets
-      backgroundColor = options.theme.borderColor
+      backgroundColor = options.borderColor
       frame.origin.y = options.menuHeight - height
       frame.size.height = height
       zIndex = index

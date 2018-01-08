@@ -26,14 +26,14 @@ open class PagingTitleCell: PagingCell {
     configure()
   }
   
-  open override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
-    backgroundColor = theme.backgroundColor
+  open override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, options: PagingOptions) {
+    backgroundColor = options.backgroundColor
     
     if let titleItem = pagingItem as? PagingTitleItem {
       viewModel = PagingTitleCellViewModel(
         title: titleItem.title,
         selected: selected,
-        theme: theme)
+        options: options)
     }
     configureTitleLabel()
   }

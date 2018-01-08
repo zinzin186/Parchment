@@ -2,17 +2,16 @@ import UIKit
 import Parchment
 
 struct IconPagingCellViewModel {
-  
   let image: UIImage?
   let selected: Bool
   let tintColor: UIColor
   let selectedTintColor: UIColor
   
-  init(image: UIImage?, selected: Bool, theme: PagingTheme) {
+  init(image: UIImage?, selected: Bool, options: PagingOptions) {
     self.image = image
     self.selected = selected
-    self.tintColor = theme.textColor
-    self.selectedTintColor = theme.selectedTextColor
+    self.tintColor = options.textColor
+    self.selectedTintColor = options.selectedTextColor
   }
 }
 
@@ -36,13 +35,13 @@ class IconPagingCell: PagingCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
+  override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, options: PagingOptions) {
     if let item = pagingItem as? IconItem {
 
       let viewModel = IconPagingCellViewModel(
         image: item.image,
         selected: selected,
-        theme: theme)
+        options: options)
       
       imageView.image = viewModel.image
       

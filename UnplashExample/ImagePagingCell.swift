@@ -39,7 +39,7 @@ class ImagePagingCell: PagingCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
+  override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, options: PagingOptions) {
     let item = pagingItem as! ImageItem
     imageView.image = item.headerImage
     titleLabel.attributedText = NSAttributedString(

@@ -13,10 +13,10 @@ class PagingIndicatorLayoutAttributesSpec: QuickSpec {
       let options = PagingOptions()
       
       beforeEach {
-        options.theme.font = UIFont.systemFont(ofSize: 15)
-        options.theme.textColor = .blue
-        options.theme.selectedTextColor = .red
-        options.theme.indicatorColor = .green
+        options.font = UIFont.systemFont(ofSize: 15)
+        options.textColor = .blue
+        options.selectedTextColor = .red
+        options.indicatorColor = .green
         options.indicatorOptions = .visible(
           height: 20,
           zIndex: Int.max,
