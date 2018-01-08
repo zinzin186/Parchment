@@ -1,6 +1,6 @@
 import Foundation
 
-public struct PagingItems<T: PagingItem> where T: Hashable, T: Comparable {
+public struct PagingItems<T: PagingItem> where T: Hashable & Comparable {
   
   public let items: [T]
   

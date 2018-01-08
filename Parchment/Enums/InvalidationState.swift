@@ -11,7 +11,7 @@ public enum InvalidationState {
   case everything
   case sizes
   
-  init(_ invalidationContext: UICollectionViewLayoutInvalidationContext) {
+  public init(_ invalidationContext: UICollectionViewLayoutInvalidationContext) {
     if invalidationContext.invalidateEverything {
       self = .everything
     } else if invalidationContext.invalidateDataSourceCounts {
@@ -27,7 +27,7 @@ public enum InvalidationState {
     }
   }
   
-  static func +(lhs: InvalidationState, rhs: InvalidationState) -> InvalidationState {
+  public static func +(lhs: InvalidationState, rhs: InvalidationState) -> InvalidationState {
     switch (lhs, rhs) {
     case (.everything, _), (_, .everything):
       return .everything

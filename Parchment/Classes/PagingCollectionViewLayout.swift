@@ -16,7 +16,7 @@ import UIKit
 /// `PagingItem`. You can customize their layout attributes by
 /// overriding `layoutAttributesForDecorationView:`.
 open class PagingCollectionViewLayout<T: PagingItem>:
-  UICollectionViewLayout, PagingLayout where T: Hashable, T: Comparable {
+  UICollectionViewLayout, PagingLayout where T: Hashable & Comparable {
   
   public let options: PagingOptions
   
