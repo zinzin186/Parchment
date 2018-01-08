@@ -1,8 +1,8 @@
 import UIKit
 
-public class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
+open class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
 
-  public var backgroundColor: UIColor?
+  open var backgroundColor: UIColor?
   
   func configure(_ options: PagingOptions) {
     if case let .visible(height, index, _, _) = options.indicatorOptions {
