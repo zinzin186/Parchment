@@ -77,6 +77,16 @@ open class PagingViewController<T: PagingItem>:
       configureMenuInteraction()
     }
   }
+  
+  /// Determine how users can interact with the page view controller.
+  /// _Default: .scrolling_
+  public var contentInteraction: PagingContentInteraction {
+    get { return options.contentInteraction }
+    set {
+      options.contentInteraction = newValue
+      configureContentInteraction()
+    }
+  }
 
   /// Determine how the selected menu item should be aligned when it
   /// is selected. Effectivly the same as the
@@ -356,7 +366,9 @@ open class PagingViewController<T: PagingItem>:
     collectionView.dataSource = self
     collectionView.register(options.menuItemClass, forCellWithReuseIdentifier: PagingCellReuseIdentifier)
     collectionViewLayout.registerDecorationViews()
+    
     configureMenuInteraction()
+    configureContentInteraction()
     
     if let currentPagingItem = state.currentPagingItem {
       selectViewController(
@@ -503,6 +515,15 @@ open class PagingViewController<T: PagingItem>:
       setupGestureRecognizers()
     case .none:
       break
+    }
+  }
+  
+  private func configureContentInteraction() {
+    switch options.contentInteraction {
+    case .scrolling:
+      pageViewController.scrollView.isScrollEnabled = true
+    case .none:
+      pageViewController.scrollView.isScrollEnabled = false
     }
   }
   

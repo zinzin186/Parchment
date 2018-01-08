@@ -8,6 +8,7 @@ public class PagingOptions {
   public var menuHorizontalAlignment: PagingMenuHorizontalAlignment
   public var menuTransition: PagingMenuTransition
   public var menuInteraction: PagingMenuInteraction
+  public var contentInteraction: PagingContentInteraction
   public var selectedScrollPosition: PagingSelectedScrollPosition
   public var indicatorOptions: PagingIndicatorOptions
   public var indicatorClass: PagingIndicatorView.Type
@@ -58,6 +59,7 @@ public class PagingOptions {
     includeSafeAreaInsets = true
     indicatorClass = PagingIndicatorView.self
     borderClass = PagingBorderView.self
+    contentInteraction = .scrolling
     
     indicatorOptions = .visible(
         height: 4,
