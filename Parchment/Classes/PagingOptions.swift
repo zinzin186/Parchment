@@ -19,6 +19,7 @@ public class PagingOptions {
   public var textColor: UIColor
   public var selectedTextColor: UIColor
   public var backgroundColor: UIColor
+  public var selectedBackgroundColor: UIColor
   public var headerBackgroundColor: UIColor
   public var borderColor: UIColor
   public var indicatorColor: UIColor
@@ -76,6 +77,7 @@ public class PagingOptions {
     textColor = UIColor.black
     selectedTextColor = UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)
     backgroundColor = UIColor.white
+    selectedBackgroundColor = .red
     headerBackgroundColor = UIColor.white
     borderColor = UIColor(white: 0.9, alpha: 1)
     indicatorColor = UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)

@@ -170,6 +170,12 @@ open class PagingViewController<T: PagingItem>:
     get { return options.backgroundColor }
     set { options.backgroundColor = newValue }
   }
+  
+  /// The background color for the selected menu item.
+  public var selectedBackgroundColor: UIColor {
+    get { return options.selectedBackgroundColor }
+    set { options.selectedBackgroundColor = newValue }
+  }
 
   /// The background color for the header view behind the menu items.
   public var headerBackgroundColor: UIColor {

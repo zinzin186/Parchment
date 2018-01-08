@@ -27,8 +27,6 @@ open class PagingTitleCell: PagingCell {
   }
   
   open override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, options: PagingOptions) {
-    backgroundColor = options.backgroundColor
-    
     if let titleItem = pagingItem as? PagingTitleItem {
       viewModel = PagingTitleCellViewModel(
         title: titleItem.title,
@@ -55,8 +53,10 @@ open class PagingTitleCell: PagingCell {
     
     if viewModel.selected {
       titleLabel.textColor = viewModel.selectedTextColor
+      backgroundColor = viewModel.selectedBackgroundColor
     } else {
       titleLabel.textColor = viewModel.textColor
+      backgroundColor = viewModel.backgroundColor
     }
   }
   
@@ -67,6 +67,11 @@ open class PagingTitleCell: PagingCell {
       titleLabel.textColor = UIColor.interpolate(
         from: viewModel.textColor,
         to: viewModel.selectedTextColor,
+        with: attributes.progress)
+      
+      backgroundColor = UIColor.interpolate(
+        from: viewModel.backgroundColor,
+        to: viewModel.selectedBackgroundColor,
         with: attributes.progress)
     }
   }
