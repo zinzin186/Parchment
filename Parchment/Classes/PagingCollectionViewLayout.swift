@@ -3,21 +3,25 @@ import UIKit
 /// A custom `UICollectionViewLayout` subclass responsible for
 /// defining the layout for all the `PagingItem` cells. You can
 /// subclass this type if you need further customization outside what
-/// is provided by the `PagingOptions` protocol.
+/// is provided by customization properties on `PagingViewController`.
 ///
 /// To create your own `PagingViewControllerLayout` you need to
-/// override the `collectionViewLayout` property in
-/// `PagingViewController`. Then you can override
-/// `layoutAttributesForItem:` and `layoutAttributesForElementsInRect:`
-/// to update the layout attributes for each cell.
+/// override the `menuLayoutClass` property on `PagingViewController`.
+/// Then you can override the methods you normally would to update the
+/// layout attributes for each cell.
 ///
-/// This layout has two decoration views; one for the border at the
+/// The layout has two decoration views; one for the border at the
 /// bottom and one for the view that indicates the currently selected
 /// `PagingItem`. You can customize their layout attributes by
-/// overriding `layoutAttributesForDecorationView:`.
+/// updating the `indicatorLayoutAttributes` and
+/// `borderLayoutAttributes` properties.
 open class PagingCollectionViewLayout<T: PagingItem>:
   UICollectionViewLayout, PagingLayout where T: Hashable & Comparable {
   
+  // MARK: Public Properties
+  
+  /// An instance that stores all the customization that is applied
+  /// to the `PagingViewController`.
   public let options: PagingOptions
   
   /// The current state of the menu items. Indicates whether an item
@@ -25,10 +29,26 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   /// used to get the distance and progress of any ongoing transition.
   public var state: PagingState<T> = .empty
   
-  public var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
-  public var indicatorLayoutAttributes: PagingIndicatorLayoutAttributes?
-  public var borderLayoutAttributes: PagingBorderLayoutAttributes?
+  /// A dictionary containing all the layout attributes for a given
+  /// `IndexPath`. This will be generated in the `prepare()` call when
+  /// the layout is invalidated with the correct invalidation context.
+  public private(set) var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
+  
+  /// The layout attributes for the selected item indicator. This is
+  /// updated whenever the layout is invalidated.
+  public private(set) var indicatorLayoutAttributes: PagingIndicatorLayoutAttributes?
+  
+  /// The layout attributes for the bottom border view. This is
+  /// updated whenever the layout is invalidated.
+  public private(set) var borderLayoutAttributes: PagingBorderLayoutAttributes?
+  
+  /// The `InvalidatedState` is used to represent what to invalidate
+  /// in a collection view layout based on the invalidation context.
   public var invalidationState: InvalidationState = .everything
+  
+  /// The `PagingItem`'s that are currently visible in the collection
+  /// view. The items in this array are not necessarily the same as
+  /// the `visibleCells` property on `UICollectionView`.
   public var visibleItems: PagingItems<T>
   
   open override var collectionViewContentSize: CGSize {
@@ -39,8 +59,12 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return PagingCellLayoutAttributes.self
   }
   
+  // MARK: Internal Properties
+  
   var sizeCache: PagingSizeCache<T>?
   var contentInsets: UIEdgeInsets = .zero
+  
+  // MARK: Private Properties
   
   private var view: UICollectionView {
     return collectionView!
@@ -70,17 +94,28 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private let PagingIndicatorKind = "PagingIndicatorKind"
   private let PagingBorderKind = "PagingBorderKind"
 
+  // MARK: Initializers
+  
+  /// Creates an instance of `PagingCollectionViewLayout`
+  ///
+  /// - Parameter options: The `PagingOptions` instance created by
+  /// the `PagingViewController`
   required public init(options: PagingOptions) {
     self.options = options
     self.visibleItems = PagingItems(items: [])
     super.init()
   }
   
+  /// Creates an instance of `PagingCollectionViewLayout`
+  ///
+  /// - Parameter coder: An unarchiver object.
   public required init?(coder: NSCoder) {
     self.options = PagingOptions()
     self.visibleItems = PagingItems(items: [])
     super.init(coder: coder)
   }
+  
+  // MARK: Public Methods
   
   open override func prepare() {
     super.prepare()
@@ -160,7 +195,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     register(options.borderClass, forDecorationViewOfKind: PagingBorderKind)
   }
 
-  // MARK: Private
+  // MARK: Private Methods
   
   private func createLayoutAttributes() {
     guard let sizeCache = sizeCache else { return }

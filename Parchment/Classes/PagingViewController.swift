@@ -20,6 +20,8 @@ open class PagingViewController<T: PagingItem>:
   EMPageViewControllerDataSource,
   EMPageViewControllerDelegate where T: Hashable & Comparable {
 
+  // MARK: Public Properties
+  
   /// The class type for collection view layout. Override this if you
   /// want to use your own subclass of the layout.
   /// _Default: PagingCollectionViewLayout.self_
@@ -170,6 +172,9 @@ open class PagingViewController<T: PagingItem>:
   /// used to get the distance and progress of any ongoing transition.
   public private(set) var state: PagingState<T> = .empty
   
+  /// The `PagingItem`'s that are currently visible in the collection
+  /// view. The items in this array are not necessarily the same as
+  /// the `visibleCells` property on `UICollectionView`.
   public private(set) var visibleItems: PagingItems<T>
   
   /// The data source is responsible for providing the `PagingItem`s
@@ -203,15 +208,16 @@ open class PagingViewController<T: PagingItem>:
   }
   
   /// A custom collection view layout that lays out all the menu items
-  /// horizontally. See the `PagingOptions` protocol on how you can
-  /// customize the layout.
+  /// horizontally. You can customize the behavior of the layout by
+  /// setting the customization properties on `PagingViewController`.
+  /// You can also use your own subclass of the layout by defining the
+  /// `menuLayoutClass` property.
   public private(set) var collectionViewLayout: PagingCollectionViewLayout<T>?
 
   /// Used to display the menu items that scrolls along with the
   /// content. Using a collection view means you can create custom
   /// cells that display pretty much anything. By default, scrolling
-  /// is enabled in the collection view. See `PagingOptions` for more
-  /// details on what you can customize.
+  /// is enabled in the collection view.
   public private(set) var collectionView: UICollectionView?
 
   /// Used to display the view controller that you are paging
@@ -226,6 +232,7 @@ open class PagingViewController<T: PagingItem>:
   /// setting values on this class directly.
   public let options: PagingOptions
   
+  // MARK: Private Properties
   
   private let sizeCache: PagingSizeCache<T>
   private let stateMachine: PagingStateMachine<T>
@@ -238,6 +245,7 @@ open class PagingViewController<T: PagingItem>:
     return view as! PagingView
   }
   
+  // MARK: Initializers
 
   /// Creates an instance of `PagingViewController`. You need to call
   /// `select(pagingItem:animated:)` in order to set the initial view
@@ -264,6 +272,8 @@ open class PagingViewController<T: PagingItem>:
     super.init(coder: coder)
     configureStateMachine()
   }
+  
+  // MARK: Public Methods
   
   /// Reload data around given paging item. This will set the given
   /// paging item as selected and generate new items around it. This
@@ -377,7 +387,6 @@ open class PagingViewController<T: PagingItem>:
   
   open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
-    
     coordinator.animate(alongsideTransition: { context in
       self.stateMachine.fire(.transitionSize)
       if let pagingItem = self.state.currentPagingItem {
@@ -387,7 +396,7 @@ open class PagingViewController<T: PagingItem>:
     }, completion: nil)
   }
   
-  // MARK: Private
+  // MARK: Private Methods
   
   private func configureStateMachine() {
     stateMachine.onPagingItemSelect = { [unowned self] pagingItem, direction, animated in
