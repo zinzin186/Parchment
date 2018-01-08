@@ -742,7 +742,7 @@ open class PagingViewController<T: PagingItem>:
     collectionView.setContentOffset(collectionView.contentOffset, animated: false)
   }
 
-  // MARK: UICollectionViewDelegate
+  // MARK: UIScrollViewDelegate
   
   open func scrollViewDidScroll(_ scrollView: UIScrollView) {
     guard let collectionViewLayout = collectionViewLayout else { return }
@@ -769,6 +769,32 @@ open class PagingViewController<T: PagingItem>:
     }
   }
   
+  open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    return
+  }
+  
+  open func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    return
+  }
+  
+  open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    return
+  }
+  
+  open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    return
+  }
+  
+  open func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+    return
+  }
+  
+  open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    return
+  }
+  
+  // MARK: UICollectionViewDelegate
+  
   open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard let currentPagingItem = state.currentPagingItem else { return }
     
@@ -779,6 +805,30 @@ open class PagingViewController<T: PagingItem>:
       pagingItem: selectedPagingItem,
       direction: direction,
       animated: true))
+  }
+  
+  open func collectionView(_ collectionView: UICollectionView, targetContentOffsetForProposedContentOffset proposedContentOffset: CGPoint) -> CGPoint {
+    return proposedContentOffset
+  }
+  
+  open func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+    return
+  }
+  
+  open func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+    return
+  }
+  
+  open func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    return
+  }
+  
+  open func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    return
+  }
+  
+  open func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    return
   }
   
   // MARK: UICollectionViewDataSource
