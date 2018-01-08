@@ -1,6 +1,6 @@
 import Foundation
 
-struct PagingDiff<T: PagingItem> where T: Hashable, T: Comparable {
+struct PagingDiff<T: PagingItem> where T: Hashable & Comparable {
   
   private let from: PagingItems<T>
   private let to: PagingItems<T>

@@ -3,23 +3,21 @@ import Quick
 import Nimble
 @testable import Parchment
 
-private func beScrolling() -> MatcherFunc<PagingState<Item>> {
-  return MatcherFunc { expression, message in
-    message.postfixMessage = "be .Scrolling)"
+private func beScrolling() -> Predicate<PagingState<Item>> {
+  return Predicate.define("be .Scrolling)") { expression, message in
     if let actual = try expression.evaluate(), case .scrolling = actual {
-      return true
+      return PredicateResult(bool: true, message: message)
     }
-    return false
+    return PredicateResult(bool: false, message: message)
   }
 }
 
-private func beSelected() -> MatcherFunc<PagingState<Item>> {
-  return MatcherFunc { expression, message in
-    message.postfixMessage = "be .Selected)"
+private func beSelected() -> Predicate<PagingState<Item>> {
+  return Predicate.define("be .Selected)") { expression, message in
     if let actual = try expression.evaluate(), case .selected = actual {
-      return true
+      return PredicateResult(bool: true, message: message)
     }
-    return false
+    return PredicateResult(bool: false, message: message)
   }
 }
 
@@ -35,15 +33,15 @@ class PagingStateMachineSpec: QuickSpec {
         let state: PagingState = .selected(pagingItem: Item(index: 0))
         stateMachine = PagingStateMachine(initialState: state)
         
-        stateMachine.pagingItemAfterItem = { [unowned self] item in
+        stateMachine.pagingItemAfterItem = { item in
           return Item(index: item.index + 1)
         }
         
-        stateMachine.pagingItemBeforeItem = { [unowned self] item in
+        stateMachine.pagingItemBeforeItem = { item in
           return Item(index: item.index - 1)
         }
         
-        stateMachine.transitionFromItem = { [unowned self] from, to in
+        stateMachine.transitionFromItem = { from, to in
           return PagingTransition(contentOffset: .zero, distance: 0)
         }
       }

@@ -1,6 +1,7 @@
 import Foundation
 
-class IndexedPagingDataSource<T: PagingItem>: PagingViewControllerInfiniteDataSource where T: Hashable & Comparable {
+class IndexedPagingDataSource<T: PagingItem>:
+  PagingViewControllerInfiniteDataSource where T: Hashable & Comparable {
   
   let items: [T]
   var viewControllerForIndex: ((Int) -> UIViewController?)?
@@ -9,8 +10,9 @@ class IndexedPagingDataSource<T: PagingItem>: PagingViewControllerInfiniteDataSo
     self.items = items
   }
   
-  func pagingViewController<U>(_ pagingViewController: PagingViewController<U>, viewControllerForPagingItem item: U) -> UIViewController {
-    
+  func pagingViewController<U>(
+    _ pagingViewController: PagingViewController<U>,
+    viewControllerForPagingItem item: U) -> UIViewController {
     guard let index = items.index(of: item as! T) else {
       fatalError("pagingViewController:viewControllerForPagingItem: PagingItem does not exist")
     }
@@ -21,7 +23,9 @@ class IndexedPagingDataSource<T: PagingItem>: PagingViewControllerInfiniteDataSo
     return viewController
   }
   
-  func pagingViewController<U>(_ pagingViewController: PagingViewController<U>, pagingItemBeforePagingItem item: U) -> U? {
+  func pagingViewController<U>(
+    _ pagingViewController: PagingViewController<U>,
+    pagingItemBeforePagingItem item: U) -> U? {
     guard let index = items.index(of: item as! T) else { return nil }
     if index > 0 {
       return items[index - 1] as? U
@@ -29,7 +33,9 @@ class IndexedPagingDataSource<T: PagingItem>: PagingViewControllerInfiniteDataSo
     return nil
   }
   
-  func pagingViewController<U>(_ pagingViewController: PagingViewController<U>, pagingItemAfterPagingItem item: U) -> U? {
+  func pagingViewController<U>(
+    _ pagingViewController: PagingViewController<U>,
+    pagingItemAfterPagingItem item: U) -> U? {
     guard let index = items.index(of: item as! T) else { return nil }
     if index < items.count - 1 {
       return items[index + 1] as? U

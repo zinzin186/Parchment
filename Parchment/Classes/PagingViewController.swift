@@ -20,6 +20,8 @@ open class PagingViewController<T: PagingItem>:
   EMPageViewControllerDataSource,
   EMPageViewControllerDelegate where T: Hashable & Comparable {
 
+  // MARK: Public Properties
+  
   /// The class type for collection view layout. Override this if you
   /// want to use your own subclass of the layout.
   /// _Default: PagingCollectionViewLayout.self_
@@ -170,6 +172,9 @@ open class PagingViewController<T: PagingItem>:
   /// used to get the distance and progress of any ongoing transition.
   public private(set) var state: PagingState<T> = .empty
   
+  /// The `PagingItem`'s that are currently visible in the collection
+  /// view. The items in this array are not necessarily the same as
+  /// the `visibleCells` property on `UICollectionView`.
   public private(set) var visibleItems: PagingItems<T>
   
   /// The data source is responsible for providing the `PagingItem`s
@@ -203,24 +208,23 @@ open class PagingViewController<T: PagingItem>:
   }
   
   /// A custom collection view layout that lays out all the menu items
-  /// horizontally. See the `PagingOptions` protocol on how you can
-  /// customize the layout.
+  /// horizontally. You can customize the behavior of the layout by
+  /// setting the customization properties on `PagingViewController`.
+  /// You can also use your own subclass of the layout by defining the
+  /// `menuLayoutClass` property.
   public private(set) var collectionViewLayout: PagingCollectionViewLayout<T>?
 
   /// Used to display the menu items that scrolls along with the
   /// content. Using a collection view means you can create custom
   /// cells that display pretty much anything. By default, scrolling
-  /// is enabled in the collection view. See `PagingOptions` for more
-  /// details on what you can customize.
+  /// is enabled in the collection view.
   public private(set) var collectionView: UICollectionView?
 
   /// Used to display the view controller that you are paging
   /// between. Instead of using UIPageViewController we use a library
   /// called EMPageViewController which fixes a lot of the common
   /// issues with using UIPageViewController.
-  public let pageViewController: EMPageViewController = {
-    return EMPageViewController(navigationOrientation: .horizontal)
-  }()
+  public let pageViewController: EMPageViewController
 
   /// An instance that stores all the customization so that it's
   /// easier to share between other classes. You should use the
@@ -228,6 +232,7 @@ open class PagingViewController<T: PagingItem>:
   /// setting values on this class directly.
   public let options: PagingOptions
   
+  // MARK: Private Properties
   
   private let sizeCache: PagingSizeCache<T>
   private let stateMachine: PagingStateMachine<T>
@@ -240,6 +245,7 @@ open class PagingViewController<T: PagingItem>:
     return view as! PagingView
   }
   
+  // MARK: Initializers
 
   /// Creates an instance of `PagingViewController`. You need to call
   /// `select(pagingItem:animated:)` in order to set the initial view
@@ -249,6 +255,7 @@ open class PagingViewController<T: PagingItem>:
     self.visibleItems = PagingItems(items: [])
     self.sizeCache = PagingSizeCache(options: options)
     self.stateMachine = PagingStateMachine(initialState: .empty)
+    self.pageViewController = EMPageViewController(navigationOrientation: .horizontal)
     super.init(nibName: nil, bundle: nil)
     configureStateMachine()
   }
@@ -261,9 +268,12 @@ open class PagingViewController<T: PagingItem>:
     self.visibleItems = PagingItems(items: [])
     self.sizeCache = PagingSizeCache(options: self.options)
     self.stateMachine = PagingStateMachine(initialState: .empty)
+    self.pageViewController = EMPageViewController(navigationOrientation: .horizontal)
     super.init(coder: coder)
     configureStateMachine()
   }
+  
+  // MARK: Public Methods
   
   /// Reload data around given paging item. This will set the given
   /// paging item as selected and generate new items around it. This
@@ -377,7 +387,6 @@ open class PagingViewController<T: PagingItem>:
   
   open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
-    
     coordinator.animate(alongsideTransition: { context in
       self.stateMachine.fire(.transitionSize)
       if let pagingItem = self.state.currentPagingItem {
@@ -387,11 +396,61 @@ open class PagingViewController<T: PagingItem>:
     }, completion: nil)
   }
   
-  // MARK: Private
+  // MARK: Private Methods
   
-  fileprivate func configureSizeCache() {
-    if let _ = delegate, let currentPagingItem = state.currentPagingItem {
+  private func configureStateMachine() {
+    stateMachine.onPagingItemSelect = { [unowned self] pagingItem, direction, animated in
+      self.selectViewController(pagingItem, direction: direction, animated: animated)
+    }
+    
+    stateMachine.onStateChange = { [unowned self] oldState, state, event in
+      self.handleStateUpdate(oldState, state: state, event: event)
+    }
+    
+    stateMachine.pagingItemBeforeItem = { [unowned self] pagingItem in
+      return self.infiniteDataSource?.pagingViewController(self,
+        pagingItemBeforePagingItem: pagingItem)
+    }
+    
+    stateMachine.pagingItemAfterItem = { [unowned self] pagingItem in
+      return self.infiniteDataSource?.pagingViewController(self,
+        pagingItemAfterPagingItem: pagingItem)
+    }
+    
+    stateMachine.transitionFromItem = { [unowned self] currentItem, upcomingItem in
+      guard
+        let upcomingItem = upcomingItem,
+        let collectionView = self.collectionView,
+        let collectionViewLayout = self.collectionViewLayout else {
+          return PagingTransition(contentOffset: .zero, distance: 0)
+      }
       
+      // If the upcoming item is outside the currently visible
+      // items we need to append the items that are around the
+      // upcoming item so we can animate the transition.
+      if self.visibleItems.itemsCache.contains(upcomingItem) == false {
+        self.reloadItems(around: upcomingItem, keepExisting: true)
+      }
+      
+      let distance = PagingDistance(
+        view: collectionView,
+        currentPagingItem: currentItem,
+        upcomingPagingItem: upcomingItem,
+        visibleItems: self.visibleItems,
+        sizeCache: self.sizeCache,
+        selectedScrollPosition: self.options.selectedScrollPosition,
+        layoutAttributes: collectionViewLayout.layoutAttributes)
+      
+      return PagingTransition(
+        contentOffset: collectionView.contentOffset,
+        distance: distance.calculate())
+    }
+    
+    configureSizeCache()
+  }
+  
+  private func configureSizeCache() {
+    if let _ = delegate, let currentPagingItem = state.currentPagingItem {
       sizeCache.widthForPagingItem = { [unowned self] item, selected in
         return self.delegate?.pagingViewController(self,
           widthForPagingItem: item,
@@ -506,7 +565,7 @@ open class PagingViewController<T: PagingItem>:
       // layout in order to update the layout attributes for the
       // decoration views.
       if state.upcomingPagingItem != nil {
-        invalidateContentOffset()
+        updateContentOffset()
         
         if sizeCache.implementsWidthDelegate {
           invalidationContext.invalidateSizes = true
@@ -519,87 +578,7 @@ open class PagingViewController<T: PagingItem>:
     }
   }
   
-  fileprivate func configureStateMachine() {
-    stateMachine.onPagingItemSelect = { [unowned self] pagingItem, direction, animated in
-      self.selectViewController(pagingItem, direction: direction, animated: animated)
-    }
-    
-    stateMachine.onStateChange = { [unowned self] oldState, state, event in
-      self.handleStateUpdate(oldState, state: state, event: event)
-    }
-    
-    stateMachine.pagingItemBeforeItem = { [unowned self] pagingItem in
-      return self.infiniteDataSource?.pagingViewController(self,
-        pagingItemBeforePagingItem: pagingItem)
-    }
-    
-    stateMachine.pagingItemAfterItem = { [unowned self] pagingItem in
-      return self.infiniteDataSource?.pagingViewController(self,
-        pagingItemAfterPagingItem: pagingItem)
-    }
-    
-    stateMachine.transitionFromItem = { [unowned self] currentItem, upcomingItem in
-      guard
-        let upcomingItem = upcomingItem,
-        let collectionView = self.collectionView,
-        let collectionViewLayout = self.collectionViewLayout else {
-          return PagingTransition(contentOffset: .zero, distance: 0)
-      }
-      
-      // If the upcoming item is outside the currently visible
-      // items we need to append the items that are around the
-      // upcoming item so we can animate the transition.
-      if self.visibleItems.itemsCache.contains(upcomingItem) == false {
-        self.reloadItems(around: upcomingItem, keepExisting: true)
-      }
-      
-      let distance = PagingDistance(
-        view: collectionView,
-        currentPagingItem: currentItem,
-        upcomingPagingItem: upcomingItem,
-        visibleItems: self.visibleItems,
-        sizeCache: self.sizeCache,
-        selectedScrollPosition: self.options.selectedScrollPosition,
-        layoutAttributes: collectionViewLayout.layoutAttributes)
-      
-      return PagingTransition(
-        contentOffset: collectionView.contentOffset,
-        distance: distance.calculate())
-    }
-    
-    configureSizeCache()
-  }
-  
-  fileprivate func selectCollectionViewItem(for pagingItem: T, animated: Bool = false) {
-    let indexPath = visibleItems.indexPath(for: pagingItem)
-    let scrollPosition = options.scrollPosition
-    
-    collectionView?.selectItem(
-      at: indexPath,
-      animated: animated,
-      scrollPosition: scrollPosition)
-  }
-
-  fileprivate func invalidateContentOffset() {
-    guard let collectionView = collectionView else { return }
-    
-    if options.menuTransition == .scrollAlongside {
-      if case let .scrolling(_, _, progress, initialContentOffset, distance) = state {
-        if collectionView.contentSize.width >= collectionView.bounds.width && state.progress != 0 {
-          let contentOffset = CGPoint(
-            x: initialContentOffset.x + (distance * fabs(progress)),
-            y: initialContentOffset.y)
-          
-          // We need to use setContentOffset with no animation in
-          // order to stop any ongoing scroll.
-          collectionView.setContentOffset(contentOffset, animated: false)
-        }
-      }
-    }
-  }
-  
-  fileprivate func generateItems(around pagingItem: T) -> Set<T> {
-    
+  private func generateItems(around pagingItem: T) -> Set<T> {
     var items: Set = [pagingItem]
     var previousItem: T = pagingItem
     var nextItem: T = pagingItem
@@ -610,7 +589,7 @@ open class PagingViewController<T: PagingItem>:
     var widthBefore: CGFloat = menuWidth
     while widthBefore > 0 {
       if let item = infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: previousItem) {
-        widthBefore -= itemWidth(pagingItem: item)
+        widthBefore -= itemWidth(for: item)
         widthBefore -= options.menuItemSpacing
         previousItem = item
         items.insert(item)
@@ -624,7 +603,7 @@ open class PagingViewController<T: PagingItem>:
     var widthAfter: CGFloat = menuWidth + widthBefore
     while widthAfter > 0 {
       if let item = infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: nextItem) {
-        widthAfter -= itemWidth(pagingItem: item)
+        widthAfter -= itemWidth(for: item)
         widthAfter -= options.menuItemSpacing
         nextItem = item
         items.insert(item)
@@ -638,7 +617,7 @@ open class PagingViewController<T: PagingItem>:
     var remainingWidth = widthAfter
     while remainingWidth > 0 {
       if let item = infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: previousItem) {
-        remainingWidth -= itemWidth(pagingItem: item)
+        remainingWidth -= itemWidth(for: item)
         remainingWidth -= options.menuItemSpacing
         previousItem = item
         items.insert(item)
@@ -717,7 +696,35 @@ open class PagingViewController<T: PagingItem>:
       completion: nil)
   }
   
-  fileprivate func itemWidth(pagingItem: T) -> CGFloat {
+  private func selectCollectionViewItem(for pagingItem: T, animated: Bool = false) {
+    let indexPath = visibleItems.indexPath(for: pagingItem)
+    let scrollPosition = options.scrollPosition
+    
+    collectionView?.selectItem(
+      at: indexPath,
+      animated: animated,
+      scrollPosition: scrollPosition)
+  }
+  
+  private func updateContentOffset() {
+    guard let collectionView = collectionView else { return }
+    
+    if options.menuTransition == .scrollAlongside {
+      if case let .scrolling(_, _, progress, initialContentOffset, distance) = state {
+        if collectionView.contentSize.width >= collectionView.bounds.width && state.progress != 0 {
+          let contentOffset = CGPoint(
+            x: initialContentOffset.x + (distance * fabs(progress)),
+            y: initialContentOffset.y)
+          
+          // We need to use setContentOffset with no animation in
+          // order to stop any ongoing scroll.
+          collectionView.setContentOffset(contentOffset, animated: false)
+        }
+      }
+    }
+  }
+  
+  private func itemWidth(for pagingItem: T) -> CGFloat {
     guard let currentPagingItem = state.currentPagingItem else { return options.estimatedItemWidth }
 
     if currentPagingItem == pagingItem {
@@ -735,11 +742,6 @@ open class PagingViewController<T: PagingItem>:
   private func hasItemAfter(pagingItem: T?) -> Bool {
     guard let item = pagingItem else { return false }
     return infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: item) != nil
-  }
-  
-  fileprivate func stopScrolling() {
-    guard let collectionView = collectionView else { return }
-    collectionView.setContentOffset(collectionView.contentOffset, animated: false)
   }
 
   // MARK: UIScrollViewDelegate

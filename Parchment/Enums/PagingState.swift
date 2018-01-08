@@ -1,5 +1,8 @@
 import Foundation
 
+/// The current state of the menu items. Indicates whether an item
+/// is currently selected or is scrolling to another item. Can be
+/// used to get the distance and progress of any ongoing transition.
 public enum PagingState<T: PagingItem>: Equatable where T: Equatable {
   case empty
   case selected(pagingItem: T)

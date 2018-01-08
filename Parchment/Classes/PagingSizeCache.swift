@@ -1,6 +1,6 @@
 import Foundation
 
-class PagingSizeCache<T: PagingItem>  where T: Hashable, T: Comparable {
+class PagingSizeCache<T: PagingItem>  where T: Hashable & Comparable {
   
   var implementsWidthDelegate: Bool = false
   var widthForPagingItem: ((T, Bool) -> CGFloat?)?
