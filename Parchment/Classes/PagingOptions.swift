@@ -1,22 +1,22 @@
 import UIKit
 
-open class PagingOptions {
-  var menuItemSize: PagingMenuItemSize
-  var menuItemClass: PagingCell.Type
-  var menuItemSpacing: CGFloat
-  var menuInsets: UIEdgeInsets
-  var menuHorizontalAlignment: PagingMenuHorizontalAlignment
-  var menuTransition: PagingMenuTransition
-  var menuInteraction: PagingMenuInteraction
-  var selectedScrollPosition: PagingSelectedScrollPosition
-  var indicatorOptions: PagingIndicatorOptions
-  var indicatorClass: PagingIndicatorView.Type
-  var borderOptions: PagingBorderOptions
-  var borderClass: PagingBorderView.Type
-  var theme: PagingTheme
-  var includeSafeAreaInsets: Bool
+public class PagingOptions {
+  public var menuItemSize: PagingMenuItemSize
+  public var menuItemClass: PagingCell.Type
+  public var menuItemSpacing: CGFloat
+  public var menuInsets: UIEdgeInsets
+  public var menuHorizontalAlignment: PagingMenuHorizontalAlignment
+  public var menuTransition: PagingMenuTransition
+  public var menuInteraction: PagingMenuInteraction
+  public var selectedScrollPosition: PagingSelectedScrollPosition
+  public var indicatorOptions: PagingIndicatorOptions
+  public var indicatorClass: PagingIndicatorView.Type
+  public var borderOptions: PagingBorderOptions
+  public var borderClass: PagingBorderView.Type
+  public var theme: PagingTheme
+  public var includeSafeAreaInsets: Bool
   
-  var scrollPosition: UICollectionViewScrollPosition {
+  public var scrollPosition: UICollectionViewScrollPosition {
     switch selectedScrollPosition {
     case .left:
       return .left
@@ -27,11 +27,11 @@ open class PagingOptions {
     }
   }
   
-  var menuHeight: CGFloat {
+  public var menuHeight: CGFloat {
     return menuItemSize.height + menuInsets.top + menuInsets.bottom
   }
   
-  var estimatedItemWidth: CGFloat {
+  public var estimatedItemWidth: CGFloat {
     switch menuItemSize {
     case let .fixed(width, _):
       return width

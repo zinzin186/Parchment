@@ -11,14 +11,14 @@ public enum PagingMenuItemSize {
 
 public extension PagingMenuItemSize {
   
-  var width: CGFloat {
+  public var width: CGFloat {
     switch self {
     case let .fixed(width, _): return width
     case let .sizeToFit(minWidth, _): return minWidth
     }
   }
   
-  var height: CGFloat {
+  public var height: CGFloat {
     switch self {
     case let .fixed(_, height): return height
     case let .sizeToFit(_, height): return height
