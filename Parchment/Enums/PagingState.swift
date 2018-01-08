@@ -13,7 +13,7 @@ public enum PagingState<T: PagingItem>: Equatable where T: Equatable {
 
 public extension PagingState {
   
-  var currentPagingItem: T? {
+  public var currentPagingItem: T? {
     switch self {
     case .empty:
       return nil
@@ -24,7 +24,7 @@ public extension PagingState {
     }
   }
   
-  var upcomingPagingItem: T? {
+  public var upcomingPagingItem: T? {
     switch self {
     case .empty:
       return nil
@@ -35,7 +35,7 @@ public extension PagingState {
     }
   }
   
-  var progress: CGFloat {
+  public var progress: CGFloat {
     switch self {
     case let .scrolling(_, _, progress, _, _):
       return progress
@@ -44,7 +44,7 @@ public extension PagingState {
     }
   }
   
-  var distance: CGFloat {
+  public var distance: CGFloat {
     switch self {
     case let .scrolling(_, _, _, _, distance):
       return distance
@@ -53,7 +53,7 @@ public extension PagingState {
     }
   }
   
-  var visuallySelectedPagingItem: T? {
+  public var visuallySelectedPagingItem: T? {
     if fabs(progress) > 0.5 {
       return upcomingPagingItem ?? currentPagingItem
     } else {
