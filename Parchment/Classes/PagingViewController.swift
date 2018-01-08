@@ -228,18 +228,18 @@ open class PagingViewController<T: PagingItem>:
   /// setting values on this class directly.
   open let options: PagingOptions
   
-  fileprivate let sizeCache: PagingSizeCache<T>
-  fileprivate let stateMachine: PagingStateMachine<T>
-  fileprivate var swipeGestureRecognizerLeft: UISwipeGestureRecognizer?
-  fileprivate var swipeGestureRecognizerRight: UISwipeGestureRecognizer?
-  fileprivate var didLayoutSubviews: Bool = false
-  fileprivate var indexedDataSource: IndexedPagingDataSource<T>?
   
+  private let sizeCache: PagingSizeCache<T>
+  private let stateMachine: PagingStateMachine<T>
+  private var swipeGestureRecognizerLeft: UISwipeGestureRecognizer?
+  private var swipeGestureRecognizerRight: UISwipeGestureRecognizer?
+  private var indexedDataSource: IndexedPagingDataSource<T>?
+  private var didLayoutSubviews: Bool = false
+  private let PagingCellReuseIdentifier = "PagingCellReuseIdentifier"
   private var pagingView: PagingView {
     return view as! PagingView
   }
   
-  fileprivate let PagingCellReuseIdentifier = "PagingCellReuseIdentifier"
 
   /// Creates an instance of `PagingViewController`. You need to call
   /// `select(pagingItem:animated:)` in order to set the initial view
@@ -406,7 +406,7 @@ open class PagingViewController<T: PagingItem>:
     }
   }
   
-  fileprivate func configureDataSource() {
+  private func configureDataSource() {
     let numberOfItems = dataSource?.numberOfViewControllers(in: self) ?? 0
     let items = (0..<numberOfItems).enumerated().flatMap {
       dataSource?.pagingViewController(self, pagingItemForIndex: $0.offset)
@@ -424,7 +424,7 @@ open class PagingViewController<T: PagingItem>:
     }
   }
   
-  fileprivate func configureMenuInteraction() {
+  private func configureMenuInteraction() {
     collectionView?.isScrollEnabled = false
     collectionView?.alwaysBounceHorizontal = false
     
@@ -447,7 +447,7 @@ open class PagingViewController<T: PagingItem>:
     }
   }
   
-  fileprivate func setupGestureRecognizers() {
+  private func setupGestureRecognizers() {
     let swipeGestureRecognizerLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer))
     swipeGestureRecognizerLeft.direction = .left
     
@@ -461,7 +461,7 @@ open class PagingViewController<T: PagingItem>:
     self.swipeGestureRecognizerRight = swipeGestureRecognizerRight
   }
   
-  @objc fileprivate dynamic func handleSwipeGestureRecognizer(_ recognizer: UISwipeGestureRecognizer) {
+  @objc private dynamic func handleSwipeGestureRecognizer(_ recognizer: UISwipeGestureRecognizer) {
     guard let currentPagingItem = state.currentPagingItem else { return }
     
     var upcomingPagingItem: T? = nil
@@ -477,7 +477,7 @@ open class PagingViewController<T: PagingItem>:
     }
   }
   
-  fileprivate func handleStateUpdate(_ oldState: PagingState<T>, state: PagingState<T>, event: PagingEvent<T>?) {
+  private func handleStateUpdate(_ oldState: PagingState<T>, state: PagingState<T>, event: PagingEvent<T>?) {
     self.state = state
     collectionViewLayout?.state = state
 
@@ -650,7 +650,7 @@ open class PagingViewController<T: PagingItem>:
     return items
   }
   
-  fileprivate func reloadItems(around pagingItem: T, keepExisting: Bool = false) {
+  private func reloadItems(around pagingItem: T, keepExisting: Bool = false) {
     guard
       let collectionView = collectionView,
       let collectionViewLayout = collectionViewLayout else { return }
@@ -708,7 +708,7 @@ open class PagingViewController<T: PagingItem>:
     stateMachine.fire(.reload(contentOffset: collectionView.contentOffset))
   }
   
-  fileprivate func selectViewController(_ pagingItem: T, direction: PagingDirection, animated: Bool = true) {
+  private func selectViewController(_ pagingItem: T, direction: PagingDirection, animated: Bool = true) {
     guard let dataSource = infiniteDataSource else { return }
     pageViewController.selectViewController(
       dataSource.pagingViewController(self, viewControllerForPagingItem: pagingItem),
@@ -727,12 +727,12 @@ open class PagingViewController<T: PagingItem>:
     }
   }
   
-  fileprivate func hasItemBefore(pagingItem: T?) -> Bool {
+  private func hasItemBefore(pagingItem: T?) -> Bool {
     guard let item = pagingItem else { return false }
     return infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: item) != nil
   }
   
-  fileprivate func hasItemAfter(pagingItem: T?) -> Bool {
+  private func hasItemAfter(pagingItem: T?) -> Bool {
     guard let item = pagingItem else { return false }
     return infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: item) != nil
   }

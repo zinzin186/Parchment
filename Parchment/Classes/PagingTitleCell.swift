@@ -8,7 +8,7 @@ import UIKit
 open class PagingTitleCell: PagingCell {
   
   fileprivate var viewModel: PagingTitleCellViewModel?
-  fileprivate let titleLabel = UILabel(frame: .zero)
+  private var viewModel: PagingTitleCellViewModel?
   
   open override var isSelected: Bool {
     didSet {

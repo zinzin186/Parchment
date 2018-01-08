@@ -325,7 +325,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     }
   }
   
-  fileprivate func indicatorMetricForFirstItem() -> PagingIndicatorMetric? {
+  private func indicatorMetricForFirstItem() -> PagingIndicatorMetric? {
     guard let currentPagingItem = state.currentPagingItem else { return nil }
     if let first = visibleItems.items.first {
       if currentPagingItem < first {
@@ -338,7 +338,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return nil
   }
   
-  fileprivate func indicatorMetricForLastItem() -> PagingIndicatorMetric? {
+  private func indicatorMetricForLastItem() -> PagingIndicatorMetric? {
     guard let currentPagingItem = state.currentPagingItem else { return nil }
     if let last = visibleItems.items.last {
       if currentPagingItem > last {
@@ -351,7 +351,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return nil
   }
   
-  fileprivate func progressForItem(at indexPath: IndexPath) -> CGFloat {
+  private func progressForItem(at indexPath: IndexPath) -> CGFloat {
     guard let currentPagingItem = state.currentPagingItem else { return 0 }
     
     let currentIndexPath = visibleItems.indexPath(for: currentPagingItem)
@@ -371,7 +371,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return 0
   }
   
-  fileprivate func upcomingIndexPathForIndexPath(_ indexPath: IndexPath?) -> IndexPath? {
+  private func upcomingIndexPathForIndexPath(_ indexPath: IndexPath?) -> IndexPath? {
     if let upcomingPagingItem = state.upcomingPagingItem, let upcomingIndexPath = visibleItems.indexPath(for: upcomingPagingItem) {
       return upcomingIndexPath
     } else if let indexPath = indexPath {
@@ -384,14 +384,14 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return indexPath
   }
     
-  fileprivate func indicatorSpacingForIndex(_ index: Int) -> UIEdgeInsets {
+  private func indicatorSpacingForIndex(_ index: Int) -> UIEdgeInsets {
     if case let .visible(_, _, insets, _) = options.indicatorOptions {
       return insets
     }
     return UIEdgeInsets.zero
   }
   
-  fileprivate func indicatorInsetsForIndex(_ index: Int) -> PagingIndicatorMetric.Inset {
+  private func indicatorInsetsForIndex(_ index: Int) -> PagingIndicatorMetric.Inset {
     if case let .visible(_, _, _, insets) = options.indicatorOptions {
       if index == range.lowerBound {
         return .left(insets.left)
@@ -402,7 +402,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return .none
   }
   
-  fileprivate func indicatorFrameForIndex(_ index: Int) -> CGRect {
+  private func indicatorFrameForIndex(_ index: Int) -> CGRect {
     if index < range.lowerBound {
       let frame = frameForIndex(0)
       return frame.offsetBy(dx: -frame.width, dy: 0)
@@ -414,7 +414,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return frameForIndex(index)
   }
   
-  fileprivate func frameForIndex(_ index: Int) -> CGRect {
+  private func frameForIndex(_ index: Int) -> CGRect {
     guard
       let sizeCache = sizeCache,
       let attributes = layoutAttributes[IndexPath(item: index, section: 0)] else { return .zero }
