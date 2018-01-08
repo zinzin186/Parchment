@@ -744,7 +744,7 @@ open class PagingViewController<T: PagingItem>:
 
   // MARK: UICollectionViewDelegate
   
-  public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+  open func scrollViewDidScroll(_ scrollView: UIScrollView) {
     guard let collectionViewLayout = collectionViewLayout else { return }
     
     // If we don't have any visible items there is no point in
@@ -783,7 +783,7 @@ open class PagingViewController<T: PagingItem>:
   
   // MARK: UICollectionViewDataSource
   
-  public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+  open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PagingCellReuseIdentifier, for: indexPath) as! PagingCell
     let pagingItem = visibleItems.items[indexPath.item]
     let selected = state.currentPagingItem == pagingItem
