@@ -42,6 +42,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
     } else if view.near(edge: .right, clearance: distance) && distance > 0 &&
       visibleItems.hasItemsAfter == false {
       
+      let originalDistance = distance
       distance = view.contentSize.width - (view.contentOffset.x + view.bounds.width)
       
       if sizeCache.implementsWidthDelegate {
@@ -61,7 +62,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
           let center = view.bounds.midX
           let centerAfterTransition = to.center.x - distance
           if centerAfterTransition < center {
-            distance = view.contentSize.width - (view.contentOffset.x + view.bounds.width)
+            distance = originalDistance
           }
         }
       }
