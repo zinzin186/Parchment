@@ -38,7 +38,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     
     pagingViewController.borderOptions = .hidden
-    pagingViewController.headerBackgroundColor = .clear
+    pagingViewController.menuBackgroundColor = .clear
     pagingViewController.indicatorColor = UIColor(white: 0, alpha: 0.4)
     pagingViewController.textColor = UIColor(white: 1, alpha: 0.6)
     pagingViewController.selectedTextColor = .white
