@@ -23,19 +23,22 @@
 
 ## Features	
 
-Parchment is a very flexible paging view controller. It let’s you page between view controllers while showing any type of generic indicator that scrolls along with the content. Some benefits of using Parchment:
+Parchment is a very flexible paging view controller. It let’s you page between view controllers while showing any type of generic indicator that scrolls along with the content. Here are some benefits of using Parchment:
 
-* **Memory-efficient**: <br/> Parchment only allocates view controllers when they’re needed, meaning if you have a lot of view <br/> controllers you don’t have to initialize them all up-front.
+* **Memory-efficient**: <br/> Parchment only allocates view controllers when they’re needed, meaning if you have a lot of view controllers you don’t have to initialize them all up-front.
 
-* **Infinite scrolling**: <br /> Because view controllers are only allocated as you are scrolling, you can create data sources that are <br/> infinitely large. This is perfect for things like [calendars](#calendar-example).
+* **Infinite scrolling**: <br /> Because view controllers are only allocated as you are scrolling, you can create data sources that are infinitely large. This is perfect for things like [calendars](Documentation/infinite-data-source.md).
 
 * **Highly customizable** <br/> The menu items are built using
-`UICollectionView`, which means you can display pretty much whatever you want. Check out the [`PagingOptions`]() protocol on how to customize the layout.
+`UICollectionView`, which means you can display pretty much whatever you want. You can even [subclass the layout](Documentation/layout-subclass.md) to create completely custom behaviours.
 
 ## Usage
 
-The easiest way to use Parchment is using the `FixedPagingViewController`. Just
-pass in an array of view controllers and it will set up everything for you.
+### Convenience subclass
+
+The easiest way to use Parchment is to use the `FixedPagingViewController` subclass. Just
+pass in an array of view controllers and Parchment will generate menu items for each view controller using their
+`title` property:
 
 ```Swift
 let firstViewController = UIViewController()
@@ -47,140 +50,140 @@ let pagingViewController = FixedPagingViewController(viewControllers: [
 ])
 ```
 
-Then add the paging view controller as a child view controller:
+See: [Using FixedPagingViewController](Documentation/fixed-view-controller.md)
 
-```Swift
-addChildViewController(pagingViewController)
-view.addSubview(pagingViewController.view)
-pagingViewController.didMove(toParentViewController: self)
-```
+### Data source
 
-Parchment will then generate menu items for each view controller using their
-`title` property. You can customize how the menu items will look, or even create
-your completely custom subclass. See [Customization](#customization).
-
-_Check out `ViewController.swift` in the `Example` target for more details._
-
-## Custom Data Source
-
-Parchment supports adding your own custom data sources. This allows you to
-allocate view controllers only when they are needed, and can even be used to
-create infinitely scrolling data sources ✨
-
-To add your own data source, you need to conform to the
-`PagingViewControllerDataSource` protocol:
-
-```Swift
-protocol PagingViewControllerDataSource: class {
-
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>,
-    viewControllerForPagingItem: T) -> UIViewController
-
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>,
-    pagingItemBeforePagingItem: T) -> T?
-
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>,
-    pagingItemAfterPagingItem: T) -> T?
-}
-```
-
-If you've ever used
-[UIPageViewController](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIPageViewControllerClassReferenceClassRef/)
-this should seem familiar. The main difference is that instead of returning view
-controllers directly, you return a object conforming to `PagingItem`.
-`PagingItem` is used to generate menu items for all the view controllers,
-without having to actually allocate them before they are needed.
-
-### Calendar Example
-
-Let’s take a look at an example of how you can create your own calendar data
-source. This is what we want to achieve:
-
-![](https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-calendar.gif "Calendar Example")
-
-First thing we need to do is create our own `PagingItem` that will hold our
-date. We also need to make sure it conforms to both `Hashable` and `Comparable`:
-
-```Swift
-struct CalendarItem: PagingItem, Hashable, Comparable {
-  let date: Date
-
-  var hashValue: Int {
-    return date.hashValue
-  }
-}
-
-func ==(lhs: CalendarItem, rhs: CalendarItem) -> Bool {
-  return lhs.date == rhs.date
-}
-
-func <(lhs: CalendarItem, rhs: CalendarItem) -> Bool {
-  return lhs.date < rhs.date
-}
-```
-
-We need to conform to `PagingViewControllerDataSource` in order to implement our
-custom data source. Every time `pagingItemBeforePagingItem:` or
-`pagingItemAfterPagingItem:` is called, we either subtract or append the time
-interval equal to one day. This means our paging view controller will show one
-menu item for each day.
+Using the convenience subclass is fine in most cases, but if you have more than a few view controllers you probably don't want to allocate them all up-front. If you're going to display a fixed number of view controllers, you can setup your own data source by implementing `PagingViewControllerDataSource`:
 
 ```Swift
 extension ViewController: PagingViewControllerDataSource {
 
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>,
-    viewControllerForPagingItem pagingItem: T) -> UIViewController {
-    let calendarItem = pagingItem as! CalendarItem
-    return CalendarViewController(date: calendarItem.date)
-  }
+    func numberOfViewControllers<T>(in pagingViewController: PagingViewController<T>) -> Int {
+        return 10
+    }
 
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>,
-    pagingItemBeforePagingItem pagingItem: T) -> T? {
-    let calendarItem = pagingItem as! CalendarItem
-    return CalendarItem(date: calendarItem.date.addingTimeInterval(-86400)) as? T
-  }
+    func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+        return ItemViewController(index: index)
+    }
 
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>,
-    pagingItemAfterPagingItem pagingItem: T) -> T? {
-    let calendarItem = pagingItem as! CalendarItem
-    return CalendarItem(date: calendarItem.date.addingTimeInterval(86400)) as? T
-  }
-
+    func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> PagingItem {
+        return PagingIndexItem(index: index, title: "View \(index)")
+    }
 }
 ```
 
-Then we simply need to create our `PagingViewController` and specify our custom
-`PagingItem`:
+Then you need set the `dataSource` property and select the initial item:
 
 ```Swift
-let pagingViewController = PagingViewController<CalendarItem>()
+let pagingViewController = PagingViewController()
 pagingViewController.dataSource = self
+pagingViewController.select(index: 0)
 ```
 
-That’s all you need to create your own infinitely paging calendar ✨🚀
+Using the data source means Parchment will only allocate view controllers for the currently selected item and any of its siblings. This is a lot more memory efficient than using `FixedPagingViewController` if you have many view controllers.
 
-_Check out the `CalendarExample` target for more details._
+See: [Using custom data source](Documentation/data-source.md)
+
+### Infinite data source
+
+Using the `PagingViewControllerDataSource` protocol means you need to know how many view controllers to display. If you’re creating something like a calendar, the number of view controllers can be infinitely large. In that case you can use the  `PagingViewControllerInfiniteDataSource` protocol:
+
+```Swift
+extension ViewController: PagingViewControllerInfiniteDataSource {
+
+  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForPagingItem pagingItem: T) -> UIViewController {
+    return ItemViewController(item: pagingItem)
+  }
+
+  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemBeforePagingItem pagingItem: T) -> T? {
+    guard let item = pagingItem as? IndexedPagingItem else { return nil }
+    return Item(index: item.index - 1)
+  }
+
+  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem pagingItem: T) -> T? {
+    guard let item = pagingItem as? IndexedPagingItem else { return nil }
+    return Item(index: item.index + 1)
+  }
+}
+```
+
+Then set the `infiniteDataSource` property and select the initial item:
+
+```Swift
+let pagingViewController = PagingViewController()
+pagingViewController.infiniteDataSource = self
+pagingViewController.select(pagingItem: Item(index: 0))
+```
+
+This pattern is very similar to the
+[UIPageViewControllerDataSource](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIPageViewControllerClassReferenceClassRef/)
+protocol. The main difference is that instead of returning view controllers directly, you have to return an instance conforming to the `PagingItem` protocol. Parchment will recursively call these methods for the selected `PagingItem` until the available space is filled up.
+
+See: [Using infinite data source](Documentation/infinite-data-source.md)
+
+## Selecting items
+
+You can select items programatically using:
+
+```Swift
+func select(pagingItem: PagingItem, animated: Bool = false)
+```
+
+Or if you have set the `dateSource` property, you can select items based on their index:
+
+```Swift
+func select(index: Int, animated: Bool = false)
+```
+
+## Reload data
+
+You can reload data for a given `PagingItem`:
+
+```Swift
+func reloadData(around: PagingItem)
+```
+
+This will mark the given paging item as selected and generate new items around it. It will also reload the view controllers displayed in the page view controller.
 
 ## Delegate
 
-You can use the `PagingViewControllerDelegate` to manually control the width of
-your menu items. Parchment does not support self-sizing cells at the moment, so
-you have to use this if you have a custom cell that you want to size based on
-its content.
+Parchment provides delegate methods for every step of the transition process through the `PagingViewControllerDelegate` protocol. You can also use this to manually control the width of your menu items.
 
 ```Swift
-public protocol PagingViewControllerDelegate: class {
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>,
+protocol PagingViewControllerDelegate: class {
+
+  func pagingViewController<T>(
+    _ pagingViewController: PagingViewController<T>,
+    isScrollingFromItem currentPagingItem: T,
+    toItem upcomingPagingItem: T?,
+    startingViewController: UIViewController,
+    destinationViewController: UIViewController?,
+    progress: CGFloat)
+
+  func pagingViewController<T>(
+    _ pagingViewController: PagingViewController<T>,
+    willScrollToItem pagingItem: T,
+    startingViewController: UIViewController,
+    destinationViewController: UIViewController)
+  
+  func pagingViewController<T>(
+    _ pagingViewController: PagingViewController<T>,
+    didScrollToItem pagingItem: T,
+    startingViewController: UIViewController?,
+    destinationViewController: UIViewController,
+    transitionSuccessful: Bool)
+
+  func pagingViewController<T>(
+    _ pagingViewController: PagingViewController<T>,
     widthForPagingItem pagingItem: T,
-    isSelected: Bool) -> CGFloat
+    isSelected: Bool) -> CGFloat?
 }
 ```
 
-_Check out `DelegateExample` to see how to create dynamically sized cells._
-
 ## Customization
 
-Parchment is build to be very flexible. You can customize the behaviour by changing the following properties on `PagingViewController`:
+Parchment is built to be very flexible. All customization is handled by the properties listed below. The menu items are displayed using `UICollectionView`, so they can display pretty much whatever you want (see: [`menuItemClass`](#`menuItemClass`)). If you need any further customization you can even [subclass the collection view layout](/Documentation/layout-subclass.md).
 
 #### `menuItemSize`
 
@@ -206,7 +209,7 @@ enum PagingMenuHorizontalAlignment {
   case `default`
 
   // Allows all paging items to be centered within the paging menu
-  // when PagingMenuItemSize is .Fixed and the sum of the widths
+  // when PagingMenuItemSize is .fixed and the sum of the widths
   // of all the paging items are less than the paging menu
   case center
 }
@@ -247,8 +250,7 @@ _Default: `.scrolling`_
 
 #### `menuItemClass`
 
-The class type for the menu item. Override this if you want your own custom menu
-items.
+The class type for the menu item. Override this if you want your own custom menu items.
 
 _Default: `PagingTitleCell.self`_
 
@@ -284,8 +286,7 @@ _Default: `.preferCentered`_
 
 #### `indicatorOptions`
 
-Add a indicator view to the selected menu item. The indicator width will be
-equal to the selected menu items width. Insets only apply horizontally.
+Add a indicator view to the selected menu item. The indicator width will be equal to the selected menu items width. Insets only apply horizontally.
 
 ```Swift
 enum PagingIndicatorOptions {
@@ -310,15 +311,13 @@ _Default:_
 
 #### `indicatorClass`
 
-The class type for the indicator view. Override this if you want your use your
-own subclass of `PagingIndicatorView`.
+The class type for the indicator view. Override this if you want your use your own subclass of `PagingIndicatorView`.
 
 _Default: `PagingIndicatorView.self`_
 
 #### `borderOptions`
 
-Add a border at the bottom of the menu items. The border will be as wide as all
-the menu items. Insets only apply horizontally.
+Add a border at the bottom of the menu items. The border will be as wide as all the menu items. Insets only apply horizontally.
 
 ```Swift
 enum PagingBorderOptions {
@@ -341,15 +340,13 @@ _Default:_
 
 #### `borderClass`
 
-The class type for the border view. Override this if you want your use your own
-subclass of `PagingBorderView`.
+The class type for the border view. Override this if you want your use your own subclass of `PagingBorderView`.
 
 _Default: `PagingBorderView.self`_
 
 #### `includeSafeAreaInsets`
 
-Updates the content inset for the menu items based on the `.safeAreaInsets`
-property.
+Updates the content inset for the menu items based on the `.safeAreaInsets` property.
 
 _Default: `true`_
 
@@ -377,9 +374,9 @@ The background color for the menu items.
 
 _Default: `UIColor.white`_
 
-#### `headerBackgroundColor`
+#### `menuBackgroundColor`
 
-The background color for the header view behind the menu items.
+The background color for the view behind the menu items.
 
 _Default: `UIColor.white`_
 
@@ -406,16 +403,16 @@ Parchment also supports [Carthage](https://github.com/Carthage/Carthage). To ins
 See [this guide](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application) for more details on using Carthage.
 
 ## Requirements
+
 * iOS 8.2+
 * Xcode 8.0+
 
 ## Acknowledgements
+
 * Parchment uses [`EMPageViewController`](https://github.com/emalyak/EMPageViewController) as a replacement for `UIPageViewController`.
 
-## Author
-* Martin Rechsteiner ([@rechsteiner]())
-
 ## Changelog
+
 This can be found in the CHANGELOG file.
  
 ## Licence
