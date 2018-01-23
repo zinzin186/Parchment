@@ -342,6 +342,21 @@ open class PagingViewController<T: PagingItem>:
         animated: animated))
     }
   }
+  
+  /// Selects the paging item at a given index. This can be called
+  /// both before and after the view has been loaded.
+  ///
+  /// - Parameter index: The index of the `PagingItem` to be displayed.
+  /// - Parameter animated: A boolean value that indicates whether
+  /// the transtion should be animated. Default is false.
+  open func select(index: Int, animated: Bool = false) {
+    guard let dataSource = dataSource else {
+      fatalError("select(index:animated:): You need to set the dataSource property to use this method")
+    }
+    
+    let pagingItem = dataSource.pagingViewController(self, pagingItemForIndex: index)
+    select(pagingItem: pagingItem, animated: animated)
+  }
 
   open override func loadView() {
     view = PagingView(options: options)
