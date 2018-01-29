@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-    <strong><a href=“#getting-started”>Getting Started</a></strong> |
+    <strong><a href="#getting-started">Getting Started</a></strong> |
     <strong><a href="#customization">Customization</a></strong> |
     <strong><a href="#installation">Installation</a></strong>
 </p>
@@ -21,7 +21,7 @@
 ![](https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-calendar.gif "Calendar Example")
 ![](https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-delegate.gif "Cities Example")
 
-## Features	
+## Features
 
 Parchment is a very flexible paging view controller. It let’s you page between view controllers while showing any type of generic indicator that scrolls along with the content. Here are some benefits of using Parchment:
 
@@ -30,7 +30,7 @@ Parchment is a very flexible paging view controller. It let’s you page between
 * **Infinite scrolling**: <br /> Because view controllers are only allocated as you are scrolling, you can create data sources that are infinitely large. This is perfect for things like [calendars](Documentation/infinite-data-source.md).
 
 * **Highly customizable** <br/> The menu items are built using
-`UICollectionView`, which means you can display pretty much whatever you want. You can even subclass the layout to create completely custom behaviours.
+  `UICollectionView`, which means you can display pretty much whatever you want. You can even subclass the layout to create completely custom behaviours.
 
 ## Getting Started
 
@@ -87,7 +87,7 @@ See: [Using custom data source](Documentation/data-source.md)
 
 ### Infinite data source
 
-Using the `PagingViewControllerDataSource` protocol means you need to know how many view controllers to display. If you’re creating something like a calendar, the number of view controllers can be infinitely large. In that case you can use the  `PagingViewControllerInfiniteDataSource` protocol:
+Using the `PagingViewControllerDataSource` protocol means you need to know how many view controllers to display. If you’re creating something like a calendar, the number of view controllers can be infinitely large. In that case you can use the `PagingViewControllerInfiniteDataSource` protocol:
 
 ```Swift
 extension ViewController: PagingViewControllerInfiniteDataSource {
@@ -166,7 +166,7 @@ protocol PagingViewControllerDelegate: class {
     willScrollToItem pagingItem: T,
     startingViewController: UIViewController,
     destinationViewController: UIViewController)
-  
+
   func pagingViewController<T>(
     _ pagingViewController: PagingViewController<T>,
     didScrollToItem pagingItem: T,
@@ -392,14 +392,14 @@ Parchment is available through [CocoaPods](https://cocoapods.org). To install it
 
 ### Carthage
 
-Parchment also supports [Carthage](https://github.com/Carthage/Carthage). To install it, you need to do the following steps: 
+Parchment also supports [Carthage](https://github.com/Carthage/Carthage). To install it, you need to do the following steps:
 
 1. Add `github "rechsteiner/Parchment"` to your `Cartfile`
 2. Run `carthage update`
 3. Link `Parchment.framework` with you target
 4. Add `$(SRCROOT)/Carthage/Build/iOS/Parchment.framework` to your
    `copy-frameworks` script phase
-   
+
 See [this guide](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application) for more details on using Carthage.
 
 ## Requirements
@@ -414,7 +414,7 @@ See [this guide](https://github.com/Carthage/Carthage#adding-frameworks-to-an-ap
 ## Changelog
 
 This can be found in the CHANGELOG file.
- 
+
 ## Licence
 
 Parchment is released under the MIT license. See LICENSE for details.
