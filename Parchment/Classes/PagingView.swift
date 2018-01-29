@@ -10,15 +10,17 @@ import UIKit
 open class PagingView: UIView {
   
   open let options: PagingOptions
-  open var collectionView: UICollectionView?
-  open var pageView: UIView?
+  open let collectionView: UICollectionView
+  open let pageView: UIView
   
   /// Creates an instance of `PagingView`.
   ///
   /// - Parameter options: The `PagingOptions` passed into the
   /// `PagingViewController`.
-  public init(options: PagingOptions) {
+  public init(options: PagingOptions, collectionView: UICollectionView, pageView: UIView) {
     self.options = options
+    self.collectionView = collectionView
+    self.pageView = pageView
     super.init(frame: .zero)
   }
   
@@ -29,10 +31,7 @@ open class PagingView: UIView {
   /// Configures the view hierarchy, sets up the layout constraints
   /// and does any other customization based on the `PagingOptions`.
   /// Override this if you need any custom behavior.
-  open func configure(collectionView: UICollectionView, pageView: UIView) {
-    self.collectionView = collectionView
-    self.pageView = pageView
-    
+  open func configure() {
     collectionView.backgroundColor = options.menuBackgroundColor
     addSubview(pageView)
     addSubview(collectionView)
@@ -42,8 +41,6 @@ open class PagingView: UIView {
   /// Sets up all the layout constraints. Override this if you need to
   /// make changes to how the views are layed out.
   open func setupConstraints() {
-    guard let pageView = pageView, let collectionView = collectionView else { return }
-    
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     pageView.translatesAutoresizingMaskIntoConstraints = false
     

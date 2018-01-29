@@ -59,24 +59,24 @@ class PagingViewControllerSpec: QuickSpec {
           UIApplication.shared.keyWindow!.rootViewController = viewController
           let _ = viewController.view
           
-          viewController.collectionView!.bounds = CGRect(x: 0, y: 0, width: 1000, height: 50)
+          viewController.collectionView.bounds = CGRect(x: 0, y: 0, width: 1000, height: 50)
         }
         
         it("reloadItems: at begining") {
           viewController.select(pagingItem: Item(index: 0))
-          let items = viewController.collectionView!.numberOfItems(inSection: 0)
+          let items = viewController.collectionView.numberOfItems(inSection: 0)
           expect(items).to(equal(21))
         }
         
         it("reloadItems: at center") {
           viewController.select(pagingItem: Item(index: 20))
-          let items = viewController.collectionView!.numberOfItems(inSection: 0)
+          let items = viewController.collectionView.numberOfItems(inSection: 0)
           expect(items).to(equal(21))
         }
         
         it("reloadItems: at end") {
           viewController.select(pagingItem: Item(index: 50))
-          let items = viewController.collectionView!.numberOfItems(inSection: 0)
+          let items = viewController.collectionView.numberOfItems(inSection: 0)
           expect(items).to(equal(21))
         }
         
