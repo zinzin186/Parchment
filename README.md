@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-    <strong><a href="#usage">Usage</a></strong> |
+    <strong><a href=“#getting-started”>Getting Started</a></strong> |
     <strong><a href="#customization">Customization</a></strong> |
     <strong><a href="#installation">Installation</a></strong>
 </p>
@@ -30,11 +30,11 @@ Parchment is a very flexible paging view controller. It let’s you page between
 * **Infinite scrolling**: <br /> Because view controllers are only allocated as you are scrolling, you can create data sources that are infinitely large. This is perfect for things like [calendars](Documentation/infinite-data-source.md).
 
 * **Highly customizable** <br/> The menu items are built using
-`UICollectionView`, which means you can display pretty much whatever you want. You can even [subclass the layout](Documentation/layout-subclass.md) to create completely custom behaviours.
+`UICollectionView`, which means you can display pretty much whatever you want. You can even subclass the layout to create completely custom behaviours.
 
-## Usage
+## Getting Started
 
-### Convenience subclass
+### Basic usage
 
 The easiest way to use Parchment is to use the `FixedPagingViewController` subclass. Just
 pass in an array of view controllers and Parchment will generate menu items for each view controller using their
@@ -54,7 +54,7 @@ See: [Using FixedPagingViewController](Documentation/fixed-view-controller.md)
 
 ### Data source
 
-Using the convenience subclass is fine in most cases, but if you have more than a few view controllers you probably don't want to allocate them all up-front. If you're going to display a fixed number of view controllers, you can setup your own data source by implementing `PagingViewControllerDataSource`:
+Using `FixedPagingViewController` is fine in most cases, but if you have more than a few view controllers you probably don't want to allocate them all up-front. If you're going to display a fixed number of view controllers, you can setup your own data source by implementing `PagingViewControllerDataSource`:
 
 ```Swift
 extension ViewController: PagingViewControllerDataSource {
@@ -73,7 +73,7 @@ extension ViewController: PagingViewControllerDataSource {
 }
 ```
 
-Then you need set the `dataSource` property and select the initial item:
+Then you need to set the `dataSource` property and select the initial item:
 
 ```Swift
 let pagingViewController = PagingViewController()
@@ -183,7 +183,7 @@ protocol PagingViewControllerDelegate: class {
 
 ## Customization
 
-Parchment is built to be very flexible. All customization is handled by the properties listed below. The menu items are displayed using `UICollectionView`, so they can display pretty much whatever you want (see: [`menuItemClass`](#`menuItemClass`)). If you need any further customization you can even [subclass the collection view layout](/Documentation/layout-subclass.md).
+Parchment is built to be very flexible. All customization is handled by the properties listed below. The menu items are displayed using `UICollectionView`, so they can display pretty much whatever you want (see: [`menuItemClass`](#`menuItemClass`)). If you need any further customization you can even subclass the collection view layout.
 
 #### `menuItemSize`
 
