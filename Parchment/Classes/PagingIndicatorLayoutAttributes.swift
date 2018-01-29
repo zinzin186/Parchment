@@ -1,12 +1,12 @@
 import UIKit
 
-class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
+open class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
 
-  var backgroundColor: UIColor?
+  open var backgroundColor: UIColor?
   
   func configure(_ options: PagingOptions) {
     if case let .visible(height, index, _, _) = options.indicatorOptions {
-      backgroundColor = options.theme.indicatorColor
+      backgroundColor = options.indicatorColor
       frame.size.height = height
       frame.origin.y = options.menuHeight - height
       zIndex = index

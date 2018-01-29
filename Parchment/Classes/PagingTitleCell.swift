@@ -7,8 +7,8 @@ import UIKit
 /// and selected text color based on the `progress` property.
 open class PagingTitleCell: PagingCell {
   
-  fileprivate var viewModel: PagingTitleCellViewModel?
-  fileprivate let titleLabel = UILabel(frame: .zero)
+  public let titleLabel = UILabel(frame: .zero)
+  private var viewModel: PagingTitleCellViewModel?
   
   open override var isSelected: Bool {
     didSet {
@@ -26,12 +26,12 @@ open class PagingTitleCell: PagingCell {
     configure()
   }
   
-  open override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, theme: PagingTheme) {
+  open override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, options: PagingOptions) {
     if let titleItem = pagingItem as? PagingTitleItem {
       viewModel = PagingTitleCellViewModel(
         title: titleItem.title,
         selected: selected,
-        theme: theme)
+        options: options)
     }
     configureTitleLabel()
   }
@@ -53,8 +53,10 @@ open class PagingTitleCell: PagingCell {
     
     if viewModel.selected {
       titleLabel.textColor = viewModel.selectedTextColor
+      backgroundColor = viewModel.selectedBackgroundColor
     } else {
       titleLabel.textColor = viewModel.textColor
+      backgroundColor = viewModel.backgroundColor
     }
   }
   
@@ -65,6 +67,11 @@ open class PagingTitleCell: PagingCell {
       titleLabel.textColor = UIColor.interpolate(
         from: viewModel.textColor,
         to: viewModel.selectedTextColor,
+        with: attributes.progress)
+      
+      backgroundColor = UIColor.interpolate(
+        from: viewModel.backgroundColor,
+        to: viewModel.selectedBackgroundColor,
         with: attributes.progress)
     }
   }

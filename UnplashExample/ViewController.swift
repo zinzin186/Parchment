@@ -15,64 +15,105 @@ struct ImageItem: PagingItem, Hashable, Comparable {
   var hashValue: Int {
     return title.hashValue + headerImage.hashValue
   }
-}
-
-func ==(lhs: ImageItem, rhs: ImageItem) -> Bool {
-  return (
-    lhs.title == rhs.title &&
-    lhs.headerImage == rhs.headerImage &&
-    lhs.images == rhs.images)
-}
-
-func <(lhs: ImageItem, rhs: ImageItem) -> Bool {
-  return lhs.index < rhs.index
-}
-
-// Lets create our own custom theme.
-struct ImagePagingTheme: PagingTheme {
-  let borderColor: UIColor = UIColor(white: 0, alpha: 0.1)
-  let indicatorColor: UIColor = .black
-}
-
-// We need to create our own options struct in order to customize it
-// to our needs. First, we need to set our custom PagingCell class
-// which will display our images. We set the cells to be fixed and add
-// some spacing around them. We also customize the looks of the border
-// and the paging indicator.
-struct ImagePagingOptions: PagingOptions {
-  let menuItemClass: PagingCell.Type = ImagePagingCell.self
-  let menuItemSize: PagingMenuItemSize = .fixed(width: 70, height: 70)
-  let menuItemSpacing: CGFloat = 8
-  let menuInsets = UIEdgeInsets(top: 12, left: 18, bottom: 12, right: 18)
-  let theme: PagingTheme = ImagePagingTheme()
   
-  let indicatorOptions: PagingIndicatorOptions = .visible(
-    height: 1,
-    zIndex: Int.max,
-    spacing: UIEdgeInsets.zero,
-    insets: UIEdgeInsets.zero)
+  static func ==(lhs: ImageItem, rhs: ImageItem) -> Bool {
+    return (
+      lhs.title == rhs.title &&
+        lhs.headerImage == rhs.headerImage &&
+        lhs.images == rhs.images)
+  }
   
-  let borderOptions: PagingBorderOptions = .visible(
-    height: 1,
-    zIndex: Int.max - 1,
-    insets: UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18))
+  static func <(lhs: ImageItem, rhs: ImageItem) -> Bool {
+    return lhs.index < rhs.index
+  }
 }
 
 class ViewController: UIViewController {
 
-  // Initialize our PagingViewController with our custom options. Note
-  // that we also need to specify the generic type as our ImageItem
-  lazy var pagingViewController: PagingViewController<ImageItem> = {
-    return PagingViewController(options: ImagePagingOptions())
-  }()
-
-  // Our data source is responsible for holding the paging items and
-  // telling the paging view controller what paging item comes before
-  // or after any given item.
-  fileprivate let dataSource = ImagePagingDataSource()
+  fileprivate let items = [
+    ImageItem(
+      index: 0,
+      title: "Green",
+      headerImage: UIImage(named: "green-1")!,
+      images: [
+        UIImage(named: "green-1")!,
+        UIImage(named: "green-2")!,
+        UIImage(named: "green-3")!,
+        UIImage(named: "green-4")!,
+        ]),
+    ImageItem(
+      index: 1,
+      title: "Food",
+      headerImage: UIImage(named: "food-1")!,
+      images: [
+        UIImage(named: "food-1")!,
+        UIImage(named: "food-2")!,
+        UIImage(named: "food-3")!,
+        UIImage(named: "food-4")!,
+        ]),
+    ImageItem(
+      index: 2,
+      title: "Succulents",
+      headerImage: UIImage(named: "succulents-1")!,
+      images: [
+        UIImage(named: "succulents-1")!,
+        UIImage(named: "succulents-2")!,
+        UIImage(named: "succulents-3")!,
+        UIImage(named: "succulents-4")!,
+        ]),
+    ImageItem(
+      index: 3,
+      title: "City",
+      headerImage: UIImage(named: "city-1")!,
+      images: [
+        UIImage(named: "city-3")!,
+        UIImage(named: "city-2")!,
+        UIImage(named: "city-1")!,
+        UIImage(named: "city-4")!,
+        ]),
+    ImageItem(
+      index: 4,
+      title: "Scenic",
+      headerImage: UIImage(named: "scenic-1")!,
+      images: [
+        UIImage(named: "scenic-1")!,
+        UIImage(named: "scenic-2")!,
+        UIImage(named: "scenic-3")!,
+        UIImage(named: "scenic-4")!,
+        ]),
+    ImageItem(
+      index: 5,
+      title: "Coffee",
+      headerImage: UIImage(named: "coffee-1")!,
+      images: [
+        UIImage(named: "coffee-1")!,
+        UIImage(named: "coffee-2")!,
+        UIImage(named: "coffee-3")!,
+        UIImage(named: "coffee-4")!,
+        ]),
+    ]
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    let pagingViewController = PagingViewController<ImageItem>()
+    pagingViewController.menuItemClass = ImagePagingCell.self
+    pagingViewController.menuItemSize = .fixed(width: 70, height: 70)
+    pagingViewController.menuItemSpacing = 8
+    pagingViewController.menuInsets = UIEdgeInsets(top: 12, left: 18, bottom: 12, right: 18)
+    pagingViewController.borderColor = UIColor(white: 0, alpha: 0.1)
+    pagingViewController.indicatorColor = .black
+    
+    pagingViewController.indicatorOptions = .visible(
+      height: 1,
+      zIndex: Int.max,
+      spacing: UIEdgeInsets.zero,
+      insets: UIEdgeInsets.zero)
+    
+    pagingViewController.borderOptions = .visible(
+      height: 1,
+      zIndex: Int.max - 1,
+      insets: UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18))
     
     // Add the paging view controller as a child view controller and
     // contrain it to all edges.
@@ -82,10 +123,26 @@ class ViewController: UIViewController {
     pagingViewController.didMove(toParentViewController: self)
     
     // Set our custom data source.
-    pagingViewController.dataSource = dataSource
+    pagingViewController.dataSource = self
     
     // Set the first item as the selected paging item.
-    pagingViewController.selectPagingItem(dataSource.items.first!)
+    pagingViewController.select(pagingItem: items[0])
   }
 
+}
+
+extension ViewController: PagingViewControllerDataSource {
+  
+  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+    return ImagesViewController(images: items[index].images)
+  }
+  
+  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
+    return items[index] as! T
+  }
+  
+  func numberOfViewControllers<T>(in: PagingViewController<T>) -> Int{
+    return items.count
+  }
+  
 }

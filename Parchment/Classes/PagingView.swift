@@ -9,24 +9,19 @@ import UIKit
 /// `loadView:` in `PagingViewController` to use your subclass.
 open class PagingView: UIView {
   
-  open let pageView: UIView
-  open let collectionView: UICollectionView
   open let options: PagingOptions
+  open let collectionView: UICollectionView
+  open let pageView: UIView
   
   /// Creates an instance of `PagingView`.
   ///
-  /// - Parameter pageView: The view assosicated with the
-  /// `EMPageViewController`.
-  /// - Parameter collectionView: The collection view used to display
-  /// the menu items.
   /// - Parameter options: The `PagingOptions` passed into the
   /// `PagingViewController`.
-  public init(pageView: UIView, collectionView: UICollectionView, options: PagingOptions) {
-    self.pageView = pageView
-    self.collectionView = collectionView
+  public init(options: PagingOptions, collectionView: UICollectionView, pageView: UIView) {
     self.options = options
+    self.collectionView = collectionView
+    self.pageView = pageView
     super.init(frame: .zero)
-    configure()
   }
   
   required public init?(coder: NSCoder) {
@@ -37,7 +32,7 @@ open class PagingView: UIView {
   /// and does any other customization based on the `PagingOptions`.
   /// Override this if you need any custom behavior.
   open func configure() {
-    collectionView.backgroundColor = options.theme.headerBackgroundColor
+    collectionView.backgroundColor = options.menuBackgroundColor
     addSubview(pageView)
     addSubview(collectionView)
     setupConstraints()

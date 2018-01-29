@@ -4,42 +4,37 @@ import UIKit
 /// layout. We need to be able to invalidate the layout multiple times
 /// with different invalidation contexts before `invalidateLayout` is
 /// called and we can use we can use this to determine exactly how
-/// much we need to invalidate by adding together the summaries each
+/// much we need to invalidate by adding together the states each
 /// time a new context is invalidated.
-enum InvalidationSummary {
-  case partial
+public enum InvalidationState {
+  case nothing
   case everything
-  case dataSourceCounts
   case sizes
   
-  init(_ invalidationContext: UICollectionViewLayoutInvalidationContext) {
+  public init(_ invalidationContext: UICollectionViewLayoutInvalidationContext) {
     if invalidationContext.invalidateEverything {
       self = .everything
     } else if invalidationContext.invalidateDataSourceCounts {
-      self = .dataSourceCounts
+      self = .everything
     } else if let context = invalidationContext as? PagingInvalidationContext {
       if context.invalidateSizes {
         self = .sizes
       } else {
-        self = .partial
+        self = .nothing
       }
     } else {
-      self = .partial
+      self = .nothing
     }
   }
   
-  static func +(lhs: InvalidationSummary, rhs: InvalidationSummary) -> InvalidationSummary {
+  public static func +(lhs: InvalidationState, rhs: InvalidationState) -> InvalidationState {
     switch (lhs, rhs) {
     case (.everything, _), (_, .everything):
       return .everything
-    case (.dataSourceCounts, .dataSourceCounts):
-      return .everything
-    case (.dataSourceCounts, _), (_, .dataSourceCounts):
-      return .dataSourceCounts
     case (.sizes, _), (_, .sizes):
       return .sizes
-    case (.partial, _), (_, .partial):
-      return .partial
+    case (.nothing, _), (_, .nothing):
+      return .nothing
     default:
       return .everything
     }

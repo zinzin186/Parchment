@@ -3,47 +3,22 @@ import Quick
 import Nimble
 @testable import Parchment
 
-private func beScrolling() -> MatcherFunc<PagingState<Item>> {
-  return MatcherFunc { expression, message in
-    message.postfixMessage = "be .Scrolling)"
+private func beScrolling() -> Predicate<PagingState<Item>> {
+  return Predicate.define("be .Scrolling)") { expression, message in
     if let actual = try expression.evaluate(), case .scrolling = actual {
-      return true
+      return PredicateResult(bool: true, message: message)
     }
-    return false
+    return PredicateResult(bool: false, message: message)
   }
 }
 
-private func beSelected() -> MatcherFunc<PagingState<Item>> {
-  return MatcherFunc { expression, message in
-    message.postfixMessage = "be .Selected)"
+private func beSelected() -> Predicate<PagingState<Item>> {
+  return Predicate.define("be .Selected)") { expression, message in
     if let actual = try expression.evaluate(), case .selected = actual {
-      return true
+      return PredicateResult(bool: true, message: message)
     }
-    return false
+    return PredicateResult(bool: false, message: message)
   }
-}
-
-private class Delegate: PagingStateMachineDelegate {
-  func pagingStateMachine<T>(
-    _ pagingStateMachine: PagingStateMachine<T>,
-    transitionFromPagingItem: T, toPagingItem: T?) -> PagingTransition {
-    return PagingTransition(contentOffset: .zero, distance: 0)
-  }
-  
-  func pagingStateMachine<T>(
-    _ pagingStateMachine: PagingStateMachine<T>,
-    pagingItemBeforePagingItem pagingItem: T) -> T? {
-    let item = pagingItem as! Item
-    return Item(index: item.index - 1) as? T
-  }
-  
-  func pagingStateMachine<T>(
-    _ pagingStateMachine: PagingStateMachine<T>,
-    pagingItemAfterPagingItem pagingItem: T) -> T? {
-    let item = pagingItem as! Item
-    return Item(index: item.index + 1) as? T
-  }
-  
 }
 
 class PagingStateMachineSpec: QuickSpec {
@@ -52,13 +27,23 @@ class PagingStateMachineSpec: QuickSpec {
     
     describe("PagingStateMachine") {
       
-      var stateMachineDelegate: Delegate!
       var stateMachine: PagingStateMachine<Item>!
       
       beforeEach {
         let state: PagingState = .selected(pagingItem: Item(index: 0))
         stateMachine = PagingStateMachine(initialState: state)
-        stateMachineDelegate = Delegate()
+        
+        stateMachine.pagingItemAfterItem = { item in
+          return Item(index: item.index + 1)
+        }
+        
+        stateMachine.pagingItemBeforeItem = { item in
+          return Item(index: item.index - 1)
+        }
+        
+        stateMachine.transitionFromItem = { from, to in
+          return PagingTransition(contentOffset: .zero, distance: 0)
+        }
       }
       
       describe("finish scrolling event") {
@@ -183,10 +168,6 @@ class PagingStateMachineSpec: QuickSpec {
         
         describe("selected paging item is not equal current item") {
           
-          beforeEach {
-            stateMachine.delegate = stateMachineDelegate
-          }
-          
           describe("is in the scrolling state") {
             it("does not change the state") {
               
@@ -249,7 +230,7 @@ class PagingStateMachineSpec: QuickSpec {
                 var direction: PagingDirection?
                 var animated: Bool?
                 
-                stateMachine.didSelectPagingItem = {
+                stateMachine.onPagingItemSelect = {
                   selectedPagingItem = $0
                   direction = $1
                   animated = $2
@@ -285,7 +266,7 @@ class PagingStateMachineSpec: QuickSpec {
             it("does not call the select block") {
               var selectedPagingItem: Item?
               
-              stateMachine.didSelectPagingItem = { pagingItem, _, _ in
+              stateMachine.onPagingItemSelect = { pagingItem, _, _ in
                 selectedPagingItem = pagingItem
               }
               
@@ -311,7 +292,6 @@ class PagingStateMachineSpec: QuickSpec {
         }
         
         it("sets the new progress") {
-          stateMachine.delegate = stateMachineDelegate
           stateMachine.fire(.scroll(progress: 0.5))
           expect(stateMachine.state.progress).to(equal(0.5))
         }
@@ -386,34 +366,18 @@ class PagingStateMachineSpec: QuickSpec {
             expect(stateMachine.state).to(equal(expectedState))
           }
           
-          describe("has no delegate") {
-            it("sets the upcoming paging item to nil") {
-              stateMachine.fire(.scroll(progress: 0.1))
-              expect(stateMachine.state.upcomingPagingItem).to(beNil())
-            }
+          it("uses the leading paging item if the progress is negative") {
+            stateMachine.fire(.scroll(progress: -0.1))
+            expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: -1)))
           }
           
-          describe("has a delegate") {
-            
-            beforeEach {
-              stateMachine.delegate = stateMachineDelegate
-            }
-            
-            it("uses the leading paging item if the progress is negative") {
-              stateMachine.fire(.scroll(progress: -0.1))
-              expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: -1)))
-            }
-            
-            
-            it("uses the trailing paging item if the progress is positive") {
-              stateMachine.fire(.scroll(progress: 0.1))
-              expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: 1)))
-            }
-            
+          it("uses the trailing paging item if the progress is positive") {
+            stateMachine.fire(.scroll(progress: 0.1))
+            expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: 1)))
           }
           
         }
-        
+    
       }
       
     }
