@@ -1,6 +1,6 @@
 # Using `FixedPagingViewController`
 
-Parchment provides a convenience subclass of `PagingViewController` that makes it very easy to get started. To use it, you just pass in  an array of the view controllers you want to display:
+Parchment provides a subclass of `PagingViewController` called `FixedPagingViewController` that makes it very easy to get started. To use it, you just pass in  an array of the view controllers you want to display:
 
 ```Swift
 class ViewController: UIViewController {

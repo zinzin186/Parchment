@@ -58,3 +58,5 @@ pagingViewController.select(index: 3)
 ```
 
 This can be called both before and after the view has appeared.
+
+_Check out the DelegateExample target for more details._
