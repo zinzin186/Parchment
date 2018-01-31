@@ -393,7 +393,6 @@ open class PagingViewController<T: PagingItem>:
     pageViewController.didMove(toParentViewController: self)
     pageViewController.dataSource = self
     
-    collectionView.backgroundColor = .white
     collectionView.showsHorizontalScrollIndicator = false
     collectionView.delegate = self
     collectionView.dataSource = self
