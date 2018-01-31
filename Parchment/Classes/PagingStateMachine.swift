@@ -22,6 +22,8 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
       handleScrollEvent(
         event,
         progress: progress)
+    case let .initial(pagingItem):
+      handleInitialEvent(event, pagingItem: pagingItem)
     case let .select(pagingItem, direction, animated):
       handleSelectEvent(
         event,
@@ -108,7 +110,12 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
         }
       }
     }
-    
+  }
+  
+  private func handleInitialEvent(_ event: PagingEvent<T>, pagingItem: T) {
+    let oldState = state
+    state = .selected(pagingItem: pagingItem)
+    onStateChange?(oldState, state, event)
   }
   
   private func handleSelectEvent(_ event: PagingEvent<T>, selectedPagingItem: T, direction: PagingDirection, animated: Bool) {

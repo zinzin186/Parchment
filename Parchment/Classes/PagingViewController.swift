@@ -331,30 +331,35 @@ open class PagingViewController<T: PagingItem>:
   /// - Parameter animated: A boolean value that indicates whether
   /// the transtion should be animated. Default is false.
   open func select(pagingItem: T, animated: Bool = false) {
-    switch (state) {
-    case .empty:
-      stateMachine.fire(.select(
-        pagingItem: pagingItem,
-        direction: .none,
-        animated: false))
-      
-      if isViewLoaded {
-        selectViewController(
-          pagingItem,
+    if pageViewController.delegate == nil {
+      stateMachine.fire(.initial(pagingItem: pagingItem))
+    } else {
+      switch (state) {
+      case .empty:
+        stateMachine.fire(.select(
+          pagingItem: pagingItem,
           direction: .none,
-          animated: false)
+          animated: false))
         
-        if view.window != nil {
-          reloadItems(around: pagingItem)
+        if isViewLoaded {
+          selectViewController(
+            pagingItem,
+            direction: .none,
+            animated: false)
+          
+          if view.window != nil {
+            reloadItems(around: pagingItem)
+            selectCollectionViewItem(for: pagingItem)
+          }
         }
+      default:
+        guard let currentPagingItem = state.currentPagingItem else { return }
+        let direction = visibleItems.direction(from: currentPagingItem, to: pagingItem)
+        stateMachine.fire(.select(
+          pagingItem: pagingItem,
+          direction: direction,
+          animated: animated))
       }
-    default:
-      guard let currentPagingItem = state.currentPagingItem else { return }
-      let direction = visibleItems.direction(from: currentPagingItem, to: pagingItem)
-      stateMachine.fire(.select(
-        pagingItem: pagingItem,
-        direction: direction,
-        animated: animated))
     }
   }
   
@@ -386,7 +391,6 @@ open class PagingViewController<T: PagingItem>:
     addChildViewController(pageViewController)
     pagingView.configure()
     pageViewController.didMove(toParentViewController: self)
-    pageViewController.delegate = self
     pageViewController.dataSource = self
     
     collectionView.backgroundColor = .white
@@ -397,14 +401,7 @@ open class PagingViewController<T: PagingItem>:
     
     configureMenuInteraction()
     configureContentInteraction()
-    
-    if let currentPagingItem = state.currentPagingItem {
-      selectViewController(
-        currentPagingItem,
-        direction: .none,
-        animated: false)
-    }
-    
+
     if #available(iOS 11.0, *) {
       pageViewController.scrollView.contentInsetAdjustmentBehavior = .never
       collectionView.contentInsetAdjustmentBehavior = .never
@@ -413,14 +410,23 @@ open class PagingViewController<T: PagingItem>:
   
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-    guard let currentPagingItem = state.currentPagingItem else { return }
     
     // We need generate the menu items when the view appears for the
     // first time. Doing it in viewWillAppear does not work as the
     // safeAreaInsets will not be updated yet.
     if didLayoutSubviews == false {
-      reloadItems(around: currentPagingItem)
-      selectCollectionViewItem(for: currentPagingItem)
+      if let currentPagingItem = state.currentPagingItem {
+        reloadItems(around: currentPagingItem)
+        selectViewController(currentPagingItem, direction: .none, animated: false)
+        selectCollectionViewItem(for: currentPagingItem)
+      }
+      
+      // Selecting a view controller in the page view triggers the
+      // delegate methods even if the view has not appeared yet. This
+      // causes problems with the initial state when we select items, so
+      // we wait until the view has appeared before setting the delegate.
+      pageViewController.delegate = self
+      
       didLayoutSubviews = true
     }
   }
