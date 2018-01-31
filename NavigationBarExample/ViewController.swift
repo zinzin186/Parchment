@@ -9,7 +9,6 @@ import Parchment
 class CustomPagingView: PagingView {
   
   override func setupConstraints() {
-    guard let pageView = pageView else { return }
     // Use our convenience extension to constrain the page view to all
     // of the edges of the super view.
     constrainToEdges(pageView)
@@ -20,7 +19,10 @@ class CustomPagingView: PagingView {
 // our own custom subclass.
 class CustomPagingViewController: FixedPagingViewController {
   override func loadView() {
-    view = CustomPagingView(options: options)
+    view = CustomPagingView(
+      options: options,
+      collectionView: collectionView,
+      pageView: pageViewController.view)
   }
 }
 
