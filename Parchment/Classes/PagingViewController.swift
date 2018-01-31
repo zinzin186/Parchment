@@ -374,8 +374,6 @@ open class PagingViewController<T: PagingItem>:
   }
 
   open override func loadView() {
-    configureCollectionViewLayout()
-    
     view = PagingView(
       options: options,
       collectionView: collectionView,
