@@ -2,6 +2,14 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.1](https://github.com/rechsteiner/Parchment/compare/v1.0.0...v1.0.1) - 2018-02-03
+
+### Fixes
+
+* Fix issue with selecting items programatically #125
+* Fix wrong color on collection view background #126
+* Fix issue with menu items being clipped #127
+
 ## [1.0.0](https://github.com/rechsteiner/Parchment/compare/v0.9.0...v1.0.0) - 2018-01-29
 
 This release introduces a lot of breaking changes, a bunch of new features and a couple of bug fixes. Here are the most notable changes, with a full list of changes below.
