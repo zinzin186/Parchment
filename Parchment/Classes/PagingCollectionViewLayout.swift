@@ -76,9 +76,9 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   
   private var adjustedMenuInsets: UIEdgeInsets {
     return UIEdgeInsets(
-      top: options.menuInsets.top + safeAreaInsets.top,
+      top: options.menuInsets.top,
       left: options.menuInsets.left + safeAreaInsets.left,
-      bottom: options.menuInsets.bottom + safeAreaInsets.bottom,
+      bottom: options.menuInsets.bottom,
       right: options.menuInsets.right + safeAreaInsets.right)
   }
   
