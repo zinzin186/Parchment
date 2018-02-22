@@ -44,8 +44,6 @@ class ViewController: UIViewController {
     pagingViewController.indicatorColor = UIColor(white: 0, alpha: 0.4)
     pagingViewController.textColor = UIColor(white: 1, alpha: 0.6)
     pagingViewController.selectedTextColor = .white
-    pagingViewController.backgroundColor = .clear
-    pagingViewController.selectedBackgroundColor = .clear
     
     // Make sure you add the PagingViewController as a child view
     // controller and contrain it to the edges of the view.
