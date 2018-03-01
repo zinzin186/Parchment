@@ -228,7 +228,8 @@ open class PagingViewController<T: PagingItem>:
   /// you want to size based on its content.
   public weak var delegate: PagingViewControllerDelegate? {
     didSet {
-      configureSizeCache()
+      guard let currentPagingItem = state.currentPagingItem else { return }
+      configureSizeCache(for: currentPagingItem)
     }
   }
   
@@ -333,6 +334,7 @@ open class PagingViewController<T: PagingItem>:
   open func select(pagingItem: T, animated: Bool = false) {
     if pageViewController.delegate == nil {
       stateMachine.fire(.initial(pagingItem: pagingItem))
+      configureSizeCache(for: pagingItem)
     } else {
       switch (state) {
       case .empty:
@@ -352,6 +354,8 @@ open class PagingViewController<T: PagingItem>:
             selectCollectionViewItem(for: pagingItem)
           }
         }
+        
+        configureSizeCache(for: pagingItem)
       default:
         guard let currentPagingItem = state.currentPagingItem else { return }
         let direction = visibleItems.direction(from: currentPagingItem, to: pagingItem)
@@ -494,12 +498,10 @@ open class PagingViewController<T: PagingItem>:
         contentOffset: self.collectionView.contentOffset,
         distance: distance.calculate())
     }
-    
-    configureSizeCache()
   }
   
-  private func configureSizeCache() {
-    if let _ = delegate, let currentPagingItem = state.currentPagingItem {
+  private func configureSizeCache(for pagingItem: T) {
+    if let _ = delegate {
       sizeCache.widthForPagingItem = { [unowned self] item, selected in
         return self.delegate?.pagingViewController(self,
           widthForPagingItem: item,
@@ -507,7 +509,7 @@ open class PagingViewController<T: PagingItem>:
       }
       
       if let _ = delegate?.pagingViewController(self,
-        widthForPagingItem: currentPagingItem,
+        widthForPagingItem: pagingItem,
         isSelected: false) {
         sizeCache.implementsWidthDelegate = true
       }
