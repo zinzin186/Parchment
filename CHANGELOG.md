@@ -2,6 +2,12 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.3](https://github.com/rechsteiner/Parchment/compare/v1.0.2...v1.0.3) - 2018-03-01
+
+### Fixes
+
+* Fix issue where size delegate was not called #135
+
 ## [1.0.2](https://github.com/rechsteiner/Parchment/compare/v1.0.1...v1.0.2) - 2018-02-22
 
 ### Changes
