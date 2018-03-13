@@ -14,6 +14,7 @@ class PagingIndicatorLayoutAttributesSpec: QuickSpec {
       
       beforeEach {
         options.font = UIFont.systemFont(ofSize: 15)
+        options.selectedFont = UIFont.boldSystemFont(ofSize: 15)
         options.textColor = .blue
         options.selectedTextColor = .red
         options.indicatorColor = .green

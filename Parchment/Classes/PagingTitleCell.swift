@@ -48,13 +48,14 @@ open class PagingTitleCell: PagingCell {
   open func configureTitleLabel() {
     guard let viewModel = viewModel else { return }
     titleLabel.text = viewModel.title
-    titleLabel.font = viewModel.font
     titleLabel.textAlignment = .center
     
     if viewModel.selected {
+      titleLabel.font = viewModel.selectedFont
       titleLabel.textColor = viewModel.selectedTextColor
       backgroundColor = viewModel.selectedBackgroundColor
     } else {
+      titleLabel.font = viewModel.font
       titleLabel.textColor = viewModel.textColor
       backgroundColor = viewModel.backgroundColor
     }
