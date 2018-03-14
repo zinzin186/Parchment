@@ -162,6 +162,12 @@ open class PagingViewController<T: PagingItem>:
     set { options.font = newValue }
   }
 
+  /// The font used for the currently selected menu item.
+  public var selectedFont: UIFont {
+    get { return options.selectedFont }
+    set { options.selectedFont = newValue }
+  }
+
   /// The color of the title label on the menu items.
   public var textColor: UIColor {
     get { return options.textColor }
