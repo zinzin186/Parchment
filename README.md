@@ -138,13 +138,26 @@ func select(index: Int, animated: Bool = false)
 
 ## Reload data
 
-You can reload data for a given `PagingItem`:
+You can reload data using this method:
+
+```Swift
+func reloadData()
+```
+
+This will keep the previously selected item if it's still part of the
+updated data. If not, it will select the first item in the list. It
+will also reload the view controllers displayed in the page view
+controller.
+
+Calling `reloadData()` will not work when using
+`PagingViewControllerInfiniteDataSource`, as we then need to know what
+the initial item should be. In that case you should use this method:
 
 ```Swift
 func reloadData(around: PagingItem)
 ```
 
-This will mark the given paging item as selected and generate new items around it. It will also reload the view controllers displayed in the page view controller.
+This will mark the given paging item as selected and generate new items around it.
 
 ## Delegate
 

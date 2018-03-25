@@ -36,6 +36,8 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
       handleTransitionSizeEvent(event)
     case .cancelScrolling:
       handleCancelScrollingEvent(event)
+    case .removeAll:
+      handleRemoveAllEvent(event)
     }
   }
   
@@ -179,4 +181,9 @@ class PagingStateMachine<T: PagingItem> where T: Equatable {
     }
   }
   
+  private func handleRemoveAllEvent(_ event: PagingEvent<T>) {
+    let oldState = state
+    state = .empty
+    onStateChange?(oldState, state, event)
+  }
 }

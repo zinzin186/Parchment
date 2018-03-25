@@ -3,12 +3,8 @@ import Foundation
 class IndexedPagingDataSource<T: PagingItem>:
   PagingViewControllerInfiniteDataSource where T: Hashable & Comparable {
   
-  let items: [T]
+  var items: [T] = []
   var viewControllerForIndex: ((Int) -> UIViewController?)?
-  
-  init(items: [T]) {
-    self.items = items
-  }
   
   func pagingViewController<U>(
     _ pagingViewController: PagingViewController<U>,
