@@ -2,6 +2,18 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.0](https://github.com/rechsteiner/Parchment/compare/v1.0.3...v1.1.0) - 2018-03-25
+
+### Added
+
+* Add method for reloading data without passing initial item (8ebd931)
+* Add option for selected font #143
+
+### Fixes
+
+* Fix issue with reloading data when using PagingViewControllerDataSource (07641e2)
+* Fix integer overflow causing crash in UnplashExample #140
+
 ## [1.0.3](https://github.com/rechsteiner/Parchment/compare/v1.0.2...v1.0.3) - 2018-03-01
 
 ### Fixes
