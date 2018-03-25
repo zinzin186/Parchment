@@ -222,7 +222,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
           width = tween(from: width, to: selectedWidth, progress: abs(state.progress))
         }
         
-        attributes.frame = CGRect(x: x, y: y, width: width, height: options.menuHeight)
+        attributes.frame = CGRect(x: x, y: y, width: width, height: options.menuItemSize.height)
       } else {
         switch (options.menuItemSize) {
         case let .fixed(width, height):
