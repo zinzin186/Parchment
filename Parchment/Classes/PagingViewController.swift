@@ -313,10 +313,32 @@ open class PagingViewController<T: PagingItem>:
   
   // MARK: Public Methods
   
+  /// Reload data for all the menu items. This will keep the
+  /// previously selected item if it's still part of the updated data.
+  /// If not, it will select the first item in the list. This method
+  /// will not work when using PagingViewControllerInfiniteDataSource
+  /// as we then need to know what the initial item should be. You
+  /// should use the reloadData(around:) method in that case.
+  open func reloadData() {
+    let previouslySelected = state.currentPagingItem
+    let items = generateItemsForIndexedDataSource()
+    indexedDataSource?.items = items
+    
+    if let pagingItem = items.first(where: { $0 == previouslySelected }) {
+      select(pagingItem: pagingItem, animated: false)
+    } else if let firstItem = items.first {
+      select(pagingItem: firstItem, animated: false)
+    } else {
+      stateMachine.fire(.removeAll)
+    }
+  }
+  
   /// Reload data around given paging item. This will set the given
   /// paging item as selected and generate new items around it. This
   /// will also reload the view controllers displayed in the page view
-  /// controller.
+  /// controller. You need to use this method to reload data when
+  /// using PagingViewControllerInfiniteDataSource as we need to know
+  /// the initial item.
   ///
   /// - Parameter pagingItem: The `PagingItem` that will be selected
   /// after the data reloads.
@@ -640,7 +662,7 @@ open class PagingViewController<T: PagingItem>:
 
       collectionViewLayout.invalidateLayout(with: invalidationContext)
     case .empty:
-      break
+      removeAll()
     }
   }
   
@@ -693,6 +715,13 @@ open class PagingViewController<T: PagingItem>:
     }
     
     return items
+  }
+  
+  private func removeAll() {
+    visibleItems = PagingItems(items: [])
+    collectionViewLayout.visibleItems = visibleItems
+    pageViewController.removeAllViewControllers()
+    collectionView.reloadData()
   }
   
   private func reloadItems(around pagingItem: T, keepExisting: Bool = false) {

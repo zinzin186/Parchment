@@ -24,8 +24,7 @@ struct IconItem: PagingItem, Hashable, Comparable {
   static func ==(lhs: IconItem, rhs: IconItem) -> Bool {
     return (
       lhs.index == rhs.index &&
-      lhs.icon == rhs.icon &&
-      lhs.image == rhs.image
+      lhs.icon == rhs.icon
     )
   }
 }
