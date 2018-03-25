@@ -321,11 +321,8 @@ open class PagingViewController<T: PagingItem>:
   /// - Parameter pagingItem: The `PagingItem` that will be selected
   /// after the data reloads.
   open func reloadData(around pagingItem: T) {
-    stateMachine.fire(.select(
-      pagingItem: pagingItem,
-      direction: .none,
-      animated: false))
-    reloadItems(around: pagingItem)
+    indexedDataSource?.items = generateItemsForIndexedDataSource()
+    select(pagingItem: pagingItem, animated: false)
   }
 
   /// Selects a given paging item. This need to be called after you
@@ -521,21 +518,24 @@ open class PagingViewController<T: PagingItem>:
       }
     }
   }
-  
-  private func configureDataSource() {
+
+  private func generateItemsForIndexedDataSource() -> [T] {
     let numberOfItems = dataSource?.numberOfViewControllers(in: self) ?? 0
-    let items = (0..<numberOfItems).enumerated().flatMap {
+    return (0..<numberOfItems).enumerated().flatMap {
       dataSource?.pagingViewController(self, pagingItemForIndex: $0.offset)
     }
-    
-    indexedDataSource = IndexedPagingDataSource(items: items)
+  }
+  
+  private func configureDataSource() {
+    indexedDataSource = IndexedPagingDataSource()
+    indexedDataSource?.items = generateItemsForIndexedDataSource()
     indexedDataSource?.viewControllerForIndex = { [unowned self] in
       return self.dataSource?.pagingViewController(self, viewControllerForIndex: $0)
     }
-    
+  
     infiniteDataSource = indexedDataSource
-
-    if let firstItem = items.first {
+    
+    if let firstItem = indexedDataSource?.items.first {
       select(pagingItem: firstItem)
     }
   }
