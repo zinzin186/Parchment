@@ -220,6 +220,10 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         self.removeChildIfNeeded(beforeViewController)
         self.removeChildIfNeeded(selectedViewController)
         self.removeChildIfNeeded(afterViewController)
+      
+        beforeViewController = nil
+        selectedViewController = nil
+        afterViewController = nil
     }
     
     /**

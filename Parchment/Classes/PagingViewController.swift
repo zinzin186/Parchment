@@ -325,9 +325,9 @@ open class PagingViewController<T: PagingItem>:
     indexedDataSource?.items = items
     
     if let pagingItem = items.first(where: { $0 == previouslySelected }) {
-      select(pagingItem: pagingItem, animated: false)
+      resetItems(around: pagingItem)
     } else if let firstItem = items.first {
-      select(pagingItem: firstItem, animated: false)
+      resetItems(around: firstItem)
     } else {
       stateMachine.fire(.removeAll)
     }
@@ -344,7 +344,7 @@ open class PagingViewController<T: PagingItem>:
   /// after the data reloads.
   open func reloadData(around pagingItem: T) {
     indexedDataSource?.items = generateItemsForIndexedDataSource()
-    select(pagingItem: pagingItem, animated: false)
+    resetItems(around: pagingItem)
   }
 
   /// Selects a given paging item. This need to be called after you
@@ -715,6 +715,26 @@ open class PagingViewController<T: PagingItem>:
     }
     
     return items
+  }
+  
+  private func resetItems(around pagingItem: T) {
+    let toItems = generateItems(around: pagingItem)
+    let sortedItems = Array(toItems).sorted()
+
+    visibleItems = PagingItems(
+      items: sortedItems,
+      hasItemsBefore: hasItemBefore(pagingItem: sortedItems.first),
+      hasItemsAfter: hasItemAfter(pagingItem: sortedItems.last))
+    collectionViewLayout.visibleItems = visibleItems
+
+    stateMachine.fire(.select(pagingItem: pagingItem, direction: .none, animated: false))
+    collectionView.reloadData()
+    selectViewController(pagingItem, direction: .none, animated: false)
+
+    // Reloading the data triggers the didFinishScrollingFrom delegate
+    // to be called which in turn means the wrong item will be selected.
+    // For now, we just fix this by selecting the correct item manually.
+    stateMachine.fire(.select(pagingItem: pagingItem, direction: .none, animated: false))
   }
   
   private func removeAll() {
