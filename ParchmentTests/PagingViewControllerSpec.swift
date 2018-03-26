@@ -132,7 +132,7 @@ class PagingViewControllerSpec: QuickSpec {
           expect(viewController.state).to(equal(PagingState.selected(pagingItem: third)))
         }
         
-        fit("display an empty view after reloading data with no items") {
+        it("display an empty view after reloading data with no items") {
           dataSource.items = []
           viewController.reloadData()
           
