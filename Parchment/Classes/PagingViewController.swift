@@ -481,7 +481,7 @@ open class PagingViewController<T: PagingItem>:
   
   private func configureStateMachine() {
     stateMachine.onPagingItemSelect = { [unowned self] pagingItem, direction, animated in
-      self.selectViewController(pagingItem, direction: direction, animated: animated)
+      self.handlePagingItemSelect(pagingItem: pagingItem, direction: direction, animated: animated)
     }
     
     stateMachine.onStateChange = { [unowned self] oldState, state, event in
@@ -621,6 +621,20 @@ open class PagingViewController<T: PagingItem>:
     
     if let item = upcomingPagingItem {
       select(pagingItem: item, animated: true)
+    }
+  }
+  
+  private func handlePagingItemSelect(pagingItem: T, direction: PagingDirection, animated: Bool) {
+    guard let currentPagingItem = state.currentPagingItem else { return }
+    
+    if currentPagingItem == pagingItem {
+      return
+    } else if pagingItem == infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: currentPagingItem) {
+      pageViewController.scrollForward(animated: animated, completion: nil)
+    } else if pagingItem == infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: currentPagingItem) {
+      pageViewController.scrollReverse(animated: animated, completion: nil)
+    } else {
+      selectViewController(pagingItem, direction: direction)
     }
   }
   
