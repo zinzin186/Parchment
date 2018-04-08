@@ -105,7 +105,7 @@ open class PagingViewController<T: PagingItem>:
     set { options.selectedScrollPosition = newValue }
   }
 
-  /// Add a indicator view to the selected menu item. The indicator
+  /// Add an indicator view to the selected menu item. The indicator
   /// width will be equal to the selected menu items width. Insets
   /// only apply horizontally. _Default: .visible_
   public var indicatorOptions: PagingIndicatorOptions {
