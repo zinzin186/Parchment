@@ -45,7 +45,7 @@ class ViewController: UIViewController {
     pagingViewController.indicatorColor = UIColor(red: 117/255, green: 111/255, blue: 216/255, alpha: 1)
     
     // Add the paging view controller as a child view
-    // controller and contrain it to all edges
+    // controller and constrain it to all edges
     addChildViewController(pagingViewController)
     view.addSubview(pagingViewController.view)
     view.constrainToEdges(pagingViewController.view)
