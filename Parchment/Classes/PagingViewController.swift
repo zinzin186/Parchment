@@ -543,7 +543,7 @@ open class PagingViewController<T: PagingItem>:
 
   private func generateItemsForIndexedDataSource() -> [T] {
     let numberOfItems = dataSource?.numberOfViewControllers(in: self) ?? 0
-    return (0..<numberOfItems).enumerated().flatMap {
+    return (0..<numberOfItems).enumerated().compactMap{
       dataSource?.pagingViewController(self, pagingItemForIndex: $0.offset)
     }
   }
