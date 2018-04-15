@@ -1022,6 +1022,13 @@ open class PagingViewController<T: PagingItem>:
   }
   
   open func em_pageViewController(_ pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController) {
+    if let upcomingPagingItem = state.upcomingPagingItem {
+      delegate?.pagingViewController(
+        self,
+        willScrollToItem: upcomingPagingItem,
+        startingViewController: startingViewController,
+        destinationViewController: destinationViewController)
+    }
     return
   }
   
