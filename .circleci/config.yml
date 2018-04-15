@@ -6,10 +6,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Homebrew Dependencies
-          command: brew upgrade carthage
-      - run:
-          name: Install Gemfile Dependencies
+          name: Install Gems
           command: bundle install
       - run:
           name: Install Carthage Dependencies
