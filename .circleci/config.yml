@@ -1,0 +1,20 @@
+version: 2.0
+jobs:
+  build-and-test:
+    macos:
+      xcode: "9.3.0"
+    steps:
+      - checkout
+      - run:
+          name: Install Homebrew Dependencies
+          command: brew upgrade carthage
+      - run:
+          name: Install Gemfile Dependencies
+          command: bundle install
+      - run:
+          name: Install Carthage Dependencies
+          command: carthage bootstrap --use-ssh --platform ios
+      - run:
+          name: Run Tests
+          command: bundle exec scan -s iOS -p Parchment.xcodeproj 
+          
