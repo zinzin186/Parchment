@@ -2,6 +2,20 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.0](https://github.com/rechsteiner/Parchment/compare/v1.1.0...v1.2.0) - 2018-04-15
+
+### Changes
+
+* Upgrade to Swift 4.1 #171
+* Prevent unnecessary view controller initializations #160
+
+### Fixes
+
+* Fix issues with reloading data #157
+* Fix issue with clearing all items in page view controller (a5759ba)
+* Fix issue where willScrollToItem delegate was not called #173
+* Fix layout bug with cell heights when using width delegate #155
+
 ## [1.1.0](https://github.com/rechsteiner/Parchment/compare/v1.0.3...v1.1.0) - 2018-03-25
 
 ### Added
