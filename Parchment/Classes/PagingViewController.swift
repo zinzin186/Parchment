@@ -627,13 +627,13 @@ open class PagingViewController<T: PagingItem>:
   private func handlePagingItemSelect(pagingItem: T, direction: PagingDirection, animated: Bool) {
     guard let currentPagingItem = state.currentPagingItem else { return }
     
-    if currentPagingItem == pagingItem {
-      return
-    } else if pagingItem == infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: currentPagingItem) {
+    if pagingItem == infiniteDataSource?.pagingViewController(self, pagingItemAfterPagingItem: currentPagingItem) {
       pageViewController.scrollForward(animated: animated, completion: nil)
+      pageViewController.view.layoutIfNeeded()
     } else if pagingItem == infiniteDataSource?.pagingViewController(self, pagingItemBeforePagingItem: currentPagingItem) {
       pageViewController.scrollReverse(animated: animated, completion: nil)
-    } else {
+      pageViewController.view.layoutIfNeeded()
+    } else if currentPagingItem != pagingItem {
       selectViewController(pagingItem, direction: direction)
     }
   }
