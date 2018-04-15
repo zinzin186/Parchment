@@ -328,6 +328,12 @@ The class type for the indicator view. Override this if you want your use your o
 
 _Default: `PagingIndicatorView.self`_
 
+#### `indicatorColor`
+
+The background color for the indicator view.
+
+_Default: `UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)`_
+
 #### `borderOptions`
 
 Add a border at the bottom of the menu items. The border will be as wide as all the menu items. Insets only apply horizontally.
@@ -356,6 +362,12 @@ _Default:_
 The class type for the border view. Override this if you want your use your own subclass of `PagingBorderView`.
 
 _Default: `PagingBorderView.self`_
+
+#### `borderColor`
+
+The background color for the border view.
+
+_Default: `UIColor(white: 0.9, alpha: 1)`_
 
 #### `includeSafeAreaInsets`
 
