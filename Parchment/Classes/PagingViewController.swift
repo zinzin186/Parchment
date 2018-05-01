@@ -118,7 +118,10 @@ open class PagingViewController<T: PagingItem>:
   /// PagingIndicatorView.self_
   public var indicatorClass: PagingIndicatorView.Type {
     get { return options.indicatorClass }
-    set { options.indicatorClass = newValue }
+    set {
+      options.indicatorClass = newValue
+      collectionViewLayout.registerIndicatorClass()
+    }
   }
 
   /// Determine the color of the indicator view.
@@ -140,7 +143,10 @@ open class PagingViewController<T: PagingItem>:
   /// PagingBorderView.self_
   public var borderClass: PagingBorderView.Type {
     get { return options.borderClass }
-    set { options.borderClass = newValue }
+    set {
+      options.borderClass = newValue
+      collectionViewLayout.registerBorderClass()
+    }
   }
   
   /// Determine the color of the border view.
@@ -476,7 +482,8 @@ open class PagingViewController<T: PagingItem>:
     collectionViewLayout.visibleItems = visibleItems
     collectionViewLayout.sizeCache = sizeCache
     collectionViewLayout.state = state
-    collectionViewLayout.registerDecorationViews()
+    collectionViewLayout.registerIndicatorClass()
+    collectionViewLayout.registerBorderClass()
   }
   
   private func configureStateMachine() {
