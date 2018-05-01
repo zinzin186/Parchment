@@ -74,8 +74,14 @@ public class PagingOptions {
         zIndex: Int.max - 1,
         insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
 
+    #if swift(>=4.0)
     font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
     selectedFont = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
+    #else
+    font = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
+    selectedFont = UIFont.systemFont(ofSize: 15, weight: UIFontWeightMedium)
+    #endif
+    
     textColor = UIColor.black
     selectedTextColor = UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)
     backgroundColor = .clear
