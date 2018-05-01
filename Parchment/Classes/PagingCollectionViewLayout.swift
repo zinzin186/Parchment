@@ -190,8 +190,11 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return layoutAttributes
   }
   
-  func registerDecorationViews() {
+  func registerIndicatorClass() {
     register(options.indicatorClass, forDecorationViewOfKind: PagingIndicatorKind)
+  }
+  
+  func registerBorderClass() {
     register(options.borderClass, forDecorationViewOfKind: PagingBorderKind)
   }
 
