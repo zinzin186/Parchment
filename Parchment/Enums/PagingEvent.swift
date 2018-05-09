@@ -9,6 +9,7 @@ enum PagingEvent<T: PagingItem> where T: Equatable {
   case cancelScrolling
   case reload(contentOffset: CGPoint)
   case removeAll
+  case reset(pagingItem: T)
 }
 
 extension PagingEvent {

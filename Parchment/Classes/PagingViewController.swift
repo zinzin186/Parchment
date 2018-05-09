@@ -668,6 +668,8 @@ open class PagingViewController<T: PagingItem>:
             reloadItems(around: pagingItem)
             selectCollectionViewItem(for: pagingItem, animated: animated)
           }
+        case .reset:
+          collectionViewLayout.invalidateLayout()
         default:
           break
         }
@@ -754,14 +756,16 @@ open class PagingViewController<T: PagingItem>:
       hasItemsAfter: hasItemAfter(pagingItem: sortedItems.last))
     collectionViewLayout.visibleItems = visibleItems
 
-    stateMachine.fire(.select(pagingItem: pagingItem, direction: .none, animated: false))
+    stateMachine.fire(.reset(pagingItem: pagingItem))
     collectionView.reloadData()
+    
+    pageViewController.removeAllViewControllers()
     selectViewController(pagingItem, direction: .none, animated: false)
 
     // Reloading the data triggers the didFinishScrollingFrom delegate
     // to be called which in turn means the wrong item will be selected.
     // For now, we just fix this by selecting the correct item manually.
-    stateMachine.fire(.select(pagingItem: pagingItem, direction: .none, animated: false))
+    stateMachine.fire(.reset(pagingItem: pagingItem))
   }
   
   private func removeAll() {
