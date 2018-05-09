@@ -42,13 +42,14 @@ class DeinitFixedPagingViewController: FixedPagingViewController {
 
 class ReloadingDataSource: PagingViewControllerDataSource {
   var items: [PagingIndexItem] = []
+  var viewControllers: [UIViewController] = []
   
   func numberOfViewControllers<T>(in pagingViewController: PagingViewController<T>) -> Int {
     return items.count
   }
   
   func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
-    return UIViewController()
+    return viewControllers[index]
   }
   
   func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
@@ -65,79 +66,148 @@ class PagingViewControllerSpec: QuickSpec {
       describe("reloading data") {
         
         let dataSource = ReloadingDataSource()
-        var viewController: PagingViewController<PagingIndexItem>!
+        var pagingViewController: PagingViewController<PagingIndexItem>!
+        var viewController0: UIViewController!
+        var viewController1: UIViewController!
         
         beforeEach {
-          dataSource.items = [
-            PagingIndexItem(index: 0, title: "First"),
-            PagingIndexItem(index: 1, title: "Second")
+          viewController0 = UIViewController()
+          viewController1 = UIViewController()
+          
+          dataSource.viewControllers = [
+            viewController0,
+            viewController1
           ]
           
-          viewController = PagingViewController()
-          viewController.menuItemSize = .fixed(width: 100, height: 50)
-          viewController.dataSource = dataSource
+          dataSource.items = [
+            PagingIndexItem(index: 0, title: "0"),
+            PagingIndexItem(index: 1, title: "1")
+          ]
           
-          UIApplication.shared.keyWindow!.rootViewController = viewController
-          let _ = viewController.view
+          pagingViewController = PagingViewController()
+          pagingViewController.menuItemSize = .fixed(width: 100, height: 50)
+          pagingViewController.dataSource = dataSource
           
-          viewController.collectionView.bounds = CGRect(x: 0, y: 0, width: 1000, height: 50)
-          viewController.viewDidLayoutSubviews()
+          UIApplication.shared.keyWindow!.rootViewController = pagingViewController
+          let _ = pagingViewController.view
+          
+          pagingViewController.collectionView.bounds = CGRect(x: 0, y: 0, width: 1000, height: 50)
+          pagingViewController.viewDidLayoutSubviews()
         }
         
         it("reloads data around item") {
-          let first = PagingIndexItem(index: 2, title: "Third")
-          let third = PagingIndexItem(index: 3, title: "Fourth")
-          dataSource.items = [first, third]
-          viewController.reloadData(around: first)
+          let item2 = PagingIndexItem(index: 2, title: "2")
+          let item3 = PagingIndexItem(index: 3, title: "3")
           
-          let cell1 = viewController.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as! PagingTitleCell
-          let cell2 = viewController.collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) as! PagingTitleCell
+          dataSource.items = [item2, item3]
+          pagingViewController.reloadData(around: item2)
+          pagingViewController.view.layoutIfNeeded()
           
-          expect(cell1.titleLabel.text).to(equal("Third"))
-          expect(cell2.titleLabel.text).to(equal("Fourth"))
+          let cell2 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 0, section: 0))
+          let cell3 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 1, section: 0))
+          
+          expect((cell2 as? PagingTitleCell)?.titleLabel.text).to(equal("2"))
+          expect((cell3 as? PagingTitleCell)?.titleLabel.text).to(equal("3"))
+          expect(pagingViewController.state).to(equal(PagingState.selected(pagingItem: item2)))
+          expect(pagingViewController.pageViewController.selectedViewController).to(be(viewController0))
+          expect(pagingViewController.pageViewController.afterViewController).to(be(viewController1))
+        }
+        
+        it("updates view controllers when reloading data") {
+          let item2 = PagingIndexItem(index: 2, title: "2")
+          let item3 = PagingIndexItem(index: 3, title: "3")
+          
+          let viewController2 = UIViewController()
+          let viewController3 = UIViewController()
+          
+          dataSource.viewControllers = [viewController2, viewController3]
+          dataSource.items = [item2, item3]
+          pagingViewController.reloadData()
+          
+          expect(pagingViewController.pageViewController.selectedViewController).to(be(viewController2))
+          expect(pagingViewController.pageViewController.afterViewController).to(be(viewController3))
+        }
+        
+        it("updates view controllers when reloading around last item") {
+          let item2 = PagingIndexItem(index: 2, title: "2")
+          let item3 = PagingIndexItem(index: 3, title: "3")
+          
+          let viewController2 = UIViewController()
+          let viewController3 = UIViewController()
+          
+          dataSource.viewControllers = [viewController2, viewController3]
+          dataSource.items = [item2, item3]
+          pagingViewController.reloadData(around: item3)
+          
+          expect(pagingViewController.pageViewController.selectedViewController).to(be(viewController3))
+          expect(pagingViewController.pageViewController.beforeViewController).to(be(viewController2))
+        }
+        
+        it("updates view controllers when reloading data without changing items") {
+          let viewController2 = UIViewController()
+          let viewController3 = UIViewController()
+          
+          dataSource.viewControllers = [viewController2, viewController3]
+          pagingViewController.reloadData()
+          
+          expect(pagingViewController.pageViewController.selectedViewController).to(be(viewController2))
+          expect(pagingViewController.pageViewController.afterViewController).to(be(viewController3))
         }
         
         it("selects previously selected item when reloading data") {
-          let first = PagingIndexItem(index: 0, title: "First")
-          let second = PagingIndexItem(index: 1, title: "Second")
-          let third = PagingIndexItem(index: 2, title: "Third")
+          let item0 = PagingIndexItem(index: 0, title: "0")
+          let item1 = PagingIndexItem(index: 1, title: "1")
+          let item2 = PagingIndexItem(index: 2, title: "2")
+          let viewController2 = UIViewController()
           
-          viewController.select(index: 1)
-          dataSource.items = [first, second, third]
-          viewController.reloadData()
+          dataSource.viewControllers = [
+            viewController0,
+            viewController1,
+            viewController2
+          ]
           
-          let cell1 = viewController.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as! PagingTitleCell
-          let cell2 = viewController.collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) as! PagingTitleCell
-          let cell3 = viewController.collectionView.cellForItem(at: IndexPath(item: 2, section: 0)) as! PagingTitleCell
+          pagingViewController.select(index: 1)
+          pagingViewController.view.layoutIfNeeded()
           
-          expect(cell1.titleLabel.text).to(equal("First"))
-          expect(cell2.titleLabel.text).to(equal("Second"))
-          expect(cell3.titleLabel.text).to(equal("Third"))
-          expect(viewController.state).to(equal(PagingState.selected(pagingItem: second)))
+          dataSource.items = [item0, item1, item2]
+          pagingViewController.reloadData()
+          pagingViewController.view.layoutIfNeeded()
+          
+          let cell0 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 0, section: 0))
+          let cell1 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 1, section: 0))
+          let cell2 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 2, section: 0))
+          
+          expect((cell0 as? PagingTitleCell)?.titleLabel.text).to(equal("0"))
+          expect((cell1 as? PagingTitleCell)?.titleLabel.text).to(equal("1"))
+          expect((cell2 as? PagingTitleCell)?.titleLabel.text).to(equal("2"))
+          expect(pagingViewController.state).to(equal(PagingState.selected(pagingItem: item1)))
         }
         
         it("selects the first item when reloading data with all new items") {
-          let third = PagingIndexItem(index: 2, title: "Third")
-          let fourth = PagingIndexItem(index: 3, title: "Fourth")
+          let item2 = PagingIndexItem(index: 2, title: "2")
+          let item3 = PagingIndexItem(index: 3, title: "3")
           
-          viewController.select(index: 1)
-          dataSource.items = [third, fourth]
-          viewController.reloadData()
+          pagingViewController.select(index: 1)
+          pagingViewController.view.layoutIfNeeded()
           
-          let cell1 = viewController.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as! PagingTitleCell
-          let cell2 = viewController.collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) as! PagingTitleCell
+          dataSource.items = [item2, item3]
+          pagingViewController.reloadData()
+          pagingViewController.view.layoutIfNeeded()
           
-          expect(cell1.titleLabel.text).to(equal("Third"))
-          expect(cell2.titleLabel.text).to(equal("Fourth"))
-          expect(viewController.state).to(equal(PagingState.selected(pagingItem: third)))
+          let cell2 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 0, section: 0))
+          let cell3 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 1, section: 0))
+          
+          expect((cell2 as? PagingTitleCell)?.titleLabel.text).to(equal("2"))
+          expect((cell3 as? PagingTitleCell)?.titleLabel.text).to(equal("3"))
+          expect(pagingViewController.state).to(equal(PagingState.selected(pagingItem: item2)))
         }
         
         it("display an empty view after reloading data with no items") {
           dataSource.items = []
-          viewController.reloadData()
+          pagingViewController.reloadData()
           
-          expect(viewController.pageViewController.scrollView.subviews).to(beEmpty())
-          expect(viewController.collectionView.numberOfItems(inSection: 0)).to(equal(0))
+          expect(pagingViewController.pageViewController.scrollView.subviews).to(beEmpty())
+          expect(pagingViewController.collectionView.numberOfItems(inSection: 0)).to(equal(0))
         }
       }
       
