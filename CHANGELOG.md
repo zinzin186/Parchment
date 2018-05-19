@@ -2,6 +2,17 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.0](https://github.com/rechsteiner/Parchment/compare/v1.2.0...v1.3.0) - 2018-05-19
+
+### Changes
+
+* Add version checks to support Swift >=3.2 #190, #184
+
+### Fixes
+
+* Fix issue with indicator/border class was not registered #191
+* Fix issue with reloading data when view controllers did not change #201
+
 ## [1.2.0](https://github.com/rechsteiner/Parchment/compare/v1.1.0...v1.2.0) - 2018-04-15
 
 ### Changes
