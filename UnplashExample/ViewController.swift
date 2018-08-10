@@ -94,7 +94,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     
     let pagingViewController = PagingViewController<ImageItem>()
-    pagingViewController.menuItemClass = ImagePagingCell.self
+	pagingViewController.menuItemSource = .class(type: ImagePagingCell.self)
     pagingViewController.menuItemSize = .fixed(width: 70, height: 70)
     pagingViewController.menuItemSpacing = 8
     pagingViewController.menuInsets = UIEdgeInsets(top: 12, left: 18, bottom: 12, right: 18)

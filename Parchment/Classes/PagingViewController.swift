@@ -31,9 +31,9 @@ open class PagingViewController<T: PagingItem>:
 
   /// The class type for the menu item. Override this if you want
   /// your own custom menu items. _Default: PagingTitleCell.self_
-  public var menuItemClass: PagingCell.Type {
-    get { return options.menuItemClass }
-    set { options.menuItemClass = newValue }
+  public var menuItemSource: PagingMenuItemSource {
+    get { return options.menuItemSource }
+    set { options.menuItemSource = newValue }
   }
 
   /// Determine the spacing between the menu items. _Default: 0_
@@ -431,7 +431,15 @@ open class PagingViewController<T: PagingItem>:
     collectionView.showsHorizontalScrollIndicator = false
     collectionView.delegate = self
     collectionView.dataSource = self
-    collectionView.register(options.menuItemClass, forCellWithReuseIdentifier: PagingCellReuseIdentifier)
+	
+	switch options.menuItemSource {
+	case .class(let type):
+		collectionView.register(type, forCellWithReuseIdentifier: PagingCellReuseIdentifier)
+		
+	case .nib(let nib):
+		collectionView.register(nib, forCellWithReuseIdentifier: PagingCellReuseIdentifier)
+	}
+	
     
     configureMenuInteraction()
     configureContentInteraction()

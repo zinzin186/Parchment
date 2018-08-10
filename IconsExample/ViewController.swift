@@ -60,7 +60,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     
     let pagingViewController = PagingViewController<IconItem>()
-    pagingViewController.menuItemClass = IconPagingCell.self
+	pagingViewController.menuItemSource = .class(type: IconPagingCell.self)
     pagingViewController.menuItemSize = .fixed(width: 60, height: 60)
     pagingViewController.textColor = UIColor(red: 0.51, green: 0.54, blue: 0.56, alpha: 1)
     pagingViewController.selectedTextColor = UIColor(red: 0.14, green: 0.77, blue: 0.85, alpha: 1)

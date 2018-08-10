@@ -38,7 +38,7 @@ class ViewController: UIViewController {
     // Create an instance of PagingViewController where CalendarItem
     // is set as the generic type.
     let pagingViewController = PagingViewController<CalendarItem>()
-    pagingViewController.menuItemClass = CalendarPagingCell.self
+	pagingViewController.menuItemSource = .class(type: CalendarPagingCell.self)
     pagingViewController.menuItemSize = .fixed(width: 48, height: 58)
     pagingViewController.textColor = UIColor(red: 95/255, green: 102/255, blue: 108/255, alpha: 1)
     pagingViewController.selectedTextColor = UIColor(red: 117/255, green: 111/255, blue: 216/255, alpha: 1)
