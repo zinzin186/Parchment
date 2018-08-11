@@ -2,7 +2,7 @@ import UIKit
 
 public class PagingOptions {
   public var menuItemSize: PagingMenuItemSize
-  public var menuItemClass: PagingCell.Type
+  public var menuItemSource: PagingMenuItemSource
   public var menuItemSpacing: CGFloat
   public var menuInsets: UIEdgeInsets
   public var menuHorizontalAlignment: PagingMenuHorizontalAlignment
@@ -54,7 +54,7 @@ public class PagingOptions {
     menuItemSize = .sizeToFit(minWidth: 150, height: 40)
     menuTransition = .scrollAlongside
     menuInteraction = .scrolling
-    menuItemClass = PagingTitleCell.self
+    menuItemSource = .class(type: PagingTitleCell.self)
     menuInsets = UIEdgeInsets.zero
     menuItemSpacing = 0
     menuHorizontalAlignment = .left
