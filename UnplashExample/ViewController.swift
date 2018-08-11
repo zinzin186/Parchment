@@ -114,10 +114,10 @@ class ViewController: UIViewController {
     
     // Add the paging view controller as a child view controller and
     // contrain it to all edges.
-    addChildViewController(pagingViewController)
+    addChild(pagingViewController)
     view.addSubview(pagingViewController.view)
     view.constrainToEdges(pagingViewController.view)
-    pagingViewController.didMove(toParentViewController: self)
+    pagingViewController.didMove(toParent: self)
     
     // Set our custom data source.
     pagingViewController.dataSource = self

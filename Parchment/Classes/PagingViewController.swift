@@ -423,9 +423,16 @@ open class PagingViewController<T: PagingItem>:
   open override func viewDidLoad() {
     super.viewDidLoad()
     
+    #if swift(>=4.2)
+    addChild(pageViewController)
+    pagingView.configure()
+    pageViewController.didMove(toParent: self)
+    #else
     addChildViewController(pageViewController)
     pagingView.configure()
     pageViewController.didMove(toParentViewController: self)
+    #endif
+    
     pageViewController.dataSource = self
     
     collectionView.showsHorizontalScrollIndicator = false
@@ -616,6 +623,7 @@ open class PagingViewController<T: PagingItem>:
   }
   
   private func setupGestureRecognizers() {
+    
     let swipeGestureRecognizerLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer))
     swipeGestureRecognizerLeft.direction = .left
     
@@ -861,7 +869,7 @@ open class PagingViewController<T: PagingItem>:
       if case let .scrolling(_, _, progress, initialContentOffset, distance) = state {
         if collectionView.contentSize.width >= collectionView.bounds.width && state.progress != 0 {
           let contentOffset = CGPoint(
-            x: initialContentOffset.x + (distance * fabs(progress)),
+            x: initialContentOffset.x + (distance * abs(progress)),
             y: initialContentOffset.y)
           
           // We need to use setContentOffset with no animation in

@@ -47,10 +47,10 @@ class ViewController: UIViewController {
     
     // Make sure you add the PagingViewController as a child view
     // controller and contrain it to the edges of the view.
-    addChildViewController(pagingViewController)
+    addChild(pagingViewController)
     view.addSubview(pagingViewController.view)
     view.constrainToEdges(pagingViewController.view)
-    pagingViewController.didMove(toParentViewController: self)
+    pagingViewController.didMove(toParent: self)
     
     // Set the menu view as the title view on the navigation bar. This
     // will remove the menu view from the view hierachy and put it

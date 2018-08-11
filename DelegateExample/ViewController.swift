@@ -32,10 +32,10 @@ class ViewController: UIViewController {
     
     // Add the paging view controller as a child view controller and
     // contrain it to all edges.
-    addChildViewController(pagingViewController)
+    addChild(pagingViewController)
     view.addSubview(pagingViewController.view)
     view.constrainToEdges(pagingViewController.view)
-    pagingViewController.didMove(toParentViewController: self)
+    pagingViewController.didMove(toParent: self)
   }
   
 }
@@ -69,7 +69,7 @@ extension ViewController: PagingViewControllerDelegate {
 
     let insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     let size = CGSize(width: CGFloat.greatestFiniteMagnitude, height: pagingViewController.menuItemSize.height)
-    let attributes = [NSAttributedStringKey.font: pagingViewController.font]
+    let attributes = [NSAttributedString.Key.font: pagingViewController.font]
     
     let rect = item.title.boundingRect(with: size,
       options: .usesLineFragmentOrigin,
