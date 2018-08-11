@@ -44,7 +44,7 @@ class ImagePagingCell: PagingCell {
     imageView.image = item.headerImage
     titleLabel.attributedText = NSAttributedString(
       string: item.title,
-      attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
+      attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
     
     if selected {
       imageView.transform = CGAffineTransform(scaleX: 2, y: 2)

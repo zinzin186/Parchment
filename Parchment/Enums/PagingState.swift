@@ -57,7 +57,7 @@ public extension PagingState {
   }
   
   public var visuallySelectedPagingItem: T? {
-    if fabs(progress) > 0.5 {
+    if abs(progress) > 0.5 {
       return upcomingPagingItem ?? currentPagingItem
     } else {
       return currentPagingItem

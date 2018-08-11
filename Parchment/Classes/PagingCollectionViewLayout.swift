@@ -338,7 +338,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     let upcomingIndexPath = upcomingIndexPathForIndexPath(currentIndexPath)
     
     if let upcomingIndexPath = upcomingIndexPath {
-      let progress = fabs(state.progress)
+      let progress = abs(state.progress)
       let to = PagingIndicatorMetric(
         frame: indicatorFrameForIndex(upcomingIndexPath.item),
         insets: indicatorInsetsForIndex(upcomingIndexPath.item),
@@ -396,13 +396,13 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     
     if let currentIndexPath = currentIndexPath {
       if indexPath.item == currentIndexPath.item {
-        return 1 - fabs(state.progress)
+        return 1 - abs(state.progress)
       }
     }
     
     if let upcomingIndexPath = upcomingIndexPathForIndexPath(currentIndexPath) {
       if indexPath.item == upcomingIndexPath.item {
-        return fabs(state.progress)
+        return abs(state.progress)
       }
     }
     
