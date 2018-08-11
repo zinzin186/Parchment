@@ -2,6 +2,16 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.0](https://github.com/rechsteiner/Parchment/compare/v1.3.0...v1.4.0) - 2018-08-11
+
+### Changes
+
+* Upgrade to Swift 4.2 #228
+
+### Added
+
+* Add option for registering cells from NIB #227
+
 ## [1.3.0](https://github.com/rechsteiner/Parchment/compare/v1.2.0...v1.3.0) - 2018-05-19
 
 ### Changes
