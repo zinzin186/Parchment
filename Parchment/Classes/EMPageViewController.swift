@@ -540,9 +540,10 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
                         self.scrolling = true
                     }
                     
-                    if self.navigationDirection == .reverse { // check if direction changed
-                        self.didFinishScrolling(to: self.selectedViewController!)
-                        self.willScroll(from: self.selectedViewController, to: self.afterViewController!)
+                    if let selectedViewController = selectedViewController,
+                        self.navigationDirection == .reverse { // check if direction changed
+                        self.didFinishScrolling(to: selectedViewController)
+                        self.willScroll(from: selectedViewController, to: self.afterViewController!)
                     }
                     
                     self.navigationDirection = .forward
@@ -567,9 +568,10 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
                         self.scrolling = true
                     }
                     
-                    if self.navigationDirection == .forward { // check if direction changed
-                        self.didFinishScrolling(to: self.selectedViewController!)
-                        self.willScroll(from: self.selectedViewController, to: self.beforeViewController!)
+                    if let selectedViewController = selectedViewController,
+                        self.navigationDirection == .forward { // check if direction changed
+                        self.didFinishScrolling(to: selectedViewController)
+                        self.willScroll(from: selectedViewController, to: self.beforeViewController!)
                     }
                     
                     self.navigationDirection = .reverse
