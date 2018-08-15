@@ -534,26 +534,27 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             
             // Scrolling forward / after
             if (progress > 0) {
-                if (self.afterViewController != nil) {
+                if let afterViewController = afterViewController {
                     if !scrolling { // call willScroll once
-                        self.willScroll(from: self.selectedViewController, to: self.afterViewController!)
+                        self.willScroll(from: self.selectedViewController, to: afterViewController)
                         self.scrolling = true
                     }
                     
-                    if self.navigationDirection == .reverse { // check if direction changed
-                        self.didFinishScrolling(to: self.selectedViewController!)
-                        self.willScroll(from: self.selectedViewController, to: self.afterViewController!)
+                    if let selectedViewController = selectedViewController,
+                        self.navigationDirection == .reverse { // check if direction changed
+                        self.didFinishScrolling(to: selectedViewController)
+                        self.willScroll(from: selectedViewController, to: afterViewController)
                     }
                     
                     self.navigationDirection = .forward
                     
-                    if (self.selectedViewController != nil) {
-                        self.delegate?.em_pageViewController?(self, isScrollingFrom: self.selectedViewController!, destinationViewController: self.afterViewController!, progress: progress)
+                    if let selectedViewController = selectedViewController {
+                        self.delegate?.em_pageViewController?(self, isScrollingFrom: selectedViewController, destinationViewController: afterViewController, progress: progress)
                     }
                 } else {
-                    if (self.selectedViewController != nil) {
+                    if let selectedViewController = selectedViewController {
                         self.delegate?.em_pageViewController?(self,
-                                                              isScrollingFrom: self.selectedViewController!,
+                                                              isScrollingFrom: selectedViewController,
                                                               destinationViewController: nil,
                                                               progress: progress)
                     }
@@ -561,26 +562,27 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
                 
                 // Scrolling reverse / before
             } else if (progress < 0) {
-                if (self.beforeViewController != nil) {
+                if let beforeViewController = beforeViewController {
                     if !scrolling { // call willScroll once
-                        self.willScroll(from: self.selectedViewController, to: self.beforeViewController!)
+                        self.willScroll(from: selectedViewController, to: beforeViewController)
                         self.scrolling = true
                     }
                     
-                    if self.navigationDirection == .forward { // check if direction changed
-                        self.didFinishScrolling(to: self.selectedViewController!)
-                        self.willScroll(from: self.selectedViewController, to: self.beforeViewController!)
+                    if let selectedViewController = selectedViewController,
+                        self.navigationDirection == .forward { // check if direction changed
+                        self.didFinishScrolling(to: selectedViewController)
+                        self.willScroll(from: selectedViewController, to: beforeViewController)
                     }
                     
                     self.navigationDirection = .reverse
                     
-                    if (self.selectedViewController != nil) {
-                        self.delegate?.em_pageViewController?(self, isScrollingFrom: self.selectedViewController!, destinationViewController: self.beforeViewController!, progress: progress)
+                    if let selectedViewController = selectedViewController {
+                        self.delegate?.em_pageViewController?(self, isScrollingFrom: selectedViewController, destinationViewController: beforeViewController, progress: progress)
                     }
                 } else {
-                    if (self.selectedViewController != nil) {
+                    if let selectedViewController = selectedViewController {
                         self.delegate?.em_pageViewController?(self,
-                                                              isScrollingFrom: self.selectedViewController!,
+                                                              isScrollingFrom: selectedViewController,
                                                               destinationViewController: nil,
                                                               progress: progress)
                     }
