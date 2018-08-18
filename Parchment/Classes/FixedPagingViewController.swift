@@ -9,7 +9,7 @@ import UIKit
 /// up-front, which in some cases might be to expensive. If that is
 /// the case, take a look at `PagingViewController` on how to create
 /// your own implementation that matches your needs.
-open class FixedPagingViewController: PagingViewController<PagingIndexItem> {
+open class FixedPagingViewController: PagingViewController {
   
   /// An array of the content view controllers. If you need to call
   /// `select(pagingItem:)` you can use the index of these view
@@ -34,15 +34,16 @@ open class FixedPagingViewController: PagingViewController<PagingIndexItem> {
 
 extension FixedPagingViewController: PagingViewControllerDataSource {
   
-  public func numberOfViewControllers<T>(in: PagingViewController<T>) -> Int {
+  public func numberOfViewControllers(in pagingViewController: PagingViewController) -> Int {
     return viewControllers.count
   }
   
-  public func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
-    return PagingIndexItem(index: index, title: viewControllers[index].title ?? "") as! T
+  public func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
+    let title = viewControllers[index].title ?? ""
+    return PagingTitleItem(title: title, index: index)
   }
   
-  public func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+  public func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
     return viewControllers[index]
   }
   

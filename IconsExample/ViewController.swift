@@ -1,7 +1,7 @@
 import UIKit
 import Parchment
 
-struct IconItem: PagingItem, Hashable, Comparable {
+struct IconItem: PagingItem, Equatable, Comparable {
   
   let icon: String
   let index: Int
@@ -13,7 +13,7 @@ struct IconItem: PagingItem, Hashable, Comparable {
     self.image = UIImage(named: icon)
   }
   
-  var hashValue: Int {
+  var identifier: Int {
     return icon.hashValue
   }
   
@@ -59,8 +59,8 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let pagingViewController = PagingViewController<IconItem>()
-	pagingViewController.menuItemSource = .class(type: IconPagingCell.self)
+    let pagingViewController = PagingViewController()
+	  pagingViewController.menuItemSource = .class(type: IconPagingCell.self)
     pagingViewController.menuItemSize = .fixed(width: 60, height: 60)
     pagingViewController.textColor = UIColor(red: 0.51, green: 0.54, blue: 0.56, alpha: 1)
     pagingViewController.selectedTextColor = UIColor(red: 0.14, green: 0.77, blue: 0.85, alpha: 1)
@@ -80,15 +80,15 @@ class ViewController: UIViewController {
 
 extension ViewController: PagingViewControllerDataSource {
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+  func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
     return IconViewController(title: icons[index].capitalized)
   }
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
-    return IconItem(icon: icons[index], index: index) as! T
+  func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
+    return IconItem(icon: icons[index], index: index)
   }
   
-  func numberOfViewControllers<T>(in: PagingViewController<T>) -> Int {
+  func numberOfViewControllers(in pagingViewController: PagingViewController) -> Int {
     return icons.count
   }
   

@@ -3,8 +3,8 @@ import Quick
 import Nimble
 @testable import Parchment
 
-private func beScrolling() -> Predicate<PagingState<Item>> {
-  return Predicate.define("be .Scrolling)") { expression, message in
+private func beScrolling() -> Predicate<PagingState> {
+  return Predicate.define("be .scrolling)") { expression, message in
     if let actual = try expression.evaluate(), case .scrolling = actual {
       return PredicateResult(bool: true, message: message)
     }
@@ -12,8 +12,8 @@ private func beScrolling() -> Predicate<PagingState<Item>> {
   }
 }
 
-private func beSelected() -> Predicate<PagingState<Item>> {
-  return Predicate.define("be .Selected)") { expression, message in
+private func beSelected() -> Predicate<PagingState> {
+  return Predicate.define("be .selected)") { expression, message in
     if let actual = try expression.evaluate(), case .selected = actual {
       return PredicateResult(bool: true, message: message)
     }
@@ -27,17 +27,19 @@ class PagingStateMachineSpec: QuickSpec {
     
     describe("PagingStateMachine") {
       
-      var stateMachine: PagingStateMachine<Item>!
+      var stateMachine: PagingStateMachine!
       
       beforeEach {
         let state: PagingState = .selected(pagingItem: Item(index: 0))
         stateMachine = PagingStateMachine(initialState: state)
         
         stateMachine.pagingItemAfterItem = { item in
+          guard let item = item as? Item else { return nil }
           return Item(index: item.index + 1)
         }
         
         stateMachine.pagingItemBeforeItem = { item in
+          guard let item = item as? Item else { return nil }
           return Item(index: item.index - 1)
         }
         
@@ -76,7 +78,7 @@ class PagingStateMachineSpec: QuickSpec {
           describe("has an upcoming paging item") {
             it("sets the selected item to equal the upcoming paging item") {
               stateMachine.fire(.finishScrolling)
-              expect(stateMachine.state.currentPagingItem).to(equal(Item(index: 1)))
+              expect(stateMachine.state.currentPagingItem as! Item?).to(equal(Item(index: 1)))
             }
           }
           
@@ -94,7 +96,7 @@ class PagingStateMachineSpec: QuickSpec {
             
             it("sets the selected item to equal the current paging item") {
               stateMachine.fire(.finishScrolling)
-              expect(stateMachine.state.currentPagingItem).to(equal(Item(index: 0)))
+              expect(stateMachine.state.currentPagingItem as! Item?).to(equal(Item(index: 0)))
             }
           }
           
@@ -212,7 +214,7 @@ class PagingStateMachineSpec: QuickSpec {
                 pagingItem: Item(index: 1),
                 direction: .none,
                 animated: false))
-              expect(stateMachine.state.currentPagingItem).to(equal(Item(index: 0)))
+              expect(stateMachine.state.currentPagingItem as! Item?).to(equal(Item(index: 0)))
             }
             
             it("sets the upcoming paging item to the selected paging item") {
@@ -220,7 +222,7 @@ class PagingStateMachineSpec: QuickSpec {
                 pagingItem: Item(index: 1),
                 direction: .none,
                 animated: false))
-              expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: 1)))
+              expect(stateMachine.state.upcomingPagingItem as! Item?).to(equal(Item(index: 1)))
             }
             
             describe("has a select block") {
@@ -231,7 +233,7 @@ class PagingStateMachineSpec: QuickSpec {
                 var animated: Bool?
                 
                 stateMachine.onPagingItemSelect = {
-                  selectedPagingItem = $0
+                  selectedPagingItem = $0 as? Item
                   direction = $1
                   animated = $2
                 }
@@ -264,7 +266,7 @@ class PagingStateMachineSpec: QuickSpec {
           describe("has a select block") {
             
             it("does not call the select block") {
-              var selectedPagingItem: Item?
+              var selectedPagingItem: PagingItem?
               
               stateMachine.onPagingItemSelect = { pagingItem, _, _ in
                 selectedPagingItem = pagingItem
@@ -288,7 +290,7 @@ class PagingStateMachineSpec: QuickSpec {
         
         it("uses the state's current paging item") {
           stateMachine.fire(.scroll(progress: 0))
-          expect(stateMachine.state.currentPagingItem).to(equal(Item(index: 0)))
+          expect(stateMachine.state.currentPagingItem as! Item?).to(equal(Item(index: 0)))
         }
         
         it("sets the new progress") {
@@ -351,7 +353,7 @@ class PagingStateMachineSpec: QuickSpec {
                 distance: 0)
               stateMachine = PagingStateMachine(initialState: initialState)
               stateMachine.fire(.scroll(progress: 0.1))
-              expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: 1)))
+              expect(stateMachine.state.upcomingPagingItem as! Item?).to(equal(Item(index: 1)))
             }
             
           }
@@ -368,12 +370,12 @@ class PagingStateMachineSpec: QuickSpec {
           
           it("uses the leading paging item if the progress is negative") {
             stateMachine.fire(.scroll(progress: -0.1))
-            expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: -1)))
+            expect(stateMachine.state.upcomingPagingItem as! Item?).to(equal(Item(index: -1)))
           }
           
           it("uses the trailing paging item if the progress is positive") {
             stateMachine.fire(.scroll(progress: 0.1))
-            expect(stateMachine.state.upcomingPagingItem).to(equal(Item(index: 1)))
+            expect(stateMachine.state.upcomingPagingItem as! Item?).to(equal(Item(index: 1)))
           }
           
         }

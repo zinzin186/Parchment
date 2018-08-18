@@ -26,7 +26,7 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let pagingViewController = PagingViewController<PagingIndexItem>()
+    let pagingViewController = PagingViewController()
     pagingViewController.dataSource = self
     pagingViewController.delegate = self
     
@@ -42,15 +42,15 @@ class ViewController: UIViewController {
 
 extension ViewController: PagingViewControllerDataSource {
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
-    return PagingIndexItem(index: index, title: cities[index]) as! T
+  func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
+    return PagingTitleItem(title: cities[index], index: index)
   }
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+  func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
     return CityViewController(title: cities[index])
   }
   
-  func numberOfViewControllers<T>(in: PagingViewController<T>) -> Int {
+  func numberOfViewControllers(in pagingViewController: PagingViewController) -> Int {
     return cities.count
   }
   
@@ -64,18 +64,18 @@ extension ViewController: PagingViewControllerDelegate {
   // can access the title string by casting the paging item to a
   // PagingTitleItem, which is the PagingItem type used by
   // FixedPagingViewController.
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, widthForPagingItem pagingItem: T, isSelected: Bool) -> CGFloat? {
-    guard let item = pagingItem as? PagingIndexItem else { return 0 }
-
+  func pagingViewController(_ pagingViewController: PagingViewController, widthForPagingItem pagingItem: PagingItem, isSelected: Bool) -> CGFloat? {
+    guard let item = pagingItem as? PagingTitleItem else { return 0 }
+    
     let insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     let size = CGSize(width: CGFloat.greatestFiniteMagnitude, height: pagingViewController.menuItemSize.height)
     let attributes = [NSAttributedString.Key.font: pagingViewController.font]
     
     let rect = item.title.boundingRect(with: size,
-      options: .usesLineFragmentOrigin,
-      attributes: attributes,
-      context: nil)
-
+                                       options: .usesLineFragmentOrigin,
+                                       attributes: attributes,
+                                       context: nil)
+    
     let width = ceil(rect.width) + insets.left + insets.right
     
     if isSelected {

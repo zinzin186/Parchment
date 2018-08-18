@@ -1,10 +1,10 @@
 import Foundation
 @testable import Parchment
 
-struct Item: PagingItem, Hashable, Comparable {
+struct Item: PagingItem, Equatable, Comparable {
   let index: Int
   
-  var hashValue: Int {
+  var identifier: Int {
     return index
   }
 }

@@ -1,15 +1,15 @@
 import Foundation
 
-enum PagingEvent<T: PagingItem> where T: Equatable {
+enum PagingEvent {
   case scroll(progress: CGFloat)
-  case initial(pagingItem: T)
-  case select(pagingItem: T, direction: PagingDirection, animated: Bool)
+  case initial(pagingItem: PagingItem)
+  case select(pagingItem: PagingItem, direction: PagingDirection, animated: Bool)
   case finishScrolling
   case transitionSize
   case cancelScrolling
   case reload(contentOffset: CGPoint)
   case removeAll
-  case reset(pagingItem: T)
+  case reset(pagingItem: PagingItem)
 }
 
 extension PagingEvent {

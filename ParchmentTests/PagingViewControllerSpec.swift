@@ -6,25 +6,23 @@ import UIKit
 
 class DataSource: PagingViewControllerInfiniteDataSource {
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem: T) -> T? {
-    guard let item = pagingItemAfterPagingItem as? Item else { return nil }
-    
-    if (item.index < 50) {
-      return Item(index: item.index + 1) as? T
+  func pagingViewController(_: PagingViewController, itemAfter: PagingItem) -> PagingItem? {
+    guard let item = itemAfter as? Item else { return nil }
+    if item.index < 50 {
+      return Item(index: item.index + 1)
     }
     return nil
   }
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemBeforePagingItem: T) -> T? {
-    guard let item = pagingItemBeforePagingItem as? Item else { return nil }
-    
-    if (item.index > 0) {
-      return Item(index: item.index - 1) as? T
+  func pagingViewController(_: PagingViewController, itemBefore: PagingItem) -> PagingItem? {
+    guard let item = itemBefore as? Item else { return nil }
+    if item.index > 0 {
+      return Item(index: item.index - 1)
     }
     return nil
   }
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForPagingItem: T) -> UIViewController {
+  func pagingViewController(_: PagingViewController, viewControllerFor pagingItem: PagingItem) -> UIViewController {
     return UIViewController()
   }
   
@@ -32,11 +30,8 @@ class DataSource: PagingViewControllerInfiniteDataSource {
 
 class Delegate: PagingViewControllerDelegate {
   
-  func pagingViewController<T>(
-    _ pagingViewController: PagingViewController<T>,
-    widthForPagingItem pagingItem: T,
-    isSelected: Bool) -> CGFloat? {
-    guard let item = pagingItem as? PagingIndexItem else { return nil }
+  func pagingViewController(_ pagingViewController: PagingViewController, widthForPagingItem pagingItem: PagingItem, isSelected: Bool) -> CGFloat? {
+    guard let item = pagingItem as? PagingTitleItem else { return nil }
     if item.index == 0 {
       return 100
     } else {
@@ -46,30 +41,25 @@ class Delegate: PagingViewControllerDelegate {
   
 }
 
-class DeinitPagingViewController: PagingViewController<PagingIndexItem> {
-  var deinitCalled: (() -> Void)?
-  deinit { deinitCalled?() }
-}
-
-class DeinitFixedPagingViewController: FixedPagingViewController {
+class DeinitPagingViewController: PagingViewController {
   var deinitCalled: (() -> Void)?
   deinit { deinitCalled?() }
 }
 
 class ReloadingDataSource: PagingViewControllerDataSource {
-  var items: [PagingIndexItem] = []
+  var items: [PagingTitleItem] = []
   var viewControllers: [UIViewController] = []
   
-  func numberOfViewControllers<T>(in pagingViewController: PagingViewController<T>) -> Int {
+  func numberOfViewControllers(in pagingViewController: PagingViewController) -> Int {
     return items.count
   }
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+  func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
     return viewControllers[index]
   }
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
-    return items[index] as! T
+  func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
+    return items[index]
   }
 }
 
@@ -83,7 +73,7 @@ class PagingViewControllerSpec: QuickSpec {
         
         let dataSource = ReloadingDataSource()
         var delegate: Delegate!
-        var pagingViewController: PagingViewController<PagingIndexItem>!
+        var pagingViewController: PagingViewController!
         
         context("has items before reloading") {
           var viewController0: UIViewController!
@@ -99,8 +89,8 @@ class PagingViewControllerSpec: QuickSpec {
             ]
             
             dataSource.items = [
-              PagingIndexItem(index: 0, title: "0"),
-              PagingIndexItem(index: 1, title: "1")
+              PagingTitleItem(title: "0", index: 0),
+              PagingTitleItem(title: "1", index: 1)
             ]
             
             pagingViewController = PagingViewController()
@@ -115,8 +105,8 @@ class PagingViewControllerSpec: QuickSpec {
           }
           
           it("reloads data around item") {
-            let item2 = PagingIndexItem(index: 2, title: "2")
-            let item3 = PagingIndexItem(index: 3, title: "3")
+            let item2 = PagingTitleItem(title: "2", index: 2)
+            let item3 = PagingTitleItem(title: "3", index: 3)
             
             dataSource.items = [item2, item3]
             pagingViewController.reloadData(around: item2)
@@ -133,8 +123,8 @@ class PagingViewControllerSpec: QuickSpec {
           }
           
           it("updates view controllers when reloading data") {
-            let item2 = PagingIndexItem(index: 2, title: "2")
-            let item3 = PagingIndexItem(index: 3, title: "3")
+            let item2 = PagingTitleItem(title: "2", index: 2)
+            let item3 = PagingTitleItem(title: "3", index: 3)
             
             let viewController2 = UIViewController()
             let viewController3 = UIViewController()
@@ -148,8 +138,8 @@ class PagingViewControllerSpec: QuickSpec {
           }
           
           it("updates view controllers when reloading around last item") {
-            let item2 = PagingIndexItem(index: 2, title: "2")
-            let item3 = PagingIndexItem(index: 3, title: "3")
+            let item2 = PagingTitleItem(title: "2", index: 2)
+            let item3 = PagingTitleItem(title: "3", index: 3)
             
             let viewController2 = UIViewController()
             let viewController3 = UIViewController()
@@ -174,9 +164,9 @@ class PagingViewControllerSpec: QuickSpec {
           }
           
           it("selects previously selected item when reloading data") {
-            let item0 = PagingIndexItem(index: 0, title: "0")
-            let item1 = PagingIndexItem(index: 1, title: "1")
-            let item2 = PagingIndexItem(index: 2, title: "2")
+            let item0 = PagingTitleItem(title: "0", index: 0)
+            let item1 = PagingTitleItem(title: "1", index: 1)
+            let item2 = PagingTitleItem(title: "2", index: 2)
             let viewController2 = UIViewController()
             
             dataSource.viewControllers = [
@@ -203,8 +193,8 @@ class PagingViewControllerSpec: QuickSpec {
           }
           
           it("selects the first item when reloading data with all new items") {
-            let item2 = PagingIndexItem(index: 2, title: "2")
-            let item3 = PagingIndexItem(index: 3, title: "3")
+            let item2 = PagingTitleItem(title: "2", index: 2)
+            let item3 = PagingTitleItem(title: "3", index: 3)
             
             pagingViewController.select(index: 1)
             pagingViewController.view.layoutIfNeeded()
@@ -255,8 +245,8 @@ class PagingViewControllerSpec: QuickSpec {
                 UIViewController()
               ]
               dataSource.items = [
-                PagingIndexItem(index: 0, title: "0"),
-                PagingIndexItem(index: 1, title: "1")
+                PagingTitleItem(title: "0", index: 0),
+                PagingTitleItem(title: "1", index: 1)
               ]
               
               pagingViewController.reloadData()
@@ -280,7 +270,7 @@ class PagingViewControllerSpec: QuickSpec {
       describe("selecting items") {
         
         let dataSource = DataSource()
-        var viewController: PagingViewController<Item>!
+        var viewController: PagingViewController!
         
         beforeEach {
           viewController = PagingViewController()
@@ -328,18 +318,6 @@ class PagingViewControllerSpec: QuickSpec {
           }
         }
         
-        it("deinits FixedPagingViewController") {
-          let viewController = UIViewController()
-          var instance: DeinitFixedPagingViewController? = DeinitFixedPagingViewController(viewControllers: [viewController])
-          waitUntil { done in
-            instance?.deinitCalled = {
-              done()
-            }
-            DispatchQueue.global(qos: .background).async {
-              instance = nil
-            }
-          }
-        }
       }
     }
   }

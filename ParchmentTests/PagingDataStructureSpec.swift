@@ -9,7 +9,7 @@ class PagingDataSpec: QuickSpec {
     
     describe("PagingData") {
       
-      var visibleItems: PagingItems<Item>!
+      var visibleItems: PagingItems!
       
       beforeEach {
         visibleItems = PagingItems(items: [
@@ -36,7 +36,7 @@ class PagingDataSpec: QuickSpec {
       describe("pagingItemForIndexPath:") {
         it("returns the paging item for a given index path") {
           let indexPath = IndexPath(item: 0, section: 0)
-          let pagingItem = visibleItems.pagingItem(for: indexPath)
+          let pagingItem = visibleItems.pagingItem(for: indexPath) as! Item
           expect(pagingItem).to(equal(Item(index: 0)))
         }
       }

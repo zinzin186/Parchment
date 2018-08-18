@@ -1,15 +1,12 @@
 import Foundation
 
-class IndexedPagingDataSource<T: PagingItem>:
-  PagingViewControllerInfiniteDataSource where T: Hashable & Comparable {
+class IndexedPagingDataSource: PagingViewControllerInfiniteDataSource {
   
-  var items: [T] = []
+  var items: [PagingItem] = []
   var viewControllerForIndex: ((Int) -> UIViewController?)?
   
-  func pagingViewController<U>(
-    _ pagingViewController: PagingViewController<U>,
-    viewControllerForPagingItem item: U) -> UIViewController {
-    guard let index = items.index(of: item as! T) else {
+  func pagingViewController(_: PagingViewController, viewControllerFor pagingItem: PagingItem) -> UIViewController {
+    guard let index = items.index(where: { $0.isEqual(to: pagingItem) }) else {
       fatalError("pagingViewController:viewControllerForPagingItem: PagingItem does not exist")
     }
     guard let viewController = viewControllerForIndex?(index) else {
@@ -19,22 +16,18 @@ class IndexedPagingDataSource<T: PagingItem>:
     return viewController
   }
   
-  func pagingViewController<U>(
-    _ pagingViewController: PagingViewController<U>,
-    pagingItemBeforePagingItem item: U) -> U? {
-    guard let index = items.index(of: item as! T) else { return nil }
+  func pagingViewController(_: PagingViewController, itemBefore pagingItem: PagingItem) -> PagingItem? {
+    guard let index = items.index(where: { $0.isEqual(to: pagingItem) }) else { return nil }
     if index > 0 {
-      return items[index - 1] as? U
+      return items[index - 1]
     }
     return nil
   }
   
-  func pagingViewController<U>(
-    _ pagingViewController: PagingViewController<U>,
-    pagingItemAfterPagingItem item: U) -> U? {
-    guard let index = items.index(of: item as! T) else { return nil }
+  func pagingViewController(_: PagingViewController, itemAfter pagingItem: PagingItem) -> PagingItem? {
+    guard let index = items.index(where: { $0.isEqual(to: pagingItem) }) else { return nil }
     if index < items.count - 1 {
-      return items[index + 1] as? U
+      return items[index + 1]
     }
     return nil
   }
