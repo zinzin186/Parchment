@@ -1,19 +1,26 @@
 import Foundation
 
-class IndexedPagingDataSource: PagingViewControllerInfiniteDataSource {
+class PagingStaticDataSource: PagingViewControllerInfiniteDataSource {
   
-  var items: [PagingItem] = []
-  var viewControllerForIndex: ((Int) -> UIViewController?)?
+  private(set) var items: [PagingItem] = []
+  private let viewControllers: [UIViewController]
+  
+  init(viewControllers: [UIViewController]) {
+    self.viewControllers = viewControllers
+    self.reloadItems()
+  }
+  
+  func reloadItems() {
+    self.items = viewControllers.enumerated().map {
+      return PagingTitleItem(title: $1.title ?? "", index: $0)
+    }
+  }
   
   func pagingViewController(_: PagingViewController, viewControllerFor pagingItem: PagingItem) -> UIViewController {
     guard let index = items.index(where: { $0.isEqual(to: pagingItem) }) else {
-      fatalError("pagingViewController:viewControllerForPagingItem: PagingItem does not exist")
+      fatalError("pagingViewController:viewControllerFor: PagingItem does not exist")
     }
-    guard let viewController = viewControllerForIndex?(index) else {
-       fatalError("pagingViewController:viewControllerForPagingItem: No view controller exist for PagingItem")
-    }
-    
-    return viewController
+    return viewControllers[index]
   }
   
   func pagingViewController(_: PagingViewController, itemBefore pagingItem: PagingItem) -> PagingItem? {
@@ -31,4 +38,5 @@ class IndexedPagingDataSource: PagingViewControllerInfiniteDataSource {
     }
     return nil
   }
+  
 }

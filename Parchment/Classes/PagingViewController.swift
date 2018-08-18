@@ -286,12 +286,21 @@ open class PagingViewController:
   private let stateMachine: PagingStateMachine
   private var swipeGestureRecognizerLeft: UISwipeGestureRecognizer?
   private var swipeGestureRecognizerRight: UISwipeGestureRecognizer?
-  private var indexedDataSource: IndexedPagingDataSource?
   private var didLayoutSubviews: Bool = false
   private let PagingCellReuseIdentifier = "PagingCellReuseIdentifier"
+  
   private var pagingView: PagingView {
     return view as! PagingView
   }
+  
+  private enum DataSourceReference {
+    case `static`(PagingStaticDataSource)
+    case finite(PagingFiniteDataSource)
+    case none
+  }
+  
+  /// Used to keep a strong reference to the internal data sources.
+  private var dataSourceReference: DataSourceReference = .none
   
   // MARK: Initializers
 
@@ -309,6 +318,11 @@ open class PagingViewController:
     super.init(nibName: nil, bundle: nil)
     configureCollectionViewLayout()
     configureStateMachine()
+  }
+  
+  public convenience init(viewControllers: [UIViewController]) {
+    self.init()
+    configureDataSource(for: viewControllers)
   }
 
   /// Creates an instance of `PagingViewController`.
@@ -336,13 +350,23 @@ open class PagingViewController:
   /// as we then need to know what the initial item should be. You
   /// should use the reloadData(around:) method in that case.
   open func reloadData() {
-    let items = generateItemsForIndexedDataSource()
-    indexedDataSource?.items = items
+    var updatedItems: [PagingItem] = []
+    
+    switch dataSourceReference {
+    case let .static(dataSource):
+      dataSource.reloadItems()
+      updatedItems = dataSource.items
+    case let .finite(dataSource):
+      dataSource.items = itemsForFiniteDataSource()
+      updatedItems = dataSource.items
+    default:
+      break
+    }
     
     if let previouslySelected = state.currentPagingItem,
-      let pagingItem = items.first(where: { $0.isEqual(to: previouslySelected) }) {
+      let pagingItem = updatedItems.first(where: { $0.isEqual(to: previouslySelected) }) {
       resetItems(around: pagingItem)
-    } else if let firstItem = items.first {
+    } else if let firstItem = updatedItems.first {
       resetItems(around: firstItem)
     } else {
       stateMachine.fire(.removeAll)
@@ -359,7 +383,12 @@ open class PagingViewController:
   /// - Parameter pagingItem: The `PagingItem` that will be selected
   /// after the data reloads.
   open func reloadData(around pagingItem: PagingItem) {
-    indexedDataSource?.items = generateItemsForIndexedDataSource()
+    switch dataSourceReference {
+    case let .finite(dataSource):
+      dataSource.items = itemsForFiniteDataSource()
+    default:
+      break
+    }
     resetItems(around: pagingItem)
   }
 
@@ -571,7 +600,7 @@ open class PagingViewController:
     }
   }
 
-  private func generateItemsForIndexedDataSource() -> [PagingItem] {
+  private func itemsForFiniteDataSource() -> [PagingItem] {
     let numberOfItems = dataSource?.numberOfViewControllers(in: self) ?? 0
     var items: [PagingItem] = []
     
@@ -585,16 +614,26 @@ open class PagingViewController:
   }
   
   private func configureDataSource() {
-    indexedDataSource = IndexedPagingDataSource()
-    indexedDataSource?.items = generateItemsForIndexedDataSource()
-    indexedDataSource?.viewControllerForIndex = { [unowned self] in
+    let dataSource = PagingFiniteDataSource()
+    dataSource.items = itemsForFiniteDataSource()
+    dataSource.viewControllerForIndex = { [unowned self] in
       return self.dataSource?.pagingViewController(self, viewControllerAt: $0)
     }
   
-    infiniteDataSource = indexedDataSource
+    dataSourceReference = .finite(dataSource)
+    infiniteDataSource = dataSource
     
-    if let firstItem = indexedDataSource?.items.first {
+    if let firstItem = dataSource.items.first {
       select(pagingItem: firstItem)
+    }
+  }
+  
+  private func configureDataSource(for viewControllers: [UIViewController]) {
+    let dataSource = PagingStaticDataSource(viewControllers: viewControllers)
+    dataSourceReference = .static(dataSource)
+    infiniteDataSource = dataSource
+    if let item = dataSource.items.first {
+      select(pagingItem: item)
     }
   }
   
