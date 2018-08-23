@@ -140,6 +140,11 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     invalidationState = .nothing
   }
   
+  open override func invalidateLayout() {
+    super.invalidateLayout()
+    invalidationState = .everything
+  }
+  
   override open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
     super.invalidateLayout(with: context)
     invalidationState = invalidationState + InvalidationState(context)
