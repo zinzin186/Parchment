@@ -1,6 +1,13 @@
 import UIKit
+import Parchment
+
+protocol ImagesViewControllerDelegate: class {
+  func imagesViewControllerDidScroll(_: ImagesViewController)
+}
 
 class ImagesViewController: UIViewController {
+  
+  weak var delegate: ImagesViewControllerDelegate?
   
   fileprivate let images: [UIImage]
   
@@ -11,13 +18,13 @@ class ImagesViewController: UIViewController {
     return layout
   }()
   
-  fileprivate lazy var collectionView: UICollectionView = {
+  lazy var collectionView: UICollectionView = {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
     collectionView.backgroundColor = .white
     return collectionView
   }()
   
-  init(images: [UIImage]) {
+  init(images: [UIImage], options: PagingOptions) {
     self.images = images
     super.init(nibName: nil, bundle: nil)
     
@@ -48,6 +55,10 @@ extension ImagesViewController: UICollectionViewDelegateFlowLayout {
     return CGSize(
       width: collectionView.bounds.width - 36,
       height: 220)
+  }
+  
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    delegate?.imagesViewControllerDidScroll(self)
   }
   
 }
