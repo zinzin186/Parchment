@@ -777,6 +777,8 @@ open class PagingViewController<T: PagingItem>:
     
     pageViewController.removeAllViewControllers()
     selectViewController(pagingItem, direction: .none, animated: false)
+    
+    configureSizeCache(for: pagingItem)
 
     // Reloading the data triggers the didFinishScrollingFrom delegate
     // to be called which in turn means the wrong item will be selected.
