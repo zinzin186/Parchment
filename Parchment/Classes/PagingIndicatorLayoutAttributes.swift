@@ -22,10 +22,10 @@ open class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
   }
   
   func configure(_ options: PagingOptions) {
-    if case let .visible(height, index, _, _) = options.indicatorOptions {
+    if case let .visible(height, index, _, insets) = options.indicatorOptions {
       backgroundColor = options.indicatorColor
       frame.size.height = height
-      frame.origin.y = options.menuHeight - height
+      frame.origin.y = options.menuHeight - height - insets.bottom + insets.top
       zIndex = index
     }
   }
