@@ -12,10 +12,6 @@
 * Fix issue with width delegate not being called #244
 * Fix issue with invalidating collection view layout #240
 
-### Added
-
-* Add selectedFont option #266
-
 ## [1.4.1](https://github.com/rechsteiner/Parchment/compare/v1.4.0...v1.4.1) - 2018-08-15
 
 ### Fixes
