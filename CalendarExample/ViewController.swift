@@ -16,15 +16,7 @@ struct CalendarItem: PagingItem, Hashable, Comparable {
     self.weekdayText = DateFormatters.weekdayFormatter.string(from: date)
   }
   
-  var hashValue: Int {
-    return date.hashValue
-  }
-  
-  static func ==(lhs: CalendarItem, rhs: CalendarItem) -> Bool {
-    return lhs.date == rhs.date
-  }
-  
-  static func <(lhs: CalendarItem, rhs: CalendarItem) -> Bool {
+  static func < (lhs: CalendarItem, rhs: CalendarItem) -> Bool {
     return lhs.date < rhs.date
   }
 }

@@ -1,7 +1,7 @@
 import UIKit
 import Parchment
 
-struct IconItem: PagingItem, Equatable, Comparable {
+struct IconItem: PagingItem, Hashable, Comparable {
   
   let icon: String
   let index: Int
@@ -13,19 +13,8 @@ struct IconItem: PagingItem, Equatable, Comparable {
     self.image = UIImage(named: icon)
   }
   
-  var identifier: Int {
-    return icon.hashValue
-  }
-  
   static func <(lhs: IconItem, rhs: IconItem) -> Bool {
     return lhs.index < rhs.index
-  }
-  
-  static func ==(lhs: IconItem, rhs: IconItem) -> Bool {
-    return (
-      lhs.index == rhs.index &&
-      lhs.icon == rhs.icon
-    )
   }
 }
 

@@ -12,15 +12,7 @@ struct ImageItem: PagingItem, Hashable, Comparable {
   let headerImage: UIImage
   let images: [UIImage]
   
-  var hashValue: Int {
-    return index.hashValue &+ title.hashValue
-  }
-  
-  static func ==(lhs: ImageItem, rhs: ImageItem) -> Bool {
-    return lhs.index == rhs.index && lhs.title == rhs.title
-  }
-  
-  static func <(lhs: ImageItem, rhs: ImageItem) -> Bool {
+  static func < (lhs: ImageItem, rhs: ImageItem) -> Bool {
     return lhs.index < rhs.index
   }
 }
