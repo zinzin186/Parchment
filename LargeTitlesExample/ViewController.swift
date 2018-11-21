@@ -34,7 +34,7 @@ class CustomPagingView: PagingView {
 
 // Create a custom paging view controller and override the view with
 // our own custom subclass.
-class CustomPagingViewController: PagingViewController<PagingIndexItem> {
+class CustomPagingViewController: PagingViewController {
     override func loadView() {
         view = CustomPagingView(
             options: options,
@@ -132,7 +132,7 @@ class ViewController: UIViewController {
 
 extension ViewController: PagingViewControllerDataSource {
     
-    func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+  func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
         let viewController = TableViewController(style: .plain)
         
         // Inset the table view with the height of the menu height.
@@ -142,11 +142,11 @@ extension ViewController: PagingViewControllerDataSource {
         return viewController
     }
     
-    func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
-        return PagingIndexItem(index: index, title: "View \(index)") as! T
+  func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
+        return PagingTitleItem(title: "View \(index)", index: index)
     }
     
-    func numberOfViewControllers<T>(in pagingViewController: PagingViewController<T>) -> Int {
+    func numberOfViewControllers(in pagingViewController: PagingViewController) -> Int {
         return 3
     }
     
@@ -154,14 +154,14 @@ extension ViewController: PagingViewControllerDataSource {
 
 extension ViewController: PagingViewControllerDelegate {
     
-    func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, willScrollToItem pagingItem: T, startingViewController: UIViewController, destinationViewController: UIViewController) {
+    func pagingViewController(_: PagingViewController, willScrollToItem pagingItem: PagingItem, startingViewController: UIViewController, destinationViewController: UIViewController) {
         guard let startingViewController = startingViewController as? TableViewController else { return }
         // Remove the UITableViewDelegate delegate when starting to
         // scroll to another page.
         startingViewController.tableView.delegate = nil
     }
 
-    func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, didScrollToItem pagingItem: T, startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
+    func pagingViewController(_: PagingViewController, didScrollToItem pagingItem: PagingItem, startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
         guard let destinationViewController = destinationViewController as? TableViewController else { return }
         guard let startingViewController = startingViewController as? TableViewController else { return }
 

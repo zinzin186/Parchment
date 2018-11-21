@@ -15,8 +15,7 @@ import UIKit
 /// `PagingItem`. You can customize their layout attributes by
 /// updating the `indicatorLayoutAttributes` and
 /// `borderLayoutAttributes` properties.
-open class PagingCollectionViewLayout<T: PagingItem>:
-  UICollectionViewLayout, PagingLayout where T: Hashable & Comparable {
+open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
   
   // MARK: Public Properties
   
@@ -27,7 +26,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   /// The current state of the menu items. Indicates whether an item
   /// is currently selected or is scrolling to another item. Can be
   /// used to get the distance and progress of any ongoing transition.
-  public var state: PagingState<T> = .empty
+  public var state: PagingState = .empty
   
   /// A dictionary containing all the layout attributes for a given
   /// `IndexPath`. This will be generated in the `prepare()` call when
@@ -49,7 +48,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   /// The `PagingItem`'s that are currently visible in the collection
   /// view. The items in this array are not necessarily the same as
   /// the `visibleCells` property on `UICollectionView`.
-  public var visibleItems: PagingItems<T>
+  public var visibleItems: PagingItems
   
   open override var collectionViewContentSize: CGSize {
     return contentSize
@@ -61,7 +60,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   
   // MARK: Internal Properties
   
-  var sizeCache: PagingSizeCache<T>?
+  var sizeCache: PagingSizeCache?
   var contentInsets: UIEdgeInsets = .zero
   
   // MARK: Private Properties
@@ -224,9 +223,9 @@ open class PagingCollectionViewLayout<T: PagingItem>:
         var width = sizeCache.itemWidth(for: pagingItem)
         let selectedWidth = sizeCache.itemWidthSelected(for: pagingItem)
         
-        if state.currentPagingItem == pagingItem {
+        if let currentPagingItem = state.currentPagingItem, currentPagingItem.isEqual(to: pagingItem) {
           width = tween(from: selectedWidth, to: width, progress: abs(state.progress))
-        } else if state.upcomingPagingItem == pagingItem {
+        } else if let upcomingPagingItem = state.upcomingPagingItem, upcomingPagingItem.isEqual(to: pagingItem) {
           width = tween(from: width, to: selectedWidth, progress: abs(state.progress))
         }
         
@@ -371,7 +370,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private func indicatorMetricForFirstItem() -> PagingIndicatorMetric? {
     guard let currentPagingItem = state.currentPagingItem else { return nil }
     if let first = visibleItems.items.first {
-      if currentPagingItem < first {
+      if currentPagingItem.isBefore(item: first) {
         return PagingIndicatorMetric(
           frame: indicatorFrameForIndex(-1),
           insets: indicatorInsetsForIndex(-1),
@@ -384,7 +383,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private func indicatorMetricForLastItem() -> PagingIndicatorMetric? {
     guard let currentPagingItem = state.currentPagingItem else { return nil }
     if let last = visibleItems.items.last {
-      if currentPagingItem > last {
+      if last.isBefore(item: currentPagingItem) {
         return PagingIndicatorMetric(
           frame: indicatorFrameForIndex(visibleItems.items.count),
           insets: indicatorInsetsForIndex(visibleItems.items.count),
@@ -450,7 +449,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       let frame = frameForIndex(0)
       return frame.offsetBy(dx: -frame.width, dy: 0)
     } else if index > range.upperBound - 1 {
-      let frame = frameForIndex(visibleItems.itemsCache.count - 1)
+      let frame = frameForIndex(visibleItems.items.count - 1)
       return frame.offsetBy(dx: frame.width, dy: 0)
     }
     
@@ -472,8 +471,10 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       let indexPath = IndexPath(item: index, section: 0)
       let pagingItem = visibleItems.pagingItem(for: indexPath)
 
-      if state.upcomingPagingItem == pagingItem || state.currentPagingItem == pagingItem  {
-        frame.size.width = sizeCache.itemWidthSelected(for: pagingItem)
+      if let upcomingPagingItem = state.upcomingPagingItem, let currentPagingItem = state.currentPagingItem {
+        if upcomingPagingItem.isEqual(to: pagingItem) || currentPagingItem.isEqual(to: pagingItem)  {
+          frame.size.width = sizeCache.itemWidthSelected(for: pagingItem)
+        }
       }
     }
 

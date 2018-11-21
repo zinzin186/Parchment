@@ -1,12 +1,12 @@
 import Foundation
 
-struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
+struct PagingDistance {
   
   let view: UIScrollView
-  let currentPagingItem: T
-  let upcomingPagingItem: T
-  let visibleItems: PagingItems<T>
-  let sizeCache: PagingSizeCache<T>
+  let currentPagingItem: PagingItem
+  let upcomingPagingItem: PagingItem
+  let visibleItems: PagingItems
+  let sizeCache: PagingSizeCache
   let selectedScrollPosition: PagingSelectedScrollPosition
   let layoutAttributes: [IndexPath: PagingCellLayoutAttributes]
   
@@ -81,7 +81,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
     if sizeCache.implementsWidthDelegate {
       if let currentIndexPath = visibleItems.indexPath(for: currentPagingItem),
         let from = layoutAttributes[currentIndexPath] {
-        if upcomingPagingItem > currentPagingItem {
+        if currentPagingItem.isBefore(item: upcomingPagingItem) {
           let fromWidth = sizeCache.itemWidth(for: currentPagingItem)
           let fromDiff = from.bounds.width - fromWidth
           distance -= fromDiff
@@ -104,7 +104,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
     if sizeCache.implementsWidthDelegate {
       if let currentIndexPath = visibleItems.indexPath(for: currentPagingItem),
         let from = layoutAttributes[currentIndexPath] {
-        if upcomingPagingItem < currentPagingItem {
+        if upcomingPagingItem.isBefore(item: currentPagingItem) {
           let toDiff = toWidth - to.bounds.width
           distance += toDiff
         } else {
@@ -140,7 +140,7 @@ struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
       if sizeCache.implementsWidthDelegate {
         let fromWidth = sizeCache.itemWidth(for: currentPagingItem)
         
-        if upcomingPagingItem < currentPagingItem {
+        if upcomingPagingItem.isBefore(item: currentPagingItem) {
           distance = -(to.bounds.width + (from.center.x - (to.center.x + (to.bounds.width / 2))) - (toWidth / 2)) - distanceToCenter
         } else {
           let toDiff = (toWidth - to.bounds.width) / 2
