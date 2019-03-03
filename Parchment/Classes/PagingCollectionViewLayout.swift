@@ -435,7 +435,9 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
   
   private func indicatorInsetsForIndex(_ index: Int) -> PagingIndicatorMetric.Inset {
     if case let .visible(_, _, _, insets) = options.indicatorOptions {
-      if index == range.lowerBound {
+      if index == 0 && range.upperBound == 1 {
+        return .both(insets.left, insets.right)
+      } else if index == range.lowerBound {
         return .left(insets.left)
       } else if index >= range.upperBound - 1 {
         return .right(insets.right)

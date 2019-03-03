@@ -343,13 +343,9 @@ open class PagingViewController:
   
   // MARK: Public Methods
   
-  /// Reload data for all the menu items. This will keep the
-  /// previously selected item if it's still part of the updated data.
-  /// If not, it will select the first item in the list. This method
-  /// will not work when using PagingViewControllerInfiniteDataSource
-  /// as we then need to know what the initial item should be. You
-  /// should use the reloadData(around:) method in that case.
-  open func reloadData() {
+  /// Reload the data for the menu items. This method will not reload
+  /// the view controllers.
+  open func reloadMenu() {
     var updatedItems: [PagingItem] = []
     
     switch dataSourceReference {
@@ -373,6 +369,38 @@ open class PagingViewController:
     }
   }
   
+  /// Reload data for all the menu items. This will keep the
+  /// previously selected item if it's still part of the updated data.
+  /// If not, it will select the first item in the list. This method
+  /// will not work when using PagingViewControllerInfiniteDataSource
+  /// as we then need to know what the initial item should be. You
+  /// should use the reloadData(around:) method in that case.
+  open func reloadData() {
+    var updatedItems: [PagingItem] = []
+    
+    switch dataSourceReference {
+    case let .static(dataSource):
+      dataSource.reloadItems()
+      updatedItems = dataSource.items
+    case let .finite(dataSource):
+      dataSource.items = itemsForFiniteDataSource()
+      updatedItems = dataSource.items
+    default:
+      break
+    }
+    
+    if let previouslySelected = state.currentPagingItem,
+      let pagingItem = updatedItems.first(where: { $0.isEqual(to: previouslySelected) }) {
+      resetItems(around: pagingItem)
+      resetViewControllers(around: pagingItem)
+    } else if let firstItem = updatedItems.first {
+      resetItems(around: firstItem)
+      resetViewControllers(around: firstItem)
+    } else {
+      stateMachine.fire(.removeAll)
+    }
+  }
+  
   /// Reload data around given paging item. This will set the given
   /// paging item as selected and generate new items around it. This
   /// will also reload the view controllers displayed in the page view
@@ -390,6 +418,7 @@ open class PagingViewController:
       break
     }
     resetItems(around: pagingItem)
+    resetViewControllers(around: pagingItem)
   }
 
   /// Selects a given paging item. This need to be called after you
@@ -827,11 +856,13 @@ open class PagingViewController:
     stateMachine.fire(.reset(pagingItem: pagingItem))
     collectionView.reloadData()
     
+    configureSizeCache(for: pagingItem)
+  }
+  
+  private func resetViewControllers(around pagingItem: PagingItem) {
     pageViewController.removeAllViewControllers()
     selectViewController(pagingItem, direction: .none, animated: false)
     
-    configureSizeCache(for: pagingItem)
-
     // Reloading the data triggers the didFinishScrollingFrom delegate
     // to be called which in turn means the wrong item will be selected.
     // For now, we just fix this by selecting the correct item manually.
