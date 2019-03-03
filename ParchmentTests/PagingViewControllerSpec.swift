@@ -79,6 +79,72 @@ class PagingViewControllerSpec: QuickSpec {
     
     describe("PagingViewController") {
       
+      describe("reloading menu") {
+        
+        let dataSource = ReloadingDataSource()
+        var pagingViewController: PagingViewController<PagingIndexItem>!
+        var viewController0: UIViewController!
+        var viewController1: UIViewController!
+        
+        beforeEach {
+          viewController0 = UIViewController()
+          viewController1 = UIViewController()
+          
+          dataSource.viewControllers = [
+            viewController0,
+            viewController1
+          ]
+          
+          dataSource.items = [
+            PagingIndexItem(index: 0, title: "0"),
+            PagingIndexItem(index: 1, title: "1")
+          ]
+          
+          pagingViewController = PagingViewController()
+          pagingViewController.menuItemSize = .fixed(width: 100, height: 50)
+          pagingViewController.dataSource = dataSource
+          
+          UIApplication.shared.keyWindow!.rootViewController = pagingViewController
+          let _ = pagingViewController.view
+          
+          pagingViewController.collectionView.bounds = CGRect(x: 0, y: 0, width: 1000, height: 50)
+          pagingViewController.viewDidLayoutSubviews()
+        }
+        
+        it("reload the menu items") {
+          let item2 = PagingIndexItem(index: 0, title: "2")
+          let item3 = PagingIndexItem(index: 1, title: "3")
+          
+          dataSource.items = [item2, item3]
+          pagingViewController.reloadMenu()
+          pagingViewController.view.layoutIfNeeded()
+          
+          let cell2 = pagingViewController.collectionView.cellForItem(
+            at: IndexPath(item: 0, section: 0)
+          ) as? PagingTitleCell
+          let cell3 = pagingViewController.collectionView.cellForItem(
+            at: IndexPath(item: 1, section: 0)
+          ) as? PagingTitleCell
+          
+          expect(pagingViewController.collectionView.numberOfItems(inSection: 0)).to(equal(2))
+          expect(cell2?.titleLabel.text).to(equal("2"))
+          expect(cell3?.titleLabel.text).to(equal("3"))
+        }
+        
+        it("does not reload the view controllers") {
+          let viewController2 = UIViewController()
+          let viewController3 = UIViewController()
+          
+          dataSource.viewControllers = [viewController2, viewController3]
+          pagingViewController.reloadMenu()
+          
+          let pageViewController = pagingViewController.pageViewController
+          expect(pageViewController.selectedViewController).to(be(viewController0))
+          expect(pageViewController.afterViewController).to(be(viewController1))
+        }
+        
+      }
+      
       describe("reloading data") {
         
         let dataSource = ReloadingDataSource()
