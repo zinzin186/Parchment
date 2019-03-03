@@ -2,6 +2,17 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.6.0](https://github.com/rechsteiner/Parchment/compare/v1.5.0...v1.6.0) - 2018-03-03
+
+### Fixes
+
+* Forward appearance methods from EMPageViewController #306
+* Fix indicator insets with only one item #307
+
+### Added
+
+* Add method for reloading menu #312
+
 ## [1.5.0](https://github.com/rechsteiner/Parchment/compare/v1.4.1...v1.5.0) - 2018-11-18
 
 ### Fixes
