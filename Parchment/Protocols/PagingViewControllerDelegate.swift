@@ -69,7 +69,7 @@ public protocol PagingViewControllerDelegate: class {
 
 public extension PagingViewControllerDelegate {
 
-  public func pagingViewController(
+  func pagingViewController(
     _: PagingViewController,
     isScrollingFromItem currentPagingItem: PagingItem,
     toItem upcomingPagingItem: PagingItem?,
@@ -79,7 +79,7 @@ public extension PagingViewControllerDelegate {
     return
   }
   
-  public func pagingViewController(
+  func pagingViewController(
     _ pagingViewController: PagingViewController,
     willScrollToItem pagingItem: PagingItem,
     startingViewController: UIViewController,
@@ -87,7 +87,7 @@ public extension PagingViewControllerDelegate {
     return
   }
   
-  public func pagingViewController(
+  func pagingViewController(
     _ pagingViewController: PagingViewController,
     didScrollToItem pagingItem: PagingItem,
     startingViewController: UIViewController?,
@@ -96,7 +96,7 @@ public extension PagingViewControllerDelegate {
     return
   }
   
-  public func pagingViewController(
+  func pagingViewController(
     _ pagingViewController: PagingViewController,
     widthForPagingItem pagingItem: PagingItem,
     isSelected: Bool) -> CGFloat? {

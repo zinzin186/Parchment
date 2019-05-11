@@ -1203,7 +1203,7 @@
 					};
 					3E504EC31C7465B000AE1CE3 = {
 						CreatedOnToolsVersion = 7.2.1;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 1020;
 						TestTargetID = 3EA04A591C53BFF40054E5E0;
 					};
 					3E5E93EF1CE8BA1E000762A1 = {
@@ -1214,12 +1214,12 @@
 					3EA04A4A1C53BFE40054E5E0 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = G4TGN24VA2;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 					};
 					3EA04A591C53BFF40054E5E0 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = G4TGN24VA2;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 					};
 					9525C6391FEE6DDC00A18EA0 = {
 						CreatedOnToolsVersion = 9.2;
@@ -1257,7 +1257,7 @@
 			};
 			buildConfigurationList = 3EA04A451C53BFE40054E5E0 /* Build configuration list for PBXProject "Parchment" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -1890,8 +1890,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.ParchmentTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example.app/Example";
 			};
 			name = Debug;
@@ -1907,8 +1906,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.ParchmentTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example.app/Example";
 			};
 			name = Release;
@@ -2080,7 +2078,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -2106,7 +2104,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.Parchment;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -2126,7 +2124,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -2146,7 +2144,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
