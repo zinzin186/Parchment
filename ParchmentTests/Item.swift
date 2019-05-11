@@ -4,8 +4,8 @@ import Foundation
 struct Item: PagingItem, Hashable, Comparable {
   let index: Int
   
-  var hashValue: Int {
-    return index
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(index)
   }
 }
 
