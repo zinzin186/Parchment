@@ -7,8 +7,8 @@ struct AnyPagingItem: PagingItem, Hashable, Comparable {
     self.base = base
   }
   
-  var hashValue: Int {
-    return base.identifier
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(base.identifier)
   }
   
   static func < (lhs: AnyPagingItem, rhs: AnyPagingItem) -> Bool {

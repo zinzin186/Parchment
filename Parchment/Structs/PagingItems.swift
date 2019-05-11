@@ -29,7 +29,7 @@ public struct PagingItems {
   /// - Parameter pagingItem: A `PagingItem` instance
   /// - Returns: The `IndexPath` for the given `PagingItem`
   public func indexPath(for pagingItem: PagingItem) -> IndexPath? {
-    guard let index = items.index(where: { $0.isEqual(to: pagingItem) }) else { return nil }
+    guard let index = items.firstIndex(where: { $0.isEqual(to: pagingItem) }) else { return nil }
     return IndexPath(item: index, section: 0)
   }
   
