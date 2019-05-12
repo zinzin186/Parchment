@@ -2,7 +2,7 @@ import Foundation
 
 struct PagingDistance {
   
-  let view: UIScrollView
+  let view: CollectionView
   let currentPagingItem: PagingItem
   let upcomingPagingItem: PagingItem
   let visibleItems: PagingItems
