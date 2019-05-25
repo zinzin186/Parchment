@@ -17,6 +17,10 @@ protocol PagingControllerSizeDelegate: class {
 }
 
 final class PagingController: NSObject {
+  
+  weak var dataSource: PagingControllerDataSource?
+  weak var sizeDelegate: PagingControllerSizeDelegate?
+  weak var delegate: PagingControllerDelegate?
 
   weak var collectionView: CollectionView! {
     didSet {
@@ -24,15 +28,36 @@ final class PagingController: NSObject {
     }
   }
   
-  weak var collectionViewLayout: CollectionViewLayout!
-  weak var dataSource: PagingControllerDataSource?
-  weak var sizeDelegate: PagingControllerSizeDelegate?
-  weak var delegate: PagingControllerDelegate?
+  weak var collectionViewLayout: CollectionViewLayout! {
+    didSet {
+      configureCollectionViewLayout()
+    }
+  }
   
-  private(set) var state: PagingState
-  private(set) var visibleItems: PagingItems
-  private(set) var options: PagingOptions
-  private(set) var sizeCache: PagingSizeCache
+  var options: PagingOptions {
+    didSet {
+      optionsChanged(oldValue: oldValue)
+    }
+  }
+  
+  private(set) var state: PagingState {
+    didSet {
+      collectionViewLayout.state = state
+    }
+  }
+  
+  private(set) var visibleItems: PagingItems {
+    didSet {
+      collectionViewLayout.visibleItems = visibleItems
+    }
+  }
+  
+  private(set) var sizeCache: PagingSizeCache {
+    didSet {
+      collectionViewLayout.sizeCache = sizeCache
+    }
+  }
+  
   private var swipeGestureRecognizerLeft: UISwipeGestureRecognizer?
   private var swipeGestureRecognizerRight: UISwipeGestureRecognizer?
   private static let CellIdentifier = "PagingController-CellIdentifier"
@@ -308,7 +333,28 @@ final class PagingController: NSObject {
     }
   }
   
-  func configureCollectionView() {
+  // MARK: Private
+  
+  private func optionsChanged(oldValue: PagingOptions) {
+    if options.menuInteraction != oldValue.menuInteraction {
+      configureMenuInteraction()
+    }
+    if options.menuItemSource != oldValue.menuItemSource {
+      configureMenuItemSource()
+    }
+    
+    sizeCache.options = options
+  }
+  
+  private func configureCollectionViewLayout() {
+    collectionViewLayout.state = state
+    collectionViewLayout.visibleItems = visibleItems
+    collectionViewLayout.sizeCache = sizeCache
+  }
+  
+  private func configureCollectionView() {
+    collectionView.isScrollEnabled = false
+    collectionView.alwaysBounceHorizontal = false
     collectionView.showsHorizontalScrollIndicator = false
     collectionView.dataSource = self
     
@@ -316,6 +362,11 @@ final class PagingController: NSObject {
       collectionView.contentInsetAdjustmentBehavior = .never
     }
     
+    configureMenuItemSource()
+    configureMenuInteraction()
+  }
+  
+  private func configureMenuItemSource() {
     switch options.menuItemSource {
     case .class(let type):
       collectionView.register(type, forCellWithReuseIdentifier: PagingController.CellIdentifier)
@@ -323,10 +374,9 @@ final class PagingController: NSObject {
     case .nib(let nib):
       collectionView.register(nib, forCellWithReuseIdentifier: PagingController.CellIdentifier)
     }
-    
-    collectionView.isScrollEnabled = false
-    collectionView.alwaysBounceHorizontal = false
-    
+  }
+  
+  private func configureMenuInteraction() {
     if let swipeGestureRecognizerLeft = swipeGestureRecognizerLeft {
       collectionView.removeGestureRecognizer(swipeGestureRecognizerLeft)
     }
@@ -345,8 +395,6 @@ final class PagingController: NSObject {
       break
     }
   }
-  
-  // MARK: Private
   
   private func setupGestureRecognizers() {
     let swipeGestureRecognizerLeft = UISwipeGestureRecognizer(

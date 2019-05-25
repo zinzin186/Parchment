@@ -2,10 +2,10 @@ import Foundation
 
 class PagingSizeCache {
   
+  var options: PagingOptions
   var implementsWidthDelegate: Bool = false
   var widthForPagingItem: ((PagingItem, Bool) -> CGFloat?)?
   
-  private let options: PagingOptions
   private var widthCache: [Int: CGFloat] = [:]
   private var selectedWidthCache: [Int: CGFloat] = [:]
   

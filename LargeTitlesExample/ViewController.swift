@@ -59,12 +59,12 @@ class ViewController: UIViewController {
         guard let navigationController = navigationController else { return }
         
         // Customize the menu to match the navigation bar color
-        pagingViewController.menuBackgroundColor = UIColor(red: 85/255, green: 66/255, blue: 232/255, alpha: 1)
-        pagingViewController.menuItemSize = .fixed(width: 150, height: 30)
-        pagingViewController.textColor = UIColor.white.withAlphaComponent(0.7)
-        pagingViewController.selectedTextColor = UIColor.white
-        pagingViewController.borderOptions = .hidden
-        pagingViewController.indicatorColor = UIColor(red: 10/255, green: 0, blue: 105/255, alpha: 1)
+        pagingViewController.options.menuBackgroundColor = UIColor(red: 85/255, green: 66/255, blue: 232/255, alpha: 1)
+        pagingViewController.options.menuItemSize = .fixed(width: 150, height: 30)
+        pagingViewController.options.textColor = UIColor.white.withAlphaComponent(0.7)
+        pagingViewController.options.selectedTextColor = UIColor.white
+        pagingViewController.options.borderOptions = .hidden
+        pagingViewController.options.indicatorColor = UIColor(red: 10/255, green: 0, blue: 105/255, alpha: 1)
         
         // Add the "hidden" scroll view to the root of the UIViewController.
         view.addSubview(hiddenScrollView)
@@ -99,7 +99,7 @@ class ViewController: UIViewController {
         navigationController.view.addSubview(pagingViewController.collectionView)
         pagingViewController.collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            pagingViewController.collectionView.heightAnchor.constraint(equalToConstant: pagingViewController.menuItemSize.height),
+            pagingViewController.collectionView.heightAnchor.constraint(equalToConstant: pagingViewController.options.menuItemSize.height),
             pagingViewController.collectionView.leadingAnchor.constraint(equalTo: navigationController.view.leadingAnchor),
             pagingViewController.collectionView.trailingAnchor.constraint(equalTo: navigationController.view.trailingAnchor),
             pagingViewController.collectionView.topAnchor.constraint(equalTo: navigationController.navigationBar.bottomAnchor),
@@ -136,7 +136,7 @@ extension ViewController: PagingViewControllerDataSource {
         let viewController = TableViewController(style: .plain)
         
         // Inset the table view with the height of the menu height.
-        let insets = UIEdgeInsets(top: pagingViewController.menuItemSize.height, left: 0, bottom: 0, right: 0)
+        let insets = UIEdgeInsets(top: pagingViewController.options.menuItemSize.height, left: 0, bottom: 0, right: 0)
         viewController.tableView.scrollIndicatorInsets = insets
         viewController.tableView.contentInset = insets
         return viewController

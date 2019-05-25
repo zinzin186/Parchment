@@ -12,6 +12,9 @@ final class MockCollectionViewLayout: CollectionViewLayout, Mock {
   var calls: [MockCall] = []
   var contentInsets: UIEdgeInsets = .zero
   var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
+  var state: PagingState = .empty
+  var visibleItems = PagingItems(items: [])
+  var sizeCache: PagingSizeCache?
   
   func prepare() {
     calls.append(MockCall(
