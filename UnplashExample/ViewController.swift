@@ -144,21 +144,21 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    pagingViewController.menuItemSource = .class(type: ImagePagingCell.self)
-    pagingViewController.menuItemSize = .fixed(width: menuItemSize.width, height: menuItemSize.height)
-    pagingViewController.menuItemSpacing = 8
-    pagingViewController.menuInsets = menuInsets
-    pagingViewController.borderColor = UIColor(white: 0, alpha: 0.1)
-    pagingViewController.indicatorColor = .black
+    pagingViewController.options.menuItemSource = .class(type: ImagePagingCell.self)
+    pagingViewController.options.menuItemSize = .fixed(width: menuItemSize.width, height: menuItemSize.height)
+    pagingViewController.options.menuItemSpacing = 8
+    pagingViewController.options.menuInsets = menuInsets
+    pagingViewController.options.borderColor = UIColor(white: 0, alpha: 0.1)
+    pagingViewController.options.indicatorColor = .black
     
-    pagingViewController.indicatorOptions = .visible(
+    pagingViewController.options.indicatorOptions = .visible(
       height: 1,
       zIndex: Int.max,
       spacing: UIEdgeInsets.zero,
       insets: UIEdgeInsets.zero
     )
     
-    pagingViewController.borderOptions = .visible(
+    pagingViewController.options.borderOptions = .visible(
       height: 1,
       zIndex: Int.max - 1,
       insets: UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
@@ -195,7 +195,7 @@ class ViewController: UIViewController {
     menuView.menuHeightConstraint?.constant = height
     
     // Update the size of the menu items.
-    pagingViewController.menuItemSize = .fixed(
+    pagingViewController.options.menuItemSize = .fixed(
       width: menuItemSize.width,
       height: height - menuInsets.top - menuInsets.bottom
     )

@@ -28,7 +28,7 @@ class ViewController: UIViewController {
     
     let pagingViewController = PagingViewController()
     pagingViewController.dataSource = self
-    pagingViewController.delegate = self
+    pagingViewController.sizeDelegate = self
     
     // Add the paging view controller as a child view controller and
     // contrain it to all edges.
@@ -56,7 +56,7 @@ extension ViewController: PagingViewControllerDataSource {
   
 }
 
-extension ViewController: PagingViewControllerDelegate {
+extension ViewController: PagingViewControllerSizeDelegate {
   
   // We want the size of our paging items to equal the width of the
   // city title. Parchment does not support self-sizing cells at
@@ -64,7 +64,7 @@ extension ViewController: PagingViewControllerDelegate {
   // can access the title string by casting the paging item to a
   // PagingTitleItem, which is the PagingItem type used by
   // FixedPagingViewController.
-  func pagingViewController(_ pagingViewController: PagingViewController, widthForPagingItem pagingItem: PagingItem, isSelected: Bool) -> CGFloat? {
+  func pagingViewController(_ pagingViewController: PagingViewController, widthForPagingItem pagingItem: PagingItem, isSelected: Bool) -> CGFloat {
     guard let item = pagingItem as? PagingTitleItem else { return 0 }
     
     let insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)

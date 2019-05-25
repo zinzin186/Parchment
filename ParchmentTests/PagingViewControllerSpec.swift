@@ -28,10 +28,10 @@ class DataSource: PagingViewControllerInfiniteDataSource {
   
 }
 
-class Delegate: PagingViewControllerDelegate {
+class SizeDelegate: PagingViewControllerSizeDelegate {
   
-  func pagingViewController(_ pagingViewController: PagingViewController, widthForPagingItem pagingItem: PagingItem, isSelected: Bool) -> CGFloat? {
-    guard let item = pagingItem as? PagingTitleItem else { return nil }
+  func pagingViewController(_ pagingViewController: PagingViewController, widthForPagingItem pagingItem: PagingItem, isSelected: Bool) -> CGFloat {
+    guard let item = pagingItem as? PagingTitleItem else { return 0 }
     if item.index == 0 {
       return 100
     } else {
@@ -138,7 +138,7 @@ class PagingViewControllerSpec: QuickSpec {
       describe("reloading data") {
         
         let dataSource = ReloadingDataSource()
-        var delegate: Delegate!
+        var delegate: SizeDelegate!
         var pagingViewController: PagingViewController!
         
         context("has items before reloading") {
@@ -301,8 +301,8 @@ class PagingViewControllerSpec: QuickSpec {
           describe("width delegate") {
             
             beforeEach {
-              delegate = Delegate()
-              pagingViewController.delegate = delegate
+              delegate = SizeDelegate()
+              pagingViewController.sizeDelegate = delegate
             }
             
             it("uses the width delegate after reloading data") {
