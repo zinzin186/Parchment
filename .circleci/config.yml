@@ -13,7 +13,7 @@ jobs:
           command: carthage bootstrap --use-ssh --platform ios
       - run:
           name: Run Tests
-          command: bundle exec scan -s iOS -p Parchment.xcodeproj 
+          command: bundle exec scan -s Parchment -p Parchment.xcodeproj 
           
 workflows:
   version: 2
