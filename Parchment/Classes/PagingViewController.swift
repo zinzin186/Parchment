@@ -61,11 +61,15 @@ open class PagingViewController:
   /// without having to actually allocate them before they are needed.
   public weak var infiniteDataSource: PagingViewControllerInfiniteDataSource?
   
+  /// Use this delegate to get notified when the user is scrolling or
+  /// when an item is selected.
+  public weak var delegate: PagingViewControllerDelegate?
+  
   /// Use this delegate if you want to manually control the width of
   /// your menu items. Self-sizing cells is not supported at the
   /// moment, so you have to use this if you have a custom cell that
   /// you want to size based on its content.
-  public weak var delegate: PagingViewControllerDelegate? {
+  public weak var sizeDelegate: PagingViewControllerSizeDelegate? {
     didSet {
       pagingController.sizeDelegate = self
     }
@@ -530,7 +534,7 @@ extension PagingViewController: PagingControllerDataSource {
 extension PagingViewController: PagingControllerSizeDelegate {
   
   func width(for pagingItem: PagingItem, isSelected: Bool) -> CGFloat {
-    return delegate?.pagingViewController(self, widthForPagingItem: pagingItem, isSelected: isSelected) ?? 0
+    return sizeDelegate?.pagingViewController(self, widthForPagingItem: pagingItem, isSelected: isSelected) ?? 0
   }
   
 }
