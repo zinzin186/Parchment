@@ -19,198 +19,12 @@ open class PagingViewController:
 
   // MARK: Public Properties
   
-  /// The size for each of the menu items. _Default:
-  /// .sizeToFit(minWidth: 150, height: 40)_
-  public var menuItemSize: PagingMenuItemSize {
-    get { return options.menuItemSize }
-    set { options.menuItemSize = newValue }
-  }
-
-  /// The class type for the menu item. Override this if you want
-  /// your own custom menu items. _Default: PagingTitleCell.self_
-  public var menuItemSource: PagingMenuItemSource {
-    get { return options.menuItemSource }
-    set { options.menuItemSource = newValue }
-  }
-
-  /// Determine the spacing between the menu items. _Default: 0_
-  public var menuItemSpacing: CGFloat {
-    get { return options.menuItemSpacing }
-    set { options.menuItemSpacing = newValue }
-  }
-
-  /// Determine the insets at around all the menu items. _Default:
-  /// UIEdgeInsets.zero_
-  public var menuInsets: UIEdgeInsets {
-    get { return options.menuInsets }
-    set { options.menuInsets = newValue }
-  }
-
-  /// Determine whether the menu items should be centered when all the
-  /// items can fit within the bounds of the view. _Default: .left_
-  public var menuHorizontalAlignment: PagingMenuHorizontalAlignment {
-    get { return options.menuHorizontalAlignment }
-    set { options.menuHorizontalAlignment = newValue }
-  }
-
-  /// Determine the transition behaviour of menu items while scrolling
-  /// the content. _Default: .scrollAlongside_
-  public var menuTransition: PagingMenuTransition {
-    get { return options.menuTransition }
-    set { options.menuTransition = newValue }
-  }
-
-  /// Determine how users can interact with the menu items.
-  /// _Default: .scrolling_
-  public var menuInteraction: PagingMenuInteraction {
-    get { return options.menuInteraction }
-    set {
-      options.menuInteraction = newValue
-      pagingController.configureCollectionView()
-    }
-  }
-  
-  /// The class type for collection view layout. Override this if you
-  /// want to use your own subclass of the layout. Setting this
-  /// property will initialize the new layout type and update the
-  /// collection view.
-  /// _Default: PagingCollectionViewLayout.self_
-  public var menuLayoutClass: PagingCollectionViewLayout.Type = PagingCollectionViewLayout.self {
-    didSet {
-      let layout = createLayout(layout: menuLayoutClass.self)
-      self.collectionViewLayout = layout
-      configureCollectionViewLayout()
-      collectionView.setCollectionViewLayout(layout, animated: false)
-    }
-  }
-  
   /// Determine how users can interact with the page view controller.
   /// _Default: .scrolling_
-  public var contentInteraction: PagingContentInteraction {
-    get { return options.contentInteraction }
-    set {
-      options.contentInteraction = newValue
+  public var contentInteraction: PagingContentInteraction = .scrolling {
+    didSet {
       configureContentInteraction()
     }
-  }
-
-  /// Determine how the selected menu item should be aligned when it
-  /// is selected. Effectivly the same as the
-  /// `UICollectionViewScrollPosition`. _Default: .preferCentered_
-  public var selectedScrollPosition: PagingSelectedScrollPosition {
-    get { return options.selectedScrollPosition }
-    set { options.selectedScrollPosition = newValue }
-  }
-
-  /// Add an indicator view to the selected menu item. The indicator
-  /// width will be equal to the selected menu items width. Insets
-  /// only apply horizontally. _Default: .visible_
-  public var indicatorOptions: PagingIndicatorOptions {
-    get { return options.indicatorOptions }
-    set {
-      options.indicatorOptions = newValue
-      collectionViewLayout.invalidateLayout()
-    }
-  }
-
-  /// The class type for the indicator view. Override this if you want
-  /// your use your own subclass of PagingIndicatorView. _Default:
-  /// PagingIndicatorView.self_
-  public var indicatorClass: PagingIndicatorView.Type {
-    get { return options.indicatorClass }
-    set {
-      options.indicatorClass = newValue
-      collectionViewLayout.registerIndicatorClass()
-    }
-  }
-
-  /// Determine the color of the indicator view.
-  public var indicatorColor: UIColor {
-    get { return options.indicatorColor }
-    set {
-      options.indicatorColor = newValue
-      collectionViewLayout.invalidateLayout()
-    }
-  }
-  
-  /// Add a border at the bottom of the menu items. The border will be
-  /// as wide as all the menu items. Insets only apply horizontally.
-  /// _Default: .visible_
-  public var borderOptions: PagingBorderOptions {
-    get { return options.borderOptions }
-    set {
-      options.borderOptions = newValue
-      collectionViewLayout.invalidateLayout()
-    }
-  }
-
-  /// The class type for the border view. Override this if you want
-  /// your use your own subclass of PagingBorderView. _Default:
-  /// PagingBorderView.self_
-  public var borderClass: PagingBorderView.Type {
-    get { return options.borderClass }
-    set {
-      options.borderClass = newValue
-      collectionViewLayout.registerBorderClass()
-    }
-  }
-  
-  /// Determine the color of the border view.
-  public var borderColor: UIColor {
-    get { return options.borderColor }
-    set {
-      options.borderColor = newValue
-      collectionViewLayout.invalidateLayout()
-    }
-  }
-
-  /// Updates the content inset for the menu items based on the
-  /// .safeAreaInsets property. _Default: true_
-  public var includeSafeAreaInsets: Bool {
-    get { return options.includeSafeAreaInsets }
-    set { options.includeSafeAreaInsets = newValue }
-  }
-
-  /// The font used for title label on the menu items.
-  public var font: UIFont {
-    get { return options.font }
-    set { options.font = newValue }
-  }
-
-  /// The font used for the currently selected menu item.
-  public var selectedFont: UIFont {
-    get { return options.selectedFont }
-    set { options.selectedFont = newValue }
-  }
-
-  /// The color of the title label on the menu items.
-  public var textColor: UIColor {
-    get { return options.textColor }
-    set { options.textColor = newValue }
-  }
-
-  /// The text color for the currently selected menu item.
-  public var selectedTextColor: UIColor {
-    get { return options.selectedTextColor }
-    set { options.selectedTextColor = newValue }
-  }
-
-  /// The background color for the menu items.
-  public var backgroundColor: UIColor {
-    get { return options.backgroundColor }
-    set { options.backgroundColor = newValue }
-  }
-  
-  /// The background color for the selected menu item.
-  public var selectedBackgroundColor: UIColor {
-    get { return options.selectedBackgroundColor }
-    set { options.selectedBackgroundColor = newValue }
-  }
-
-  /// The background color for the view behind the menu items.
-  public var menuBackgroundColor: UIColor {
-    get { return options.menuBackgroundColor }
-    set { options.menuBackgroundColor = newValue }
   }
   
   /// The current state of the menu items. Indicates whether an item
@@ -277,10 +91,22 @@ open class PagingViewController:
   public let pageViewController: EMPageViewController
 
   /// An instance that stores all the customization so that it's
-  /// easier to share between other classes. You should use the
-  /// customization properties on PagingViewController, instead of
-  /// setting values on this class directly.
-  public let options: PagingOptions
+  /// easier to share between other classes.
+  public var options: PagingOptions {
+    didSet {
+      if options.menuLayoutClass != oldValue.menuLayoutClass {
+        let layout = createLayout(layout: options.menuLayoutClass.self)
+        collectionViewLayout = layout
+        collectionViewLayout.options = options
+        collectionView.setCollectionViewLayout(layout, animated: false)
+      }
+      else {
+        collectionViewLayout.options = options
+      }
+      
+      pagingController.options = options
+    }
+  }
   
   // MARK: Private Properties
   
@@ -309,12 +135,11 @@ open class PagingViewController:
     self.options = PagingOptions()
     self.pagingController = PagingController(options: options)
     self.pageViewController = EMPageViewController(navigationOrientation: .horizontal)
-    self.collectionViewLayout = createLayout(layout: menuLayoutClass.self)
+    self.collectionViewLayout = createLayout(layout: options.menuLayoutClass.self)
     self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
     super.init(nibName: nil, bundle: nil)
     collectionView.delegate = self
     configurePagingController()
-    configureCollectionViewLayout()
   }
   
   public convenience init(viewControllers: [UIViewController]) {
@@ -329,12 +154,11 @@ open class PagingViewController:
     self.options = PagingOptions()
     self.pagingController = PagingController(options: options)
     self.pageViewController = EMPageViewController(navigationOrientation: .horizontal)
-    self.collectionViewLayout = createLayout(layout: menuLayoutClass.self)
+    self.collectionViewLayout = createLayout(layout: options.menuLayoutClass.self)
     self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
     super.init(coder: coder)
     collectionView.delegate = self
     configurePagingController()
-    configureCollectionViewLayout()
   }
   
   // MARK: Public Methods
@@ -506,12 +330,6 @@ open class PagingViewController:
     pagingController.delegate = self
   }
   
-  private func configureCollectionViewLayout() {
-    collectionViewLayout.pagingController = pagingController
-    collectionViewLayout.registerIndicatorClass()
-    collectionViewLayout.registerBorderClass()
-  }
-  
   private func itemsForFiniteDataSource() -> [PagingItem] {
     let numberOfItems = dataSource?.numberOfViewControllers(in: self) ?? 0
     var items: [PagingItem] = []
@@ -550,7 +368,7 @@ open class PagingViewController:
   }
   
   private func configureContentInteraction() {
-    switch options.contentInteraction {
+    switch contentInteraction {
     case .scrolling:
       pageViewController.scrollView.isScrollEnabled = true
     case .none:

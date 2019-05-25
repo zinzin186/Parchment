@@ -17,7 +17,7 @@ class CustomPagingView: PagingView {
 
 // Create a custom paging view controller and override the view with
 // our own custom subclass.
-class CustomPagingViewController: FixedPagingViewController {
+class CustomPagingViewController: PagingViewController {
   override func loadView() {
     view = CustomPagingView(
       options: options,
@@ -39,11 +39,11 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    pagingViewController.borderOptions = .hidden
-    pagingViewController.menuBackgroundColor = .clear
-    pagingViewController.indicatorColor = UIColor(white: 0, alpha: 0.4)
-    pagingViewController.textColor = UIColor(white: 1, alpha: 0.6)
-    pagingViewController.selectedTextColor = .white
+    pagingViewController.options.borderOptions = .hidden
+    pagingViewController.options.menuBackgroundColor = .clear
+    pagingViewController.options.indicatorColor = UIColor(white: 0, alpha: 0.4)
+    pagingViewController.options.textColor = UIColor(white: 1, alpha: 0.6)
+    pagingViewController.options.selectedTextColor = .white
     
     // Make sure you add the PagingViewController as a child view
     // controller and contrain it to the edges of the view.
@@ -62,7 +62,7 @@ class ViewController: UIViewController {
     super.viewDidLayoutSubviews()
     guard let navigationBar = navigationController?.navigationBar else { return }
     navigationItem.titleView?.frame = CGRect(origin: .zero, size: navigationBar.bounds.size)
-    pagingViewController.menuItemSize = .fixed(width: 100, height: navigationBar.bounds.height)
+    pagingViewController.options.menuItemSize = .fixed(width: 100, height: navigationBar.bounds.height)
   }
   
 }

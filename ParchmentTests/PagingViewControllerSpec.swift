@@ -91,7 +91,7 @@ class PagingViewControllerSpec: QuickSpec {
           ]
           
           pagingViewController = PagingViewController()
-          pagingViewController.menuItemSize = .fixed(width: 100, height: 50)
+          pagingViewController.options.menuItemSize = .fixed(width: 100, height: 50)
           pagingViewController.dataSource = dataSource
           
           UIApplication.shared.keyWindow!.rootViewController = pagingViewController
@@ -160,7 +160,7 @@ class PagingViewControllerSpec: QuickSpec {
             ]
             
             pagingViewController = PagingViewController()
-            pagingViewController.menuItemSize = .fixed(width: 100, height: 50)
+            pagingViewController.options.menuItemSize = .fixed(width: 100, height: 50)
             pagingViewController.dataSource = dataSource
             
             UIApplication.shared.keyWindow!.rootViewController = pagingViewController
@@ -340,7 +340,7 @@ class PagingViewControllerSpec: QuickSpec {
         
         beforeEach {
           viewController = PagingViewController()
-          viewController.menuItemSize = .fixed(width: 100, height: 50)
+          viewController.options.menuItemSize = .fixed(width: 100, height: 50)
           viewController.infiniteDataSource = dataSource
           
           UIApplication.shared.keyWindow!.rootViewController = viewController

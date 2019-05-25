@@ -1,6 +1,9 @@
 import UIKit
 
 protocol CollectionViewLayout: class {
+  var state: PagingState { get set }
+  var visibleItems: PagingItems { get set }
+  var sizeCache: PagingSizeCache? { get set }
   var contentInsets: UIEdgeInsets { get }
   var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] { get }
   func prepare()

@@ -75,9 +75,9 @@ class ViewController: UIViewController {
     pagingViewController.didMove(toParent: self)
     
     // Customize the menu styling.
-    pagingViewController.selectedTextColor = .black
-    pagingViewController.indicatorColor = .black
-    pagingViewController.indicatorOptions = .visible(
+    pagingViewController.options.selectedTextColor = .black
+    pagingViewController.options.indicatorColor = .black
+    pagingViewController.options.indicatorOptions = .visible(
       height: 1,
       zIndex: Int.max,
       spacing: .zero,
