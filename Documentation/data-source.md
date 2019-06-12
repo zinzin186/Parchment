@@ -4,7 +4,7 @@ Let’s start by defining an array that contains the information we need to disp
 
 ```Swift
 class ViewController: UIViewController {
-    let citites = [
+    let cities = [
         "Oslo",
         "Stockholm",
         "Tokyo",
