@@ -16,10 +16,10 @@
 
 <br/>
 
-![](https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-contacts.gif "Contacts Example")
-![](https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-unsplash.gif "Unsplash Example")
-![](https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-calendar.gif "Calendar Example")
-![](https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-delegate.gif "Cities Example")
+![](https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-contacts.gif "Contacts Example")
+![](https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-unplash.gif "Unsplash Example")
+![](https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-calendar.gif "Calendar Example")
+![](https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-delegate.gif "Cities Example")
 
 ## Features
 
