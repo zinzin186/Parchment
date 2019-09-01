@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-header-4.png" width="270" height="110" />
+  <img src="https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment.png" width="228" height="32" />
 </p>
 
 <p align="center">
@@ -16,10 +16,9 @@
 
 <br/>
 
-![](https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-contacts.gif "Contacts Example")
+![](https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-delegate.gif "Cities Example")
 ![](https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-unplash.gif "Unsplash Example")
 ![](https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-calendar.gif "Calendar Example")
-![](https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-delegate.gif "Cities Example")
 
 ## Features
 
