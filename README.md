@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-title-2.png" width="240" height="80" />
+  <img src="https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-title-3.png" width="240" height="70" />
 </p>
 
 <p align="center">
