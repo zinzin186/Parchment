@@ -1,26 +1,14 @@
 import UIKit
 
-protocol PagingControllerDataSource: class {
-  func pagingItemBefore(pagingItem: PagingItem) -> PagingItem?
-  func pagingItemAfter(pagingItem: PagingItem) -> PagingItem?
-}
-
-protocol PagingControllerDelegate: class {
-  func selectContent(pagingItem: PagingItem, direction: PagingDirection, animated: Bool)
-  func selectContentPrevious(animated: Bool)
-  func selectContentNext(animated: Bool)
-  func removeContent()
-}
-
 protocol PagingControllerSizeDelegate: class {
   func width(for: PagingItem, isSelected: Bool) -> CGFloat
 }
 
 final class PagingController: NSObject {
   
-  weak var dataSource: PagingControllerDataSource?
+  weak var dataSource: PagingMenuDataSource?
   weak var sizeDelegate: PagingControllerSizeDelegate?
-  weak var delegate: PagingControllerDelegate?
+  weak var delegate: PagingMenuDelegate?
 
   weak var collectionView: CollectionView! {
     didSet {
@@ -108,12 +96,6 @@ final class PagingController: NSObject {
     case .selected:
       if let currentPagingItem = state.currentPagingItem {
         if pagingItem.isEqual(to: currentPagingItem) == false {
-          
-          let direction = visibleItems.direction(
-            from: currentPagingItem,
-            to: pagingItem
-          )
-          
           appendItemsIfNeeded(upcomingPagingItem: pagingItem)
           
           let transition = calculateTransition(
@@ -129,19 +111,16 @@ final class PagingController: NSObject {
             distance: transition.distance
           )
           
-          if let upcomingItem = dataSource?.pagingItemAfter(pagingItem: currentPagingItem),
-            pagingItem.isEqual(to: upcomingItem)  {
-            delegate?.selectContentNext(animated: animated)
-          } else if let upcomingItem = dataSource?.pagingItemBefore(pagingItem: currentPagingItem),
-            pagingItem.isEqual(to: upcomingItem) {
-            delegate?.selectContentPrevious(animated: animated)
-          } else {
-            delegate?.selectContent(
-              pagingItem: pagingItem,
-              direction: direction,
-              animated: animated
-            )
-          }
+          let direction = visibleItems.direction(
+            from: currentPagingItem,
+            to: pagingItem
+          )
+          
+          delegate?.selectContent(
+            pagingItem: pagingItem,
+            direction: direction,
+            animated: animated
+          )
         }
       }
       

@@ -53,11 +53,26 @@ public struct PagingItems {
     if contains(from) == false {
       return .none
     } else if from.isBefore(item: to) {
-      return .forward
+      return .forward(sibling: isSibling(from: from, to: to))
     } else if to.isBefore(item: from) {
-      return .reverse
+      return .reverse(sibling: isSibling(from: from, to: to))
     }
     return .none
+  }
+  
+  func isSibling(from: PagingItem, to: PagingItem) -> Bool {
+    guard
+      let fromIndex = items.firstIndex(where : { $0.isEqual(to: from) }),
+      let toIndex = items.firstIndex(where: { $0.isEqual(to: to) })
+      else { return false }
+    
+    if fromIndex == toIndex - 1 {
+      return true
+    } else if fromIndex - 1 == toIndex {
+      return true
+    } else {
+      return false
+    }
   }
   
   func contains(_ pagingItem: PagingItem) -> Bool {

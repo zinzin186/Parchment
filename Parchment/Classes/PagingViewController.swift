@@ -519,13 +519,13 @@ open class PagingViewController:
   }
 }
 
-extension PagingViewController: PagingControllerDataSource {
+extension PagingViewController: PagingMenuDataSource {
   
-  func pagingItemBefore(pagingItem: PagingItem) -> PagingItem? {
+  public func pagingItemBefore(pagingItem: PagingItem) -> PagingItem? {
     return infiniteDataSource?.pagingViewController(self, itemBefore: pagingItem)
   }
   
-  func pagingItemAfter(pagingItem: PagingItem) -> PagingItem? {
+  public func pagingItemAfter(pagingItem: PagingItem) -> PagingItem? {
     return infiniteDataSource?.pagingViewController(self, itemAfter: pagingItem)
   }
   
@@ -539,29 +539,31 @@ extension PagingViewController: PagingControllerSizeDelegate {
   
 }
 
-extension PagingViewController: PagingControllerDelegate {
+extension PagingViewController: PagingMenuDelegate {
   
-  func selectContent(pagingItem: PagingItem, direction: PagingDirection, animated: Bool) {
+  public func selectContent(pagingItem: PagingItem, direction: PagingDirection, animated: Bool) {
     guard let dataSource = infiniteDataSource else { return }
-    pageViewController.selectViewController(
-      dataSource.pagingViewController(self, viewControllerFor: pagingItem),
-      direction: direction.pageViewControllerNavigationDirection,
-      animated: animated,
-      completion: nil
-    )
+    
+    switch direction {
+    case .forward(true):
+      pageViewController.scrollForward(animated: animated, completion: nil)
+      pageViewController.view.layoutIfNeeded()
+      
+    case .reverse(true):
+      pageViewController.scrollReverse(animated: animated, completion: nil)
+      pageViewController.view.layoutIfNeeded()
+      
+    default:
+      pageViewController.selectViewController(
+        dataSource.pagingViewController(self, viewControllerFor: pagingItem),
+        direction: direction.pageViewControllerNavigationDirection,
+        animated: animated,
+        completion: nil
+      )
+    }
   }
   
-  func selectContentPrevious(animated: Bool) {
-    pageViewController.scrollReverse(animated: animated, completion: nil)
-    pageViewController.view.layoutIfNeeded()
-  }
-  
-  func selectContentNext(animated: Bool) {
-    pageViewController.scrollForward(animated: animated, completion: nil)
-    pageViewController.view.layoutIfNeeded()
-  }
-  
-  func removeContent() {
+  public func removeContent() {
     pageViewController.removeAllViewControllers()
   }
   
