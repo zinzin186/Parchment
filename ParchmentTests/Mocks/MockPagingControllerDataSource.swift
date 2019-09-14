@@ -1,7 +1,7 @@
 import Foundation
 @testable import Parchment
 
-final class MockPagingControllerDataSource: PagingControllerDataSource {
+final class MockPagingControllerDataSource: PagingMenuDataSource {
   
   var maxIndexAfter: Int = Int.max
   var minIndexBefore: Int = Int.min

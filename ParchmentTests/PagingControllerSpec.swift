@@ -574,7 +574,11 @@ class PagingControllerSpec: QuickSpec {
               expect(collectionView.calls).to(beEmpty())
               expect(collectionViewLayout.calls).to(beEmpty())
               expect(actions(delegate.calls)).to(equal([
-                .delegate(.selectContentPrevious(animated: false))
+                .delegate(.selectContent(
+                  pagingItem: Item(index: 0),
+                  direction: .reverse(sibling: true),
+                  animated: false
+                ))
               ]))
             }
           }
@@ -586,7 +590,11 @@ class PagingControllerSpec: QuickSpec {
               expect(collectionView.calls).to(beEmpty())
               expect(collectionViewLayout.calls).to(beEmpty())
               expect(actions(delegate.calls)).to(equal([
-                .delegate(.selectContentNext(animated: false))
+                .delegate(.selectContent(
+                  pagingItem: Item(index: 2),
+                  direction: .forward(sibling: true),
+                  animated: false
+                ))
               ]))
             }
           }
@@ -600,7 +608,7 @@ class PagingControllerSpec: QuickSpec {
               expect(actions(delegate.calls)).to(equal([
                 .delegate(.selectContent(
                   pagingItem: Item(index: 4),
-                  direction: .forward,
+                  direction: .forward(sibling: false),
                   animated: false
                 ))
               ]))
@@ -664,7 +672,11 @@ class PagingControllerSpec: QuickSpec {
                 .collectionViewLayout(.prepare),
                 .collectionView(.contentOffset(CGPoint(x: 400, y: 0))),
                 .collectionView(.layoutIfNeeded),
-                .delegate(.selectContentNext(animated: false))
+                .delegate(.selectContent(
+                  pagingItem: Item(index: 1),
+                  direction: .forward(sibling: true),
+                  animated: false
+                ))
               ]
             ))
           }
@@ -875,7 +887,7 @@ class PagingControllerSpec: QuickSpec {
               pagingItem: Item(index: 2),
               direction: .none,
               animated: false
-              )),
+            )),
             .collectionViewLayout(.invalidateLayout)
           ]
         ))
