@@ -264,11 +264,16 @@ open class PagingViewController:
   /// - Parameter animated: A boolean value that indicates whether
   /// the transtion should be animated. Default is false.
   open func select(index: Int, animated: Bool = false) {
-    guard let dataSource = dataSource else {
+    switch dataSourceReference {
+    case let .static(dataSource):
+      let pagingItem = dataSource.items[index]
+      pagingController.select(pagingItem: pagingItem, animated: animated)
+    case let .finite(dataSource):
+      let pagingItem = dataSource.items[index]
+      pagingController.select(pagingItem: pagingItem, animated: animated)
+    case .none:
       fatalError("select(index:animated:): You need to set the dataSource property to use this method")
     }
-    let pagingItem = dataSource.pagingViewController(self, pagingItemAt: index)
-    pagingController.select(pagingItem: pagingItem, animated: false)
   }
   
   open override func loadView() {
