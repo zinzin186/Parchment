@@ -2,18 +2,15 @@ version: 2
 jobs:
   build-and-test:
     macos:
-      xcode: "10.2.0"
+      xcode: "10.3.0"
     steps:
       - checkout
-      - run:
-          name: Install Gems
-          command: bundle install
       - run:
           name: Install Carthage Dependencies
           command: carthage bootstrap --use-ssh --platform ios
       - run:
           name: Run Tests
-          command: bundle exec scan -s iOS -p Parchment.xcodeproj 
+          command: xcodebuild -project Parchment.xcodeproj -scheme "Parchment" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone X,OS=12.4' test
           
 workflows:
   version: 2
