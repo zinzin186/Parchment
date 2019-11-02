@@ -34,10 +34,12 @@ open class PagingTitleCell: PagingCell {
         options: options)
     }
     configureTitleLabel()
+    configureAccessibility()
   }
   
   open func configure() {
     contentView.addSubview(titleLabel)
+    contentView.isAccessibilityElement = true
   }
   
   open override func layoutSubviews() {
@@ -60,6 +62,11 @@ open class PagingTitleCell: PagingCell {
       backgroundColor = viewModel.backgroundColor
     }
   }
+
+  open func configureAccessibility() {
+    contentView.accessibilityLabel = viewModel?.title
+    contentView.accessibilityTraits = viewModel?.selected ?? false ? .selected : .none
+  }
   
   open override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
     super.apply(layoutAttributes)
@@ -76,5 +83,4 @@ open class PagingTitleCell: PagingCell {
         with: attributes.progress)
     }
   }
-  
 }
