@@ -43,7 +43,7 @@ class ViewController: UIViewController {
 extension ViewController: PagingViewControllerDataSource {
   
   func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
-    return PagingTitleItem(title: cities[index], index: index)
+    return PagingIndexItem(index: index, title: cities[index])
   }
   
   func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
@@ -65,7 +65,7 @@ extension ViewController: PagingViewControllerSizeDelegate {
   // PagingTitleItem, which is the PagingItem type used by
   // FixedPagingViewController.
   func pagingViewController(_ pagingViewController: PagingViewController, widthForPagingItem pagingItem: PagingItem, isSelected: Bool) -> CGFloat {
-    guard let item = pagingItem as? PagingTitleItem else { return 0 }
+    guard let item = pagingItem as? PagingIndexItem else { return 0 }
     
     let insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     let size = CGSize(width: CGFloat.greatestFiniteMagnitude, height: pagingViewController.options.menuItemSize.height)

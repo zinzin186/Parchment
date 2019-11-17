@@ -298,7 +298,7 @@ open class PagingViewController:
     configurePagingController()
     
     // Register default cell
-    register(PagingTitleCell.self, for: PagingTitleItem.self)
+    register(PagingTitleCell.self, for: PagingIndexItem.self)
   }
   
   public convenience init(viewControllers: [UIViewController]) {

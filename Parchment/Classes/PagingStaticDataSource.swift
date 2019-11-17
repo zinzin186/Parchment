@@ -16,7 +16,7 @@ class PagingStaticDataSource: PagingViewControllerInfiniteDataSource {
   
   func reloadItems() {
     self.items = viewControllers.enumerated().map {
-      return PagingTitleItem(title: $1.title ?? "", index: $0)
+      return PagingIndexItem(index: $0, title: $1.title ?? "")
     }
   }
   

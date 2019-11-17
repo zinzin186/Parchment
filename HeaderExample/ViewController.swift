@@ -116,7 +116,7 @@ extension ViewController: PagingViewControllerDataSource {
   }
   
   func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
-    return PagingTitleItem(title: "View \(index)", index: index)
+    return PagingIndexItem(index: index, title: "View \(index)")
   }
   
   func numberOfViewControllers(in: PagingViewController) -> Int{
