@@ -31,7 +31,7 @@ class DataSource: PagingViewControllerInfiniteDataSource {
 class SizeDelegate: PagingViewControllerSizeDelegate {
   
   func pagingViewController(_ pagingViewController: PagingViewController, widthForPagingItem pagingItem: PagingItem, isSelected: Bool) -> CGFloat {
-    guard let item = pagingItem as? PagingTitleItem else { return 0 }
+    guard let item = pagingItem as? PagingIndexItem else { return 0 }
     if item.index == 0 {
       return 100
     } else {
@@ -47,7 +47,7 @@ class DeinitPagingViewController: PagingViewController {
 }
 
 class ReloadingDataSource: PagingViewControllerDataSource {
-  var items: [PagingTitleItem] = []
+  var items: [PagingIndexItem] = []
   var viewControllers: [UIViewController] = []
   
   func numberOfViewControllers(in pagingViewController: PagingViewController) -> Int {
@@ -86,8 +86,8 @@ class PagingViewControllerSpec: QuickSpec {
           ]
           
           dataSource.items = [
-            PagingTitleItem(title: "0", index: 0),
-            PagingTitleItem(title: "1", index: 1)
+            PagingIndexItem(index: 0, title: "0"),
+            PagingIndexItem(index: 1, title: "1")
           ]
           
           pagingViewController = PagingViewController()
@@ -102,8 +102,8 @@ class PagingViewControllerSpec: QuickSpec {
         }
         
         it("reload the menu items") {
-          let item2 = PagingTitleItem(title: "2", index: 0)
-          let item3 = PagingTitleItem(title: "3", index: 1)
+          let item2 = PagingIndexItem(index: 0, title: "2")
+          let item3 = PagingIndexItem(index: 1, title: "3")
           
           dataSource.items = [item2, item3]
           pagingViewController.reloadMenu()
@@ -155,8 +155,8 @@ class PagingViewControllerSpec: QuickSpec {
             ]
             
             dataSource.items = [
-              PagingTitleItem(title: "0", index: 0),
-              PagingTitleItem(title: "1", index: 1)
+              PagingIndexItem(index: 0, title: "0"),
+              PagingIndexItem(index: 1, title: "1")
             ]
             
             pagingViewController = PagingViewController()
@@ -171,8 +171,8 @@ class PagingViewControllerSpec: QuickSpec {
           }
           
           it("reloads data around item") {
-            let item2 = PagingTitleItem(title: "2", index: 2)
-            let item3 = PagingTitleItem(title: "3", index: 3)
+            let item2 = PagingIndexItem(index: 2, title: "2")
+            let item3 = PagingIndexItem(index: 3, title: "3")
             
             dataSource.items = [item2, item3]
             pagingViewController.reloadData(around: item2)
@@ -189,8 +189,8 @@ class PagingViewControllerSpec: QuickSpec {
           }
           
           it("updates view controllers when reloading data") {
-            let item2 = PagingTitleItem(title: "2", index: 2)
-            let item3 = PagingTitleItem(title: "3", index: 3)
+            let item2 = PagingIndexItem(index: 2, title: "2")
+            let item3 = PagingIndexItem(index: 3, title: "3")
             
             let viewController2 = UIViewController()
             let viewController3 = UIViewController()
@@ -204,8 +204,8 @@ class PagingViewControllerSpec: QuickSpec {
           }
           
           it("updates view controllers when reloading around last item") {
-            let item2 = PagingTitleItem(title: "2", index: 2)
-            let item3 = PagingTitleItem(title: "3", index: 3)
+            let item2 = PagingIndexItem(index: 2, title: "2")
+            let item3 = PagingIndexItem(index: 3, title: "3")
             
             let viewController2 = UIViewController()
             let viewController3 = UIViewController()
@@ -230,9 +230,9 @@ class PagingViewControllerSpec: QuickSpec {
           }
           
           it("selects previously selected item when reloading data") {
-            let item0 = PagingTitleItem(title: "0", index: 0)
-            let item1 = PagingTitleItem(title: "1", index: 1)
-            let item2 = PagingTitleItem(title: "2", index: 2)
+            let item0 = PagingIndexItem(index: 0, title: "0")
+            let item1 = PagingIndexItem(index: 1, title: "1")
+            let item2 = PagingIndexItem(index: 2, title: "2")
             let viewController2 = UIViewController()
             
             dataSource.viewControllers = [
@@ -259,8 +259,8 @@ class PagingViewControllerSpec: QuickSpec {
           }
           
           it("selects the first item when reloading data with all new items") {
-            let item2 = PagingTitleItem(title: "2", index: 2)
-            let item3 = PagingTitleItem(title: "3", index: 3)
+            let item2 = PagingIndexItem(index: 2, title: "2")
+            let item3 = PagingIndexItem(index: 3, title: "3")
             
             pagingViewController.select(index: 1)
             pagingViewController.view.layoutIfNeeded()
@@ -311,8 +311,8 @@ class PagingViewControllerSpec: QuickSpec {
                 UIViewController()
               ]
               dataSource.items = [
-                PagingTitleItem(title: "0", index: 0),
-                PagingTitleItem(title: "1", index: 1)
+                PagingIndexItem(index: 0, title: "0"),
+                PagingIndexItem(index: 1, title: "1")
               ]
               
               pagingViewController.reloadData()

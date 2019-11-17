@@ -22,10 +22,10 @@ class ViewController: UIViewController {
 
     let items: [PagingItem] = [
         IconItem(icon: "done", index: 0),
-        PagingTitleItem(title: "TODO", index: 1),
-        PagingTitleItem(title: "In Progress", index: 2),
-        PagingTitleItem(title: "Archive", index: 3),
-        PagingTitleItem(title: "Other", index: 4)
+        PagingIndexItem(index: 1, title: "TODO"),
+        PagingIndexItem(index: 2, title: "In Progress"),
+        PagingIndexItem(index: 3, title: "Archive"),
+        PagingIndexItem(index: 4, title: "Other")
     ]
     
     override func viewDidLoad() {
@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         let pagingViewController = PagingViewController()
         pagingViewController.sizeDelegate = self
         pagingViewController.register(IconPagingCell.self, for: IconItem.self)
-        pagingViewController.register(PagingTitleCell.self, for: PagingTitleItem.self)
+        pagingViewController.register(PagingTitleCell.self, for: PagingIndexItem.self)
         pagingViewController.menuItemSize = .fixed(width: 60, height: 60)
         pagingViewController.textColor = UIColor(red: 0.51, green: 0.54, blue: 0.56, alpha: 1)
         pagingViewController.selectedTextColor = UIColor(red: 0.14, green: 0.77, blue: 0.85, alpha: 1)
@@ -85,7 +85,7 @@ extension ViewController: PagingViewControllerSizeDelegate {
   // PagingTitleItem, which is the PagingItem type used by
   // FixedPagingViewController.
   func pagingViewController(_ pagingViewController: PagingViewController, widthForPagingItem pagingItem: PagingItem, isSelected: Bool) -> CGFloat {
-    guard let item = pagingItem as? PagingTitleItem else { return 50 }
+    guard let item = pagingItem as? PagingIndexItem else { return 50 }
     
     let insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     let size = CGSize(width: CGFloat.greatestFiniteMagnitude, height: pagingViewController.options.menuItemSize.height)
