@@ -2,7 +2,20 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.6.0](https://github.com/rechsteiner/Parchment/compare/v1.5.0...v1.6.0) - 2018-03-03
+## [1.7.0](https://github.com/rechsteiner/Parchment/compare/v1.6.0...v1.7.0) - 2019-26-09
+
+### Fixes
+
+* Update to Swift 5 and Xcode 10.2 #339
+* Fix issue changing selection when view is not visible #371
+* Fix unbalanced appearance transitions #373
+* Fix issues when compiled as SPM dependency (Xcode 11) (#386)
+
+### Added
+
+* Add support for Accio as dependency manager #345
+
+## [1.6.0](https://github.com/rechsteiner/Parchment/compare/v1.5.0...v1.6.0) - 2019-03-03
 
 ### Fixes
 

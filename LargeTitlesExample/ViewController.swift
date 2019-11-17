@@ -104,6 +104,7 @@ class ViewController: UIViewController {
             pagingViewController.collectionView.trailingAnchor.constraint(equalTo: navigationController.view.trailingAnchor),
             pagingViewController.collectionView.topAnchor.constraint(equalTo: navigationController.navigationBar.bottomAnchor),
         ])
+        extendedLayoutIncludesOpaqueBars = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -191,6 +192,7 @@ extension ViewController: UITableViewDelegate {
         // content offset of the hidden scroll view to trigger the
         // large titles to update.
         hiddenScrollView.contentOffset = scrollView.contentOffset
+        hiddenScrollView.panGestureRecognizer.state = scrollView.panGestureRecognizer.state
     }
     
 }
