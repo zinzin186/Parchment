@@ -28,10 +28,10 @@ class ViewController: UIViewController {
 
     let pagingViewController = PagingViewController()
     pagingViewController.register(CalendarPagingCell.self, for: CalendarItem.self)
-    pagingViewController.options.menuItemSize = .fixed(width: 48, height: 58)
-    pagingViewController.options.textColor = UIColor(red: 95/255, green: 102/255, blue: 108/255, alpha: 1)
-    pagingViewController.options.selectedTextColor = UIColor(red: 117/255, green: 111/255, blue: 216/255, alpha: 1)
-    pagingViewController.options.indicatorColor = UIColor(red: 117/255, green: 111/255, blue: 216/255, alpha: 1)
+    pagingViewController.menuItemSize = .fixed(width: 48, height: 58)
+    pagingViewController.textColor = UIColor(red: 95/255, green: 102/255, blue: 108/255, alpha: 1)
+    pagingViewController.selectedTextColor = UIColor(red: 117/255, green: 111/255, blue: 216/255, alpha: 1)
+    pagingViewController.indicatorColor = UIColor(red: 117/255, green: 111/255, blue: 216/255, alpha: 1)
     
     // Add the paging view controller as a child view
     // controller and constrain it to all edges

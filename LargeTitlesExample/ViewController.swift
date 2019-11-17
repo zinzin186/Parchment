@@ -59,12 +59,12 @@ class ViewController: UIViewController {
         guard let navigationController = navigationController else { return }
         
         // Customize the menu to match the navigation bar color
-        pagingViewController.options.menuBackgroundColor = UIColor(red: 85/255, green: 66/255, blue: 232/255, alpha: 1)
-        pagingViewController.options.menuItemSize = .fixed(width: 150, height: 30)
-        pagingViewController.options.textColor = UIColor.white.withAlphaComponent(0.7)
-        pagingViewController.options.selectedTextColor = UIColor.white
-        pagingViewController.options.borderOptions = .hidden
-        pagingViewController.options.indicatorColor = UIColor(red: 10/255, green: 0, blue: 105/255, alpha: 1)
+        pagingViewController.menuBackgroundColor = UIColor(red: 85/255, green: 66/255, blue: 232/255, alpha: 1)
+        pagingViewController.menuItemSize = .fixed(width: 150, height: 30)
+        pagingViewController.textColor = UIColor.white.withAlphaComponent(0.7)
+        pagingViewController.selectedTextColor = UIColor.white
+        pagingViewController.borderOptions = .hidden
+        pagingViewController.indicatorColor = UIColor(red: 10/255, green: 0, blue: 105/255, alpha: 1)
         
         // Add the "hidden" scroll view to the root of the UIViewController.
         view.addSubview(hiddenScrollView)
