@@ -19,7 +19,8 @@
 <p align="center">
   <img src="https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-delegate.gif" alt="Cities Example" />
   <img src="https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-unplash.gif" alt="Unsplash Example" />
-  <img src="https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-calendar.gif" alt="Calendar Example" />
+  <img src="https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-
+            .gif" alt="Calendar Example" />
 </p>
 
 ## Features
@@ -241,9 +242,22 @@ pagingViewController.sizeDelegate = self
 
 ## Customization
 
-Parchment is built to be very flexible. All customization is handled by the properties listed below. The menu items are displayed using UICollectionView, so they can display pretty much whatever you want (see: [`menuItemClass`](#menuItemClass)). If you need any further customization you can even subclass the collection view layout.
+Parchment is built to be very flexible. The menu items are displayed using UICollectionView, so they can display pretty much whatever you want. If you need any further customization you can even subclass the collection view layout. All customization is handled by the properties listed below. 
 
-Example of customization:
+### Custom cells
+
+To use custom cells you need to subclass `PagingCell` and register the cell type for a given `PagingItem`:
+
+```Swift
+let pagingViewController = PagingViewController()
+pagingViewController.register(CalendarPagingCell.self, for: CalendarItem.self)
+```
+
+Parchment will then dequeue your custom cell when you return the given `PagingItem` in your data source. You can register multiple cell types for different `PagingItem`s.
+
+### Properties
+
+All customization properties are set on `PagingViewController`:
 
 ```Swift
 let pagingViewController = PagingViewController()
