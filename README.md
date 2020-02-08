@@ -19,8 +19,7 @@
 <p align="center">
   <img src="https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-delegate.gif" alt="Cities Example" />
   <img src="https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-unplash.gif" alt="Unsplash Example" />
-  <img src="https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-
-            .gif" alt="Calendar Example" />
+  <img src="https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-calendar.gif" alt="Calendar Example" />
 </p>
 
 ## Features
