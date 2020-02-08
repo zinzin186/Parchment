@@ -45,10 +45,10 @@ Parchment lets you page between view controllers while showing any type of gener
   * [Size delegate](#size-delegate)
   * [Selecting items](#selecting-items)
 * [Customization](#customization)
-* [Installation]()
-* [Acknowledgements]()
-* [Changelog]()
-* [Licence]()
+* [Installation](#installation)
+* [Acknowledgements](#acknowledgements)
+* [Changelog](#changelog)
+* [Licence](#licence)
 
 ## Getting started
 
@@ -241,12 +241,14 @@ pagingViewController.sizeDelegate = self
 
 ## Customization
 
-Parchment is built to be very flexible. The menu items are displayed using `UICollectionView`, so they can display pretty much whatever you want. All customization is done on the `PagingOptions` struct, which is available as the `options` property on `PagingViewController`:
+Parchment is built to be very flexible. All customization is handled by the properties listed below. The menu items are displayed using UICollectionView, so they can display pretty much whatever you want (see: [`menuItemClass`](#menuItemClass)). If you need any further customization you can even subclass the collection view layout.
+
+Example of customization:
 
 ```Swift
 let pagingViewController = PagingViewController()
-pagingViewController.options.menuItemSize = .fixed(width: 40, height: 40)
-pagingViewController.options.menuItemSpacing = 10
+pagingViewController.menuItemSize = .fixed(width: 40, height: 40)
+pagingViewController.menuItemSpacing = 10
 ```
 
 #### `menuItemSize`
