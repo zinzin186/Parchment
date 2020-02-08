@@ -2,6 +2,18 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0](https://github.com/rechsteiner/Parchment/compare/v1.6.0...v1.7.0) - 2020-08-02
+
+See releases for more details: [https://github.com/rechsteiner/Parchment/tree/v2.0.0]()
+
+### Changes
+
+* Removed `FixedPagingViewController`
+* Removed generics (#285)
+* Moved size delegate into separate protocol
+* Replaced `menuItemSource` with `register(cellClass:)`
+* Updated naming of data sources
+
 ## [1.7.0](https://github.com/rechsteiner/Parchment/compare/v1.6.0...v1.7.0) - 2019-26-09
 
 ### Fixes
