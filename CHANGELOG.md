@@ -10,7 +10,7 @@
 
 ## [2.0.0](https://github.com/rechsteiner/Parchment/compare/v1.7.0...v2.0.0) - 2020-08-02
 
-See releases for more details: [https://github.com/rechsteiner/Parchment/tree/v2.0.0]()
+See releases for more details: [https://github.com/rechsteiner/Parchment/releases/tag/v2.0.0]()
 
 ### Changes
 
