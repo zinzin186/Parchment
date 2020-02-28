@@ -613,10 +613,10 @@ final class PagingController: NSObject {
   }
   
   private func configureSizeCache(for pagingItem: PagingItem) {
-    if let sizeDelegate = sizeDelegate {
+    if sizeDelegate != nil {
       sizeCache.implementsWidthDelegate = true
-      sizeCache.widthForPagingItem = { item, selected in
-        return sizeDelegate.width(for: item, isSelected: selected)
+      sizeCache.widthForPagingItem = { [weak self] item, selected in
+        return self?.sizeDelegate?.width(for: item, isSelected: selected)
       }
     }
   }
