@@ -16,6 +16,10 @@ public struct PagingOptions {
   /// Determine whether the menu items should be centered when all the
   /// items can fit within the bounds of the view. _Default: .left_
   public var menuHorizontalAlignment: PagingMenuHorizontalAlignment
+
+  /// Determine the position of the menu relative to the content.
+  /// _Default: .top_
+  public var menuPosition: PagingMenuPosition
   
   /// Determine the transition behaviour of menu items while scrolling
   /// the content. _Default: .scrollAlongside_
@@ -128,6 +132,7 @@ public struct PagingOptions {
   public init() {
     selectedScrollPosition = .preferCentered
     menuItemSize = .sizeToFit(minWidth: 150, height: 40)
+    menuPosition = .top
     menuTransition = .scrollAlongside
     menuInteraction = .scrolling
     menuInsets = UIEdgeInsets.zero
