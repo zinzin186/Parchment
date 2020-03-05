@@ -425,7 +425,7 @@ class PagingControllerSpec: QuickSpec {
         }
         
         context("has superview but no window") {
-          it("enters selected state and calls select content delegate") {
+          it("enters selected state with no actions") {
             // Remove the window and make sure we have a superview.
             collectionView.superview = UIView(frame: .zero)
             collectionView.window = nil
@@ -434,65 +434,57 @@ class PagingControllerSpec: QuickSpec {
             
             expect(collectionView.calls).to(beEmpty())
             expect(collectionViewLayout.calls).to(beEmpty())
+            expect(delegate.calls).to(beEmpty())
+            expect(pagingController.state).to(equal(PagingState.selected(
+              pagingItem: Item(index: 0)
+            )))
+          }
+        }
+        
+        context("has superview and window") {
+          it("enters selected state") {
+            // Make sure there is no item before index 0.
+            dataSource.minIndexBefore = 0
+            
+            // Make sure we have a superview and window
+            collectionView.superview = UIView(frame: .zero)
+            collectionView.window = UIWindow(frame: .zero)
+            
+            // Select the first item.
+            pagingController.select(pagingItem: Item(index: 0), animated: false)
+            
             expect(pagingController.state).to(equal(PagingState.selected(
               pagingItem: Item(index: 0)
             )))
             
-            expect(delegate.calls).to(haveCount(1))
-            expect(delegate.calls[0].action).to(equal(
-              .delegate(.selectContent(
-                pagingItem: Item(index: 0),
-                direction: PagingDirection.none,
-                animated: false
-              ))
+            // Combine the method calls for the collection view,
+            // collection view layout and delegate to ensure that
+            // they were called in the correct order.
+            let actions = combinedActions(
+              collectionView.calls,
+              collectionViewLayout.calls,
+              delegate.calls
+            )
+            
+            expect(actions).to(equal(
+              [
+                .collectionView(.reloadData),
+                .collectionViewLayout(.prepare),
+                .collectionView(.contentOffset(.zero)),
+                .collectionView(.layoutIfNeeded),
+                .delegate(.selectContent(
+                  pagingItem: Item(index: 0),
+                  direction: PagingDirection.none,
+                  animated: false
+                )),
+                .collectionView(.selectItem(
+                  indexPath: IndexPath(item: 0, section: 0),
+                  animated: false,
+                  scrollPosition: .left
+                )),
+                .collectionView(.contentOffset(CGPoint(x: 0, y: 0)))
+              ]
             ))
-          }
-          
-          context("has superview and window") {
-            it("enters selected state") {
-              // Make sure there is no item before index 0.
-              dataSource.minIndexBefore = 0
-              
-              // Make sure we have a superview and window
-              collectionView.superview = UIView(frame: .zero)
-              collectionView.window = UIWindow(frame: .zero)
-              
-              // Select the first item.
-              pagingController.select(pagingItem: Item(index: 0), animated: false)
-              
-              expect(pagingController.state).to(equal(PagingState.selected(
-                pagingItem: Item(index: 0)
-              )))
-              
-              // Combine the method calls for the collection view,
-              // collection view layout and delegate to ensure that
-              // they were called in the correct order.
-              let actions = combinedActions(
-                collectionView.calls,
-                collectionViewLayout.calls,
-                delegate.calls
-              )
-              
-              expect(actions).to(equal(
-                [
-                  .collectionView(.reloadData),
-                  .collectionViewLayout(.prepare),
-                  .collectionView(.contentOffset(.zero)),
-                  .collectionView(.layoutIfNeeded),
-                  .delegate(.selectContent(
-                    pagingItem: Item(index: 0),
-                    direction: PagingDirection.none,
-                    animated: false
-                  )),
-                  .collectionView(.selectItem(
-                    indexPath: IndexPath(item: 0, section: 0),
-                    animated: false,
-                    scrollPosition: .left
-                  )),
-                  .collectionView(.contentOffset(CGPoint(x: 0, y: 0)))
-                ]
-              ))
-            }
           }
         }
       }

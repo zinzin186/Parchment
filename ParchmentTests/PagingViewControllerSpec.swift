@@ -94,11 +94,10 @@ class PagingViewControllerSpec: QuickSpec {
           pagingViewController.menuItemSize = .fixed(width: 100, height: 50)
           pagingViewController.dataSource = dataSource
           
-          UIApplication.shared.keyWindow!.rootViewController = pagingViewController
-          let _ = pagingViewController.view
-          
-          pagingViewController.collectionView.bounds = CGRect(x: 0, y: 0, width: 1000, height: 50)
-          pagingViewController.viewDidLayoutSubviews()
+          let window = UIWindow(frame: UIScreen.main.bounds)
+          window.rootViewController = pagingViewController
+          window.makeKeyAndVisible()
+          pagingViewController.view.layoutIfNeeded()
         }
         
         it("reload the menu items") {
@@ -163,11 +162,10 @@ class PagingViewControllerSpec: QuickSpec {
             pagingViewController.menuItemSize = .fixed(width: 100, height: 50)
             pagingViewController.dataSource = dataSource
             
-            UIApplication.shared.keyWindow!.rootViewController = pagingViewController
-            let _ = pagingViewController.view
-            
-            pagingViewController.collectionView.bounds = CGRect(x: 0, y: 0, width: 1000, height: 50)
-            pagingViewController.viewDidLayoutSubviews()
+            let window = UIWindow(frame: UIScreen.main.bounds)
+            window.rootViewController = pagingViewController
+            window.makeKeyAndVisible()
+            pagingViewController.view.layoutIfNeeded()
           }
           
           it("reloads data around item") {
@@ -292,10 +290,10 @@ class PagingViewControllerSpec: QuickSpec {
             pagingViewController = PagingViewController()
             pagingViewController.dataSource = dataSource
             
-            UIApplication.shared.keyWindow!.rootViewController = pagingViewController
-            let _ = pagingViewController.view
-            pagingViewController.collectionView.bounds = CGRect(x: 0, y: 0, width: 1000, height: 50)
-            pagingViewController.viewDidLayoutSubviews()
+            let window = UIWindow(frame: UIScreen.main.bounds)
+            window.rootViewController = pagingViewController
+            window.makeKeyAndVisible()
+            pagingViewController.view.layoutIfNeeded()
           }
           
           describe("width delegate") {
@@ -344,11 +342,10 @@ class PagingViewControllerSpec: QuickSpec {
           viewController.menuItemSize = .fixed(width: 100, height: 50)
           viewController.infiniteDataSource = dataSource
           
-          UIApplication.shared.keyWindow!.rootViewController = viewController
-          let _ = viewController.view
-          
-          viewController.collectionView.bounds = CGRect(x: 0, y: 0, width: 1000, height: 50)
-          viewController.viewDidLayoutSubviews()
+          let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1000, height: 50))
+          window.rootViewController = viewController
+          window.makeKeyAndVisible()
+          viewController.view.layoutIfNeeded()
         }
         
         it("selecting the first item generates enough items") {
@@ -368,11 +365,36 @@ class PagingViewControllerSpec: QuickSpec {
           let items = viewController.collectionView.numberOfItems(inSection: 0)
           expect(items).to(equal(21))
         }
-        
       }
       
+      describe("selecting index before initial render") {
+        it("starts at the selected item") {
+          let viewController0 = UIViewController()
+          let viewController1 = UIViewController()
+          let item0 = PagingIndexItem(index: 0, title: "0")
+          let item1 = PagingIndexItem(index: 1, title: "1")
+
+          let dataSource = ReloadingDataSource()
+          dataSource.viewControllers = [viewController0, viewController1]
+          dataSource.items = [item0, item1]
+
+          let pagingViewController = PagingViewController()
+          pagingViewController.dataSource = dataSource
+          pagingViewController.select(index: 1)
+
+          let window = UIWindow(frame: UIScreen.main.bounds)
+          window.rootViewController = pagingViewController
+          window.makeKeyAndVisible()
+          pagingViewController.view.layoutIfNeeded()
+          
+          expect(pagingViewController.pageViewController.selectedViewController).to(equal(viewController1))
+          expect(pagingViewController.collectionView.indexPathsForSelectedItems).to(equal([IndexPath(item: 1, section: 0)]))
+          expect(pagingViewController.state).to(equal(PagingState.selected(pagingItem: item1)))
+        }
+      }
+
       describe("retain cycles") {
-        
+
         it("deinits PagingViewController") {
           var instance: DeinitPagingViewController? = DeinitPagingViewController()
           waitUntil { done in
@@ -384,7 +406,7 @@ class PagingViewControllerSpec: QuickSpec {
             }
           }
         }
-        
+
       }
     }
   }
