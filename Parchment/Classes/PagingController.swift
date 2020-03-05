@@ -64,33 +64,28 @@ final class PagingController: NSObject {
   }
   
   func select(pagingItem: PagingItem, animated: Bool) {
+    if collectionView.superview == nil || collectionView.window == nil {
+      state = .selected(pagingItem: pagingItem)
+      return
+    }
+    
     switch state {
     case .empty:
       state = .selected(pagingItem: pagingItem)
       
-      if collectionView.superview != nil {
-        if collectionView.window == nil {
-          delegate?.selectContent(
-            pagingItem: pagingItem,
-            direction: .none,
-            animated: false
-          )
-        } else {
-          reloadItems(around: pagingItem)
-          
-          delegate?.selectContent(
-            pagingItem: pagingItem,
-            direction: .none,
-            animated: false
-          )
-          
-          collectionView.selectItem(
-            at: visibleItems.indexPath(for: pagingItem),
-            animated: false,
-            scrollPosition: options.scrollPosition
-          )
-        }
-      }
+      reloadItems(around: pagingItem)
+      
+      delegate?.selectContent(
+        pagingItem: pagingItem,
+        direction: .none,
+        animated: false
+      )
+      
+      collectionView.selectItem(
+        at: visibleItems.indexPath(for: pagingItem),
+        animated: false,
+        scrollPosition: options.scrollPosition
+      )
       
     case .selected:
       if let currentPagingItem = state.currentPagingItem {
@@ -234,7 +229,8 @@ final class PagingController: NSObject {
   
   func viewAppeared() {
     switch state {
-    case let .selected(pagingItem), let .scrolling(pagingItem, _, _, _, _):
+    case let .selected(pagingItem), let .scrolling(_, pagingItem?, _, _, _):
+      state = .selected(pagingItem: pagingItem)
       reloadItems(around: pagingItem)
       
       delegate?.selectContent(
