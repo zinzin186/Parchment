@@ -409,29 +409,28 @@ final class PagingController: NSObject {
     )
     
     if options.menuTransition == .scrollAlongside {
-      if collectionView.contentSize.width >= collectionView.bounds.width && state.progress != 0 {
-        let contentOffset = CGPoint(
-          x: initialContentOffset.x + (distance * abs(progress)),
-          y: initialContentOffset.y
-        )
-        
-        let invalidationContext = PagingInvalidationContext()
-        
-        // We don't want to update the content offset if there is no
-        // upcoming item to scroll to. We still need to invalidate the
-        // layout in order to update the layout attributes for the
-        // decoration views. We need to use setContentOffset with no
-        // animation in order to stop any ongoing scroll.
-        if upcomingPagingItem != nil {
+      let invalidationContext = PagingInvalidationContext()
+      
+      // We don't want to update the content offset if there is no
+      // upcoming item to scroll to. We still need to invalidate the
+      // layout in order to update the layout attributes for the
+      // decoration views. We need to use setContentOffset with no
+      // animation in order to stop any ongoing scroll.
+      if upcomingPagingItem != nil {
+        if collectionView.contentSize.width >= collectionView.bounds.width && state.progress != 0 {
+          let contentOffset = CGPoint(
+            x: initialContentOffset.x + (distance * abs(progress)),
+            y: initialContentOffset.y
+          )
           collectionView.setContentOffset(contentOffset, animated: false)
-          
-          if sizeCache.implementsWidthDelegate {
-            invalidationContext.invalidateSizes = true
-          }
         }
         
-        collectionViewLayout.invalidateLayout(with: invalidationContext)
+        if sizeCache.implementsWidthDelegate {
+          invalidationContext.invalidateSizes = true
+        }
       }
+      
+      collectionViewLayout.invalidateLayout(with: invalidationContext)
     }
   }
   
