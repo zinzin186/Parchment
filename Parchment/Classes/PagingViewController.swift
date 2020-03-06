@@ -459,7 +459,6 @@ open class PagingViewController:
     pageViewController.didMove(toParentViewController: self)
     #endif
     
-    pageViewController.delegate = self
     pageViewController.dataSource = self
     configureContentInteraction()
 
@@ -477,6 +476,12 @@ open class PagingViewController:
     if didLayoutSubviews == false {
       didLayoutSubviews = true
       pagingController.viewAppeared()
+      
+      // Selecting a view controller in the page view triggers the
+      // delegate methods even if the view has not appeared yet. This
+      // causes problems with the initial state when we select items, so
+      // we wait until the view has appeared before setting the delegate.
+      pageViewController.delegate = self
     }
   }
   
