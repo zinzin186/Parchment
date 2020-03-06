@@ -392,6 +392,35 @@ class PagingViewControllerSpec: QuickSpec {
           expect(pagingViewController.state).to(equal(PagingState.selected(pagingItem: item1)))
         }
       }
+      
+      describe("reloading data before initial render") {
+        it("starts at the selected item") {
+          let viewController0 = UIViewController()
+          let viewController1 = UIViewController()
+          let viewController2 = UIViewController()
+          let item0 = PagingIndexItem(index: 0, title: "0")
+          let item1 = PagingIndexItem(index: 1, title: "1")
+          let item2 = PagingIndexItem(index: 2, title: "2")
+
+          let dataSource = ReloadingDataSource()
+          dataSource.viewControllers = [viewController0, viewController1, viewController2]
+          dataSource.items = [item0, item1, item2]
+          
+          let pagingViewController = PagingViewController()
+          pagingViewController.dataSource = dataSource
+          pagingViewController.reloadData()
+          pagingViewController.select(index: 1)
+          
+          let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1000, height: 50))
+          window.rootViewController = pagingViewController
+          window.makeKeyAndVisible()
+          pagingViewController.view.layoutIfNeeded()
+          
+          expect(pagingViewController.pageViewController.selectedViewController).to(equal(viewController1))
+          expect(pagingViewController.collectionView.indexPathsForSelectedItems).to(equal([IndexPath(item: 1, section: 0)]))
+          expect(pagingViewController.state).to(equal(PagingState.selected(pagingItem: item1)))
+        }
+      }
 
       describe("retain cycles") {
 
