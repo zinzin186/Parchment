@@ -224,6 +224,7 @@ final class PagingController: NSObject {
   
   func removeAll() {
     state = .empty
+    sizeCache.clear()
     visibleItems = PagingItems(items: [])
     collectionView.reloadData()
     delegate?.removeContent()
@@ -270,6 +271,8 @@ final class PagingController: NSObject {
   }
   
   func reloadMenu(around pagingItem: PagingItem) {
+    sizeCache.clear()
+    
     let toItems = generateItems(around: pagingItem)
     
     visibleItems = PagingItems(
