@@ -199,6 +199,7 @@ final class PagingController: NSObject {
   func transitionSize() {
     switch state {
     case let .scrolling(pagingItem, _, _, _, _):
+      sizeCache.clear()
       state = .selected(pagingItem: pagingItem)
       reloadItems(around: pagingItem)
       collectionView.selectItem(
@@ -209,6 +210,7 @@ final class PagingController: NSObject {
       
     default:
       if let pagingItem = state.currentPagingItem {
+        sizeCache.clear()
         reloadItems(around: pagingItem)
         
         collectionView.selectItem(
