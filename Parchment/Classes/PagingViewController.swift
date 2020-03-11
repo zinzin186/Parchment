@@ -268,6 +268,7 @@ open class PagingViewController:
       }
       
       pagingController.options = options
+      pagingView.options = options
     }
   }
   
