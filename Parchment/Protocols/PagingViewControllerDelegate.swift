@@ -51,6 +51,14 @@ public protocol PagingViewControllerDelegate: class {
     startingViewController: UIViewController?,
     destinationViewController: UIViewController,
     transitionSuccessful: Bool)
+  
+  /// Called when paging cell is selected in the menu.
+  ///
+  /// - Parameter pagingViewController: The `PagingViewController` instance
+  /// - Parameter pagingItem: The item that was selected.
+  func pagingViewController(
+    _ pagingViewController: PagingViewController,
+    didSelectItem pagingItem: PagingItem)
 }
 
 public extension PagingViewControllerDelegate {
@@ -79,6 +87,12 @@ public extension PagingViewControllerDelegate {
     startingViewController: UIViewController?,
     destinationViewController: UIViewController,
     transitionSuccessful: Bool) {
+    return
+  }
+  
+  func pagingViewController(
+    _ pagingViewController: PagingViewController,
+    didSelectItem pagingItem: PagingItem) {
     return
   }
 }
