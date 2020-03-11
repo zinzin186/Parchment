@@ -2,6 +2,21 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0](https://github.com/rechsteiner/Parchment/compare/v2.0.1...v2.1.0) - 2020-11-03
+
+### Changes
+
+* Add option to position menu vertically (#412)
+* Combine all example targets into single target (#442)
+
+### Fixes
+
+* Fix missing import causing SwiftPM to fail (#420)
+* Fix memory leak occurring when configuring size cache (#433)
+* Fix issue with initial selection not being set (#438)
+* Fix regression causing indicator not to animate (#441)
+* Fix issues with invalidation of size cache (#444)
+
 ## [2.0.1](https://github.com/rechsteiner/Parchment/compare/v2.0.0...v2.0.1) - 2020-08-02
 
 ### Fixes
