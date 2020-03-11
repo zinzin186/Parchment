@@ -216,6 +216,10 @@ protocol PagingViewControllerDelegate: class {
         startingViewController: UIViewController?,
         destinationViewController: UIViewController,
         transitionSuccessful: Bool)
+        
+    func pagingViewController(
+        _ pagingViewController: PagingViewController,
+        didSelectItem pagingItem: PagingItem)
 }
 ```
 
