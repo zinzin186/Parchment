@@ -320,6 +320,7 @@ final class PagingController: NSObject {
     }
     
     sizeCache.options = options
+    collectionViewLayout.invalidateLayout()
   }
   
   private func configureCollectionViewLayout() {
