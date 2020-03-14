@@ -6,9 +6,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Carthage Dependencies
-          command: carthage bootstrap --use-ssh --platform ios
-      - run:
           name: Run Tests
           command: xcodebuild -project Parchment.xcodeproj -scheme "Parchment" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=13.1' test
           
