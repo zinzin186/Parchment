@@ -69,8 +69,8 @@ final class MockCollectionView: CollectionView, Mock {
     let indexPaths = range.map { IndexPath(item: $0, section: 0) }
     
     contentSize = CGSize(
-      width: PagingControllerSpec.ItemSize * CGFloat(items),
-      height: PagingControllerSpec.ItemSize
+      width: PagingControllerTests.ItemSize * CGFloat(items),
+      height: PagingControllerTests.ItemSize
     )
     indexPathsForVisibleItems = indexPaths
     
@@ -79,10 +79,10 @@ final class MockCollectionView: CollectionView, Mock {
     for indexPath in indexPaths {
       let attributes = PagingCellLayoutAttributes(forCellWith: indexPath)
       attributes.frame = CGRect(
-        x: PagingControllerSpec.ItemSize * CGFloat(indexPath.item),
+        x: PagingControllerTests.ItemSize * CGFloat(indexPath.item),
         y: 0,
-        width: PagingControllerSpec.ItemSize,
-        height: PagingControllerSpec.ItemSize
+        width: PagingControllerTests.ItemSize,
+        height: PagingControllerTests.ItemSize
       )
       layoutAttributes[indexPath] = attributes
     }
@@ -118,7 +118,7 @@ final class MockCollectionView: CollectionView, Mock {
     ))
     if let indexPath = indexPath {
       contentOffset = CGPoint(
-        x: CGFloat(indexPath.item) * PagingControllerSpec.ItemSize,
+        x: CGFloat(indexPath.item) * PagingControllerTests.ItemSize,
         y: 0
       )
     }
