@@ -2,6 +2,16 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.2.0](https://github.com/rechsteiner/Parchment/compare/v2.1.0...v2.2.0) - 2020-21-03
+
+### Added
+
+* Add delegate method when selecting item (#450)
+
+### Changes
+
+* Update menu constraints when menuItemSize changes (#449)
+
 ## [2.1.0](https://github.com/rechsteiner/Parchment/compare/v2.0.1...v2.1.0) - 2020-11-03
 
 ### Changes
