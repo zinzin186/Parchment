@@ -295,22 +295,37 @@ open class PagingViewController:
   /// Creates an instance of `PagingViewController`. You need to call
   /// `select(pagingItem:animated:)` in order to set the initial view
   /// controller before any items become visible.
-  public init() {
-    self.options = PagingOptions()
+  ///
+  /// - Parameter options: An object with configuration options. These
+  /// parameters are also available directly on `PagingViewController`.
+  public init(options: PagingOptions = PagingOptions()) {
+    self.options = options
     self.pagingController = PagingController(options: options)
     self.pageViewController = EMPageViewController(navigationOrientation: .horizontal)
     self.collectionViewLayout = createLayout(layout: options.menuLayoutClass.self)
     self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
     super.init(nibName: nil, bundle: nil)
     collectionView.delegate = self
+    collectionViewLayout.options = options
     configurePagingController()
     
     // Register default cell
     register(PagingTitleCell.self, for: PagingIndexItem.self)
   }
   
-  public convenience init(viewControllers: [UIViewController]) {
-    self.init()
+  /// Creates an instance of `PagingViewController`. The first view
+  /// controller will be selected by default.
+  ///
+  /// - Parameters:
+  ///   - options: An object with configuration options. These
+  ///   parameters are also available directly on `PagingViewController`.
+  ///   - viewControllers: An array of view controllers that you want
+  /// to display. The title of the view controllers will be used to
+  /// generate the menu items.
+  public convenience init(
+    options: PagingOptions = PagingOptions(),
+    viewControllers: [UIViewController]) {
+    self.init(options: options)
     configureDataSource(for: viewControllers)
   }
 
@@ -514,6 +529,7 @@ open class PagingViewController:
     pagingController.collectionViewLayout = collectionViewLayout
     pagingController.dataSource = self
     pagingController.delegate = self
+    pagingController.options = options
   }
   
   private func itemsForFiniteDataSource() -> [PagingItem] {
