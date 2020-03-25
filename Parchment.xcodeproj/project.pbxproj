@@ -88,6 +88,7 @@
 		95A84B0520E586FA0031520F /* PagingStaticDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A84B0420E586FA0031520F /* PagingStaticDataSource.swift */; };
 		95A84B0D20ED46920031520F /* AnyPagingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A84B0C20ED46920031520F /* AnyPagingItem.swift */; };
 		95B301171E59FCD500B95D02 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B301161E59FCD500B95D02 /* UIEdgeInsets.swift */; };
+		95D2AE44242BC1FA00AC3D46 /* ParchmentUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D2AE43242BC1FA00AC3D46 /* ParchmentUITests.swift */; };
 		95D78FDB2287138F00E6EE7C /* MockCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D78FDA2287138F00E6EE7C /* MockCollectionView.swift */; };
 		95D78FDD228713B800E6EE7C /* MockCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D78FDC228713B800E6EE7C /* MockCollectionViewLayout.swift */; };
 		95D78FDF228715C800E6EE7C /* MockPagingControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D78FDE228715C800E6EE7C /* MockPagingControllerDelegate.swift */; };
@@ -121,6 +122,13 @@
 			remoteInfo = Parchment;
 		};
 		95CCFF331CF1CDD700233464 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3EA04A421C53BFE40054E5E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3EA04A591C53BFF40054E5E0;
+			remoteInfo = Example;
+		};
+		95D2AE46242BC1FA00AC3D46 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3EA04A421C53BFE40054E5E0 /* Project object */;
 			proxyType = 1;
@@ -228,6 +236,9 @@
 		95A84B0420E586FA0031520F /* PagingStaticDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingStaticDataSource.swift; sourceTree = "<group>"; };
 		95A84B0C20ED46920031520F /* AnyPagingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyPagingItem.swift; sourceTree = "<group>"; };
 		95B301161E59FCD500B95D02 /* UIEdgeInsets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIEdgeInsets.swift; sourceTree = "<group>"; };
+		95D2AE41242BC1F900AC3D46 /* ParchmentUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParchmentUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		95D2AE43242BC1FA00AC3D46 /* ParchmentUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParchmentUITests.swift; sourceTree = "<group>"; };
+		95D2AE45242BC1FA00AC3D46 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		95D78FDA2287138F00E6EE7C /* MockCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCollectionView.swift; sourceTree = "<group>"; };
 		95D78FDC228713B800E6EE7C /* MockCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCollectionViewLayout.swift; sourceTree = "<group>"; };
 		95D78FDE228715C800E6EE7C /* MockPagingControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPagingControllerDelegate.swift; sourceTree = "<group>"; };
@@ -266,6 +277,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E9E8D141C70FDF900F265A4 /* Parchment.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95D2AE3E242BC1F900AC3D46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,6 +371,7 @@
 			children = (
 				3EA04A4D1C53BFE40054E5E0 /* Parchment */,
 				3E504EC51C7465B000AE1CE3 /* ParchmentTests */,
+				95D2AE42242BC1FA00AC3D46 /* ParchmentUITests */,
 				3EA04A5B1C53BFF40054E5E0 /* Example */,
 				3EA04A4C1C53BFE40054E5E0 /* Products */,
 			);
@@ -364,6 +383,7 @@
 				3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */,
 				3EA04A5A1C53BFF40054E5E0 /* Example.app */,
 				3E504EC41C7465B000AE1CE3 /* ParchmentTests.xctest */,
+				95D2AE41242BC1F900AC3D46 /* ParchmentUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -548,6 +568,15 @@
 			path = Storyboard;
 			sourceTree = "<group>";
 		};
+		95D2AE42242BC1FA00AC3D46 /* ParchmentUITests */ = {
+			isa = PBXGroup;
+			children = (
+				95D2AE43242BC1FA00AC3D46 /* ParchmentUITests.swift */,
+				95D2AE45242BC1FA00AC3D46 /* Info.plist */,
+			);
+			path = ParchmentUITests;
+			sourceTree = "<group>";
+		};
 		95D78FE5228728FD00E6EE7C /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
@@ -631,13 +660,31 @@
 			productReference = 3EA04A5A1C53BFF40054E5E0 /* Example.app */;
 			productType = "com.apple.product-type.application";
 		};
+		95D2AE40242BC1F900AC3D46 /* ParchmentUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95D2AE4A242BC1FA00AC3D46 /* Build configuration list for PBXNativeTarget "ParchmentUITests" */;
+			buildPhases = (
+				95D2AE3D242BC1F900AC3D46 /* Sources */,
+				95D2AE3E242BC1F900AC3D46 /* Frameworks */,
+				95D2AE3F242BC1F900AC3D46 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				95D2AE47242BC1FA00AC3D46 /* PBXTargetDependency */,
+			);
+			name = ParchmentUITests;
+			productName = ParchmentUITests;
+			productReference = 95D2AE41242BC1F900AC3D46 /* ParchmentUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		3EA04A421C53BFE40054E5E0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1100;
+				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1110;
 				ORGANIZATIONNAME = "Martin Rechsteiner";
 				TargetAttributes = {
@@ -655,6 +702,12 @@
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = G4TGN24VA2;
 						LastSwiftMigration = 1020;
+					};
+					95D2AE40242BC1F900AC3D46 = {
+						CreatedOnToolsVersion = 11.3.1;
+						DevelopmentTeam = G4TGN24VA2;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 3EA04A591C53BFF40054E5E0;
 					};
 				};
 			};
@@ -674,6 +727,7 @@
 				3EA04A4A1C53BFE40054E5E0 /* Parchment */,
 				3E504EC31C7465B000AE1CE3 /* ParchmentTests */,
 				3EA04A591C53BFF40054E5E0 /* Example */,
+				95D2AE40242BC1F900AC3D46 /* ParchmentUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -700,6 +754,13 @@
 				3EA04A671C53BFF40054E5E0 /* LaunchScreen.storyboard in Resources */,
 				3EA04A641C53BFF40054E5E0 /* Assets.xcassets in Resources */,
 				3EA04A621C53BFF40054E5E0 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95D2AE3F242BC1F900AC3D46 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -816,6 +877,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		95D2AE3D242BC1F900AC3D46 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95D2AE44242BC1FA00AC3D46 /* ParchmentUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -833,6 +902,11 @@
 			isa = PBXTargetDependency;
 			target = 3EA04A591C53BFF40054E5E0 /* Example */;
 			targetProxy = 95CCFF331CF1CDD700233464 /* PBXContainerItemProxy */;
+		};
+		95D2AE47242BC1FA00AC3D46 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3EA04A591C53BFF40054E5E0 /* Example */;
+			targetProxy = 95D2AE46242BC1FA00AC3D46 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1087,6 +1161,56 @@
 			};
 			name = Release;
 		};
+		95D2AE48242BC1FA00AC3D46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G4TGN24VA2;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ParchmentUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.ParchmentUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Example;
+			};
+			name = Debug;
+		};
+		95D2AE49242BC1FA00AC3D46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G4TGN24VA2;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ParchmentUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.ParchmentUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Example;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1122,6 +1246,15 @@
 			buildConfigurations = (
 				3EA04A6A1C53BFF40054E5E0 /* Debug */,
 				3EA04A6B1C53BFF40054E5E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		95D2AE4A242BC1FA00AC3D46 /* Build configuration list for PBXNativeTarget "ParchmentUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95D2AE48242BC1FA00AC3D46 /* Debug */,
+				95D2AE49242BC1FA00AC3D46 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

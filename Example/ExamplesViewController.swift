@@ -44,9 +44,18 @@ enum Example: CaseIterable {
 final class ExamplesViewController: UITableViewController {
   static let CellIdentifier = "CellIdentifier"
   
+  var isUITesting: Bool {
+    return ProcessInfo.processInfo.arguments.contains("--ui-testing")
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: Self.CellIdentifier)
+    
+    if isUITesting {
+      let viewController = createViewController(for: .basic)
+      navigationController?.setViewControllers([viewController], animated: false)
+    }
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
