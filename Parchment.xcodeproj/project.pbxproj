@@ -42,6 +42,7 @@
 		3EFEFBF71C80B8820023C949 /* PagingIndicatorLayoutAttributesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesTests.swift */; };
 		951E163720A21D3A0055E9D4 /* PagingViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954842601F4251F90072038C /* PagingViewControllerTests.swift */; };
 		952D802F1E37CC09003DCB18 /* PagingTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 952D802E1E37CC09003DCB18 /* PagingTransition.swift */; };
+		953B8D352416C3DC0047BBA1 /* SelfSizingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953B8D342416C3DC0047BBA1 /* SelfSizingViewController.swift */; };
 		954842591F42438E0072038C /* PagingInvalidationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954842581F42438E0072038C /* PagingInvalidationContext.swift */; };
 		9548425D1F42486B0072038C /* PagingDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9548425C1F42486B0072038C /* PagingDiff.swift */; };
 		954842631F4252070072038C /* PagingDiffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954842621F4252070072038C /* PagingDiffTests.swift */; };
@@ -197,6 +198,7 @@
 		3EC0184C1C95F993005421AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorLayoutAttributesTests.swift; sourceTree = "<group>"; };
 		952D802E1E37CC09003DCB18 /* PagingTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingTransition.swift; sourceTree = "<group>"; };
+		953B8D342416C3DC0047BBA1 /* SelfSizingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingViewController.swift; sourceTree = "<group>"; };
 		954842581F42438E0072038C /* PagingInvalidationContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingInvalidationContext.swift; sourceTree = "<group>"; };
 		9548425C1F42486B0072038C /* PagingDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingDiff.swift; sourceTree = "<group>"; };
 		954842601F4251F90072038C /* PagingViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingViewControllerTests.swift; sourceTree = "<group>"; };
@@ -440,6 +442,14 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		953B8D332416C3C60047BBA1 /* SelfSizing */ = {
+			isa = PBXGroup;
+			children = (
+				953B8D342416C3DC0047BBA1 /* SelfSizingViewController.swift */,
+			);
+			path = SelfSizing;
+			sourceTree = "<group>";
+		};
 		955453CA2413DBCE00923BC8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -460,6 +470,7 @@
 			children = (
 				955453CC2413DBEB00923BC8 /* Basic */,
 				955453CD2413DC5A00923BC8 /* Calendar */,
+				953B8D332416C3C60047BBA1 /* SelfSizing */,
 				955453D42413DD7A00923BC8 /* SizeDelegate */,
 				955453D72413E0FA00923BC8 /* Images */,
 				955453DC2413E1A500923BC8 /* Icons */,
@@ -861,6 +872,7 @@
 				955453D82413E11300923BC8 /* UnsplashViewController.swift in Sources */,
 				955453EF2415172800923BC8 /* MultipleCellsViewController.swift in Sources */,
 				955453DF2413E1B200923BC8 /* IconViewController.swift in Sources */,
+				953B8D352416C3DC0047BBA1 /* SelfSizingViewController.swift in Sources */,
 				955453D62413DD8E00923BC8 /* SizeDelegateViewController.swift in Sources */,
 				955453D92413E11300923BC8 /* ImageCollectionViewCell.swift in Sources */,
 				955453EA241515D900923BC8 /* ScrollViewController.swift in Sources */,

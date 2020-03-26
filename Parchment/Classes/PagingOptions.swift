@@ -126,6 +126,8 @@ public struct PagingOptions {
       return width
     case let .sizeToFit(minWidth, _):
       return minWidth
+    case let .selfSizing(estimatedItemWidth, _):
+      return estimatedItemWidth
     }
   }
   
