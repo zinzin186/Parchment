@@ -104,6 +104,10 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
     }
   }
   
+  /// Cache used to store the preferred item width for each
+  /// self-sizing cell. PagingItem identifier is used as the key.
+  private var widthCache: [Int: CGFloat] = [:]
+  
   private(set) var contentInsets: UIEdgeInsets = .zero
   private var contentSize: CGSize = .zero
   private let PagingIndicatorKind = "PagingIndicatorKind"
@@ -142,6 +146,29 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
   override open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
     super.invalidateLayout(with: context)
     invalidationState = invalidationState + InvalidationState(context)
+  }
+  
+  override open func invalidationContext(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutInvalidationContext {
+    let context = PagingInvalidationContext()
+    context.invalidateSizes = true
+    return context
+  }
+  
+  override open func shouldInvalidateLayout(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
+    switch options.menuItemSize {
+    // Invalidate the layout and update the layout attributes with the
+    // preferred width for each cell. The preferred width is based on
+    // the layout constraints in each cell.
+    case .selfSizing where originalAttributes is PagingCellLayoutAttributes:
+      if preferredAttributes.frame.width != originalAttributes.frame.width {
+        let pagingItem = visibleItems.pagingItem(for: originalAttributes.indexPath)
+        widthCache[pagingItem.identifier] = preferredAttributes.frame.width
+        return true
+      }
+      return false
+    default:
+      return false
+    }
   }
   
   override open func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
@@ -243,9 +270,9 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
       let attributes = PagingCellLayoutAttributes(forCellWith: indexPath)
       let x = previousFrame.maxX + options.menuItemSpacing
       let y = adjustedMenuInsets.top
+      let pagingItem = visibleItems.pagingItem(for: indexPath)
       
       if sizeCache.implementsWidthDelegate {
-        let pagingItem = visibleItems.pagingItem(for: indexPath)
         var width = sizeCache.itemWidth(for: pagingItem)
         let selectedWidth = sizeCache.itemWidthSelected(for: pagingItem)
         
@@ -262,6 +289,12 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
           attributes.frame = CGRect(x: x, y: y, width: width, height: height)
         case let .sizeToFit(minWidth, height):
           attributes.frame = CGRect(x: x, y: y, width: minWidth, height: height)
+        case let .selfSizing(estimatedWidth, height):
+          if let actualWidth = widthCache[pagingItem.identifier] {
+            attributes.frame = CGRect(x: x, y: y, width: actualWidth, height: height)
+          } else {
+            attributes.frame = CGRect(x: x, y: y, width: estimatedWidth, height: height)
+          }
         }
       }
       

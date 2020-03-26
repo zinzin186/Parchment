@@ -2,6 +2,7 @@ import UIKit
 
 enum Example: CaseIterable {
   case basic
+  case selfSizing
   case calendar
   case sizeDelegate
   case images
@@ -17,6 +18,8 @@ enum Example: CaseIterable {
     switch self {
     case .basic:
       return "Basic"
+    case .selfSizing:
+      return "Self sizing cells"
     case .calendar:
       return "Calendar"
     case .sizeDelegate:
@@ -95,6 +98,8 @@ final class ExamplesViewController: UITableViewController {
       return BasicViewController(nibName: nil, bundle: nil)
     case .calendar:
       return CalendarViewController(nibName: nil, bundle: nil)
+    case .selfSizing:
+      return SelfSizingViewController()
     case .sizeDelegate:
       return SizeDelegateViewController(nibName: nil, bundle: nil)
     case .images:
