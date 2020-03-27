@@ -143,15 +143,30 @@ extension PageViewController: PageViewManagerDelegate {
         height: scrollView.bounds.height)
     }
     
+    // When updating the content offset we need to account for the
+    // current content offset as well. This ensures that the selected
+    // page is fully centered when swiping so fast that you get the
+    // bounce effect in the scroll view.
+    var diff: CGFloat = 0
+    if scrollView.contentOffset.x > view.bounds.width * 2 {
+      diff = scrollView.contentOffset.x - view.bounds.width * 2
+    } else if scrollView.contentOffset.x > view.bounds.width && scrollView.contentOffset.x < view.bounds.width * 2 {
+      diff = scrollView.contentOffset.x - view.bounds.width
+    } else if scrollView.contentOffset.x < view.bounds.width && scrollView.contentOffset.x < 0 {
+      diff = scrollView.contentOffset.x
+    }
+    
+    // Need to set content size before updating content offset. If not
+    // the views will be misplaced when overshooting.
     scrollView.contentSize = CGSize(
       width: CGFloat(manager.state.count) * view.bounds.width,
       height: view.bounds.height)
     
     switch manager.state {
     case .first, .single, .empty:
-      scrollView.contentOffset = CGPoint(x: 0, y: 0)
+      scrollView.contentOffset = CGPoint(x: diff, y: 0)
     case .last, .center:
-      scrollView.contentOffset = CGPoint(x: view.bounds.width, y: 0)
+      scrollView.contentOffset = CGPoint(x: view.bounds.width + diff, y: 0)
     }
   }
   
