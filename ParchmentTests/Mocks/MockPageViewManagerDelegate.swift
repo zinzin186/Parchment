@@ -26,7 +26,7 @@ final class MockPageViewManagerDelegate: PageViewManagerDelegate {
     calls.append(.scrollReverse)
   }
   
-  func layoutViews(for viewControllers: [UIViewController]) {
+  func layoutViews(for viewControllers: [UIViewController], keepContentOffset: Bool) {
     calls.append(.layoutViews(viewControllers))
   }
   

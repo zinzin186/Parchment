@@ -57,6 +57,14 @@ public final class PageViewController: UIViewController {
     manager.viewWillAppear(animated: animated)
   }
   
+  
+  public override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.willTransition(to: newCollection, with: coordinator)
+    coordinator.animate(alongsideTransition: { _ in
+      self.manager.viewWillTransitionSize()
+    })
+  }
+  
   // MARK: - Public Methods
   
   public func selectViewController(_ viewController: UIViewController, direction: PageViewDirection, animated: Bool = true) {
@@ -134,7 +142,7 @@ extension PageViewController: PageViewManagerDelegate {
     }
   }
   
-  func layoutViews(for viewControllers: [UIViewController]) {
+  func layoutViews(for viewControllers: [UIViewController], keepContentOffset: Bool) {
     for (index, viewController) in viewControllers.enumerated() {
       viewController.view.frame = CGRect(
         x: CGFloat(index) * scrollView.bounds.width,
@@ -148,12 +156,14 @@ extension PageViewController: PageViewManagerDelegate {
     // page is fully centered when swiping so fast that you get the
     // bounce effect in the scroll view.
     var diff: CGFloat = 0
-    if scrollView.contentOffset.x > view.bounds.width * 2 {
-      diff = scrollView.contentOffset.x - view.bounds.width * 2
-    } else if scrollView.contentOffset.x > view.bounds.width && scrollView.contentOffset.x < view.bounds.width * 2 {
-      diff = scrollView.contentOffset.x - view.bounds.width
-    } else if scrollView.contentOffset.x < view.bounds.width && scrollView.contentOffset.x < 0 {
-      diff = scrollView.contentOffset.x
+    if keepContentOffset {
+      if scrollView.contentOffset.x > view.bounds.width * 2 {
+        diff = scrollView.contentOffset.x - view.bounds.width * 2
+      } else if scrollView.contentOffset.x > view.bounds.width && scrollView.contentOffset.x < view.bounds.width * 2 {
+        diff = scrollView.contentOffset.x - view.bounds.width
+      } else if scrollView.contentOffset.x < view.bounds.width && scrollView.contentOffset.x < 0 {
+        diff = scrollView.contentOffset.x
+      }
     }
     
     // Need to set content size before updating content offset. If not

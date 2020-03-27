@@ -3,7 +3,7 @@ import UIKit
 protocol PageViewManagerDelegate: class {
   func scrollForward()
   func scrollReverse()
-  func layoutViews(for viewControllers: [UIViewController])
+  func layoutViews(for viewControllers: [UIViewController], keepContentOffset: Bool)
   func addViewController(_ viewController: UIViewController)
   func removeViewController(_ viewController: UIViewController)
   func beginAppearanceTransition(isAppearing: Bool, viewController: UIViewController)

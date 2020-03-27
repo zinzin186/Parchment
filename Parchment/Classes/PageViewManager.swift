@@ -4,9 +4,9 @@ final class PageViewManager {
   weak var dataSource: PageViewManagerDataSource?
   weak var delegate: PageViewManagerDelegate?
   
-  private weak var previousViewController: UIViewController?
+  private(set) weak var previousViewController: UIViewController?
   private(set) weak var selectedViewController: UIViewController?
-  private weak var nextViewController: UIViewController?
+  private(set) weak var nextViewController: UIViewController?
   
   var state: PageViewState {
     if previousViewController == nil && nextViewController == nil && selectedViewController == nil {
@@ -157,6 +157,10 @@ final class PageViewManager {
   
   func willEndDragging() {
     resetState()
+  }
+  
+  func viewWillTransitionSize() {
+    layoutsViews(keepContentOffset: false)
   }
   
   func didScroll(progress: CGFloat) {
@@ -528,7 +532,7 @@ final class PageViewManager {
     delegate?.endAppearanceTransition(viewController: oldPreviousViewController)
   }
   
-  private func layoutsViews() {
+  private func layoutsViews(keepContentOffset: Bool = true) {
     var viewControllers: [UIViewController] = []
     
     if let previousViewController = previousViewController {
@@ -541,6 +545,6 @@ final class PageViewManager {
       viewControllers.append(nextViewController)
     }
     
-    delegate?.layoutViews(for: viewControllers)
+    delegate?.layoutViews(for: viewControllers, keepContentOffset: keepContentOffset)
   }
 }
