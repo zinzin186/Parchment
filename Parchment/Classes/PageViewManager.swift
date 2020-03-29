@@ -24,6 +24,14 @@ final class PageViewManager {
   
   // MARK: - Private Properties
   
+  private enum AppearanceState {
+    case appearing(animated: Bool)
+    case disappearing(animated: Bool)
+    case disappeared
+    case appeared
+  }
+  
+  private var appearanceState: AppearanceState = .disappeared
   private var didReload: Bool = false
   private var didSelect: Bool = false
   private var initialDirection: PageViewDirection = .none
@@ -35,7 +43,7 @@ final class PageViewManager {
     direction: PageViewDirection = .none,
     animated: Bool = false) {
     if state == .empty || animated == false {
-      selectViewController(viewController)
+      selectViewController(viewController, animated: animated)
       return
     } else {
       resetState()
@@ -69,8 +77,8 @@ final class PageViewManager {
     } else if let nextViewController = nextViewController,
       let selectedViewController = selectedViewController {
       
-      delegate?.beginAppearanceTransition(isAppearing: false, viewController: selectedViewController)
-      delegate?.beginAppearanceTransition(isAppearing: true, viewController: nextViewController)
+      beginAppearanceTransition(false, for: selectedViewController, animated: animated)
+      beginAppearanceTransition(true, for: nextViewController, animated: animated)
       
       let newNextViewController = dataSource?.viewControllerAfter(nextViewController)
       
@@ -88,8 +96,8 @@ final class PageViewManager {
       
       layoutsViews()
       
-      delegate?.endAppearanceTransition(viewController: selectedViewController)
-      delegate?.endAppearanceTransition(viewController: nextViewController)
+      endAppearanceTransition(for: selectedViewController)
+      endAppearanceTransition(for: nextViewController)
     }
   }
   
@@ -100,8 +108,8 @@ final class PageViewManager {
     } else if let previousViewController = previousViewController,
       let selectedViewController = selectedViewController {
       
-      delegate?.beginAppearanceTransition(isAppearing: false, viewController: selectedViewController)
-      delegate?.beginAppearanceTransition(isAppearing: true, viewController: previousViewController)
+      beginAppearanceTransition(false, for: selectedViewController, animated: animated)
+      beginAppearanceTransition(true, for: previousViewController, animated: animated)
       
       let newPreviousViewController = dataSource?.viewControllerBefore(previousViewController)
       
@@ -119,8 +127,8 @@ final class PageViewManager {
       
       layoutsViews()
       
-      delegate?.endAppearanceTransition(viewController: selectedViewController)
-      delegate?.endAppearanceTransition(viewController: previousViewController)
+      endAppearanceTransition(for: selectedViewController)
+      endAppearanceTransition(for: previousViewController)
     }
   }
   
@@ -128,7 +136,7 @@ final class PageViewManager {
     let oldSelectedViewController = selectedViewController
     
     if let selectedViewController = oldSelectedViewController {
-      delegate?.beginAppearanceTransition(isAppearing: false, viewController: selectedViewController)
+      beginAppearanceTransition(false, for: selectedViewController, animated: false)
       delegate?.removeViewController(selectedViewController)
     }
     if let previousViewController = previousViewController {
@@ -143,12 +151,49 @@ final class PageViewManager {
     layoutsViews()
     
     if let oldSelectedViewController = oldSelectedViewController {
-      delegate?.endAppearanceTransition(viewController: oldSelectedViewController)
+      endAppearanceTransition(for: oldSelectedViewController)
     }
   }
   
-  func viewWillAppear(animated: Bool) {
-    layoutsViews()
+  func viewWillAppear(_ animated: Bool) {
+    appearanceState = .appearing(animated: animated)
+    if let selectedViewController = selectedViewController {
+      delegate?.beginAppearanceTransition(
+        isAppearing: true,
+        viewController: selectedViewController,
+        animated: animated)
+    }
+    
+    switch state {
+    case .center, .first, .last, .single:
+      layoutsViews()
+    case .empty:
+      break
+    }
+  }
+  
+  func viewDidAppear(_ animated: Bool) {
+    appearanceState = .appeared
+    if let selectedViewController = selectedViewController {
+      delegate?.endAppearanceTransition(viewController: selectedViewController)
+    }
+  }
+  
+  func viewWillDisappear(_ animated: Bool) {
+    appearanceState = .disappearing(animated: animated)
+    if let selectedViewController = selectedViewController {
+      delegate?.beginAppearanceTransition(
+      isAppearing: false,
+      viewController: selectedViewController,
+      animated: animated)
+    }
+  }
+  
+  func viewDidDisappear(_ animated: Bool) {
+    appearanceState = .disappeared
+    if let selectedViewController = selectedViewController {
+      delegate?.endAppearanceTransition(viewController: selectedViewController)
+    }
   }
   
   func willBeginDragging() {
@@ -230,17 +275,17 @@ final class PageViewManager {
   
   // MARK: - Private Methods
 
-  private func selectViewController(_ viewController: UIViewController) {
+  private func selectViewController(_ viewController: UIViewController, animated: Bool) {
     let oldSelectedViewController = selectedViewController
     let newPreviousViewController = dataSource?.viewControllerBefore(viewController)
     let newNextViewController = dataSource?.viewControllerAfter(viewController)
     
     if let oldSelectedViewController = oldSelectedViewController {
-      delegate?.beginAppearanceTransition(isAppearing: false, viewController: oldSelectedViewController)
+      beginAppearanceTransition(false, for: oldSelectedViewController, animated: animated)
     }
     
     if viewController !== selectedViewController {
-      delegate?.beginAppearanceTransition(isAppearing: true, viewController: viewController)
+      beginAppearanceTransition(true, for: viewController, animated: animated)
     }
     
     if let oldPreviosViewController = previousViewController {
@@ -294,11 +339,11 @@ final class PageViewManager {
     layoutsViews()
     
     if let oldSelectedViewController = oldSelectedViewController {
-      delegate?.endAppearanceTransition(viewController: oldSelectedViewController)
+      endAppearanceTransition(for: oldSelectedViewController)
     }
     
     if viewController !== oldSelectedViewController {
-      delegate?.endAppearanceTransition(viewController: viewController)
+      endAppearanceTransition(for: viewController)
     }
   }
   
@@ -361,8 +406,8 @@ final class PageViewManager {
     let oldNextViewController = nextViewController
     
     if let nextViewController = oldNextViewController {
-      delegate?.beginAppearanceTransition(isAppearing: true, viewController: selectedViewController)
-      delegate?.beginAppearanceTransition(isAppearing: false, viewController: nextViewController)
+      beginAppearanceTransition(true, for: selectedViewController, animated: true)
+      beginAppearanceTransition(false, for: nextViewController, animated: true)
     }
     
     if didSelect {
@@ -379,8 +424,8 @@ final class PageViewManager {
     }
     
     if let oldNextViewController = oldNextViewController {
-      delegate?.endAppearanceTransition(viewController: selectedViewController)
-      delegate?.endAppearanceTransition(viewController: oldNextViewController)
+      endAppearanceTransition(for: selectedViewController)
+      endAppearanceTransition(for: oldNextViewController)
       delegate?.didFinishScrolling(
         from: selectedViewController,
         to: oldNextViewController,
@@ -393,8 +438,8 @@ final class PageViewManager {
     let oldPreviousViewController = previousViewController
     
     if let previousViewController = oldPreviousViewController {
-      delegate?.beginAppearanceTransition(isAppearing: true, viewController: selectedViewController)
-      delegate?.beginAppearanceTransition(isAppearing: false, viewController: previousViewController)
+      beginAppearanceTransition(true, for: selectedViewController, animated: true)
+      beginAppearanceTransition(false, for: previousViewController, animated: true)
     }
     
     if didSelect {
@@ -411,8 +456,8 @@ final class PageViewManager {
     }
     
     if let oldPreviousViewController = oldPreviousViewController {
-      delegate?.endAppearanceTransition(viewController: selectedViewController)
-      delegate?.endAppearanceTransition(viewController: oldPreviousViewController)
+      endAppearanceTransition(for: selectedViewController)
+      endAppearanceTransition(for: oldPreviousViewController)
       delegate?.didFinishScrolling(
         from: selectedViewController,
         to: oldPreviousViewController,
@@ -424,8 +469,8 @@ final class PageViewManager {
     if let selectedViewController = selectedViewController,
       let nextViewController = nextViewController {
       delegate?.willScroll(from: selectedViewController, to: nextViewController)
-      delegate?.beginAppearanceTransition(isAppearing: true, viewController: nextViewController)
-      delegate?.beginAppearanceTransition(isAppearing: false, viewController: selectedViewController)
+      beginAppearanceTransition(true, for: nextViewController, animated: true)
+      beginAppearanceTransition(false, for: selectedViewController, animated: true)
     }
   }
   
@@ -433,8 +478,8 @@ final class PageViewManager {
     if let selectedViewController = selectedViewController,
       let previousViewController = previousViewController {
       delegate?.willScroll(from: selectedViewController, to: previousViewController)
-      delegate?.beginAppearanceTransition(isAppearing: true, viewController: previousViewController)
-      delegate?.beginAppearanceTransition(isAppearing: false, viewController: selectedViewController)
+      beginAppearanceTransition(true, for: previousViewController, animated: true)
+      beginAppearanceTransition(false, for: selectedViewController, animated: true)
     }
   }
   
@@ -481,8 +526,8 @@ final class PageViewManager {
         
     layoutsViews()
     
-    delegate?.endAppearanceTransition(viewController: oldSelectedViewController)
-    delegate?.endAppearanceTransition(viewController: oldNextViewController)
+    endAppearanceTransition(for: oldSelectedViewController)
+    endAppearanceTransition(for: oldNextViewController)
   }
   
   private func didScrollReverse() {
@@ -528,8 +573,8 @@ final class PageViewManager {
     
     layoutsViews()
     
-    delegate?.endAppearanceTransition(viewController: oldSelectedViewController)
-    delegate?.endAppearanceTransition(viewController: oldPreviousViewController)
+    endAppearanceTransition(for: oldSelectedViewController)
+    endAppearanceTransition(for: oldPreviousViewController)
   }
   
   private func layoutsViews(keepContentOffset: Bool = true) {
@@ -546,5 +591,39 @@ final class PageViewManager {
     }
     
     delegate?.layoutViews(for: viewControllers, keepContentOffset: keepContentOffset)
+  }
+  
+  private func beginAppearanceTransition(
+    _ isAppearing: Bool,
+    for viewController: UIViewController,
+    animated: Bool) {
+    switch appearanceState {
+    case .appeared:
+      delegate?.beginAppearanceTransition(
+        isAppearing: isAppearing,
+        viewController: viewController,
+        animated: animated)
+    case let .appearing(animated):
+      // Override the given animated flag with the animated flag of
+      // the parent views appearance transition.
+      delegate?.beginAppearanceTransition(
+        isAppearing: isAppearing,
+        viewController: viewController,
+        animated: animated)
+    case let .disappearing(animated):
+      // When the parent view is about to disappear we always set
+      // isAppearing to false.
+      delegate?.beginAppearanceTransition(
+        isAppearing: false,
+        viewController: viewController,
+        animated: animated)
+    default:
+      break
+    }
+  }
+  
+  private func endAppearanceTransition(for viewController: UIViewController) {
+    guard case .appeared = appearanceState else { return }
+    delegate?.endAppearanceTransition(viewController: viewController)
   }
 }

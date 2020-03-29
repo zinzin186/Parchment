@@ -6,7 +6,10 @@ protocol PageViewManagerDelegate: class {
   func layoutViews(for viewControllers: [UIViewController], keepContentOffset: Bool)
   func addViewController(_ viewController: UIViewController)
   func removeViewController(_ viewController: UIViewController)
-  func beginAppearanceTransition(isAppearing: Bool, viewController: UIViewController)
+  func beginAppearanceTransition(
+    isAppearing: Bool,
+    viewController: UIViewController,
+    animated: Bool)
   func endAppearanceTransition(viewController: UIViewController)
   func willScroll(
     from selectedViewController: UIViewController,

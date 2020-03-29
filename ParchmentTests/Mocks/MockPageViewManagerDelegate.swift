@@ -9,7 +9,7 @@ final class MockPageViewManagerDelegate: PageViewManagerDelegate {
     case layoutViews([UIViewController])
     case addViewController(UIViewController)
     case removeViewController(UIViewController)
-    case beginAppearanceTransition(Bool, UIViewController)
+    case beginAppearanceTransition(Bool, UIViewController, Bool)
     case endAppearanceTransition(UIViewController)
     case willScroll(from: UIViewController, to: UIViewController)
     case isScrolling(from: UIViewController, to: UIViewController?, progress: CGFloat)
@@ -38,8 +38,8 @@ final class MockPageViewManagerDelegate: PageViewManagerDelegate {
     calls.append(.removeViewController(viewController))
   }
   
-  func beginAppearanceTransition(isAppearing: Bool, viewController: UIViewController) {
-    calls.append(.beginAppearanceTransition(isAppearing, viewController))
+  func beginAppearanceTransition(isAppearing: Bool, viewController: UIViewController, animated: Bool) {
+    calls.append(.beginAppearanceTransition(isAppearing, viewController, animated))
   }
   
   func endAppearanceTransition(viewController: UIViewController) {

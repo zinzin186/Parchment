@@ -54,9 +54,23 @@ public final class PageViewController: UIViewController {
   public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     view.layoutIfNeeded()
-    manager.viewWillAppear(animated: animated)
+    manager.viewWillAppear(animated)
   }
   
+  public override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    manager.viewDidAppear(animated)
+  }
+  
+  public override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    manager.viewWillDisappear(animated)
+  }
+  
+  public override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    manager.viewDidDisappear(animated)
+  }
   
   public override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
     super.willTransition(to: newCollection, with: coordinator)
@@ -194,8 +208,8 @@ extension PageViewController: PageViewManagerDelegate {
     viewController.didMove(toParent: nil)
   }
   
-  func beginAppearanceTransition(isAppearing: Bool, viewController: UIViewController) {
-    viewController.beginAppearanceTransition(isAppearing, animated: false)
+  func beginAppearanceTransition(isAppearing: Bool, viewController: UIViewController, animated: Bool) {
+    viewController.beginAppearanceTransition(isAppearing, animated: animated)
   }
   
   func endAppearanceTransition(viewController: UIViewController) {
