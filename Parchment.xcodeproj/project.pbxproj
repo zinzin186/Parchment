@@ -78,6 +78,7 @@
 		955453F32415181800923BC8 /* StoryboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955453F22415181500923BC8 /* StoryboardViewController.swift */; };
 		95591F21222C3A0400677B4B /* PagingControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95591F20222C3A0400677B4B /* PagingControllerTests.swift */; };
 		95591F23222C522800677B4B /* PagingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95591F22222C522800677B4B /* PagingController.swift */; };
+		955D02442434E56900416E71 /* PagingViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955D02432434E56900416E71 /* PagingViewTests.swift */; };
 		9568922B222C525C00AFF250 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9568922A222C525C00AFF250 /* CollectionView.swift */; };
 		957F14091E35583500E562F8 /* PagingCellLayoutAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957F14081E35583500E562F8 /* PagingCellLayoutAttributes.swift */; };
 		95868C2C2003DA87004B392B /* PagingContentInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95868C2B2003DA87004B392B /* PagingContentInteraction.swift */; };
@@ -251,6 +252,7 @@
 		9555594820E4FB3F00D3971A /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		95591F20222C3A0400677B4B /* PagingControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingControllerTests.swift; sourceTree = "<group>"; };
 		95591F22222C522800677B4B /* PagingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingController.swift; sourceTree = "<group>"; };
+		955D02432434E56900416E71 /* PagingViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingViewTests.swift; sourceTree = "<group>"; };
 		9568922A222C525C00AFF250 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		957F14081E35583500E562F8 /* PagingCellLayoutAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingCellLayoutAttributes.swift; sourceTree = "<group>"; };
 		95868C2B2003DA87004B392B /* PagingContentInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingContentInteraction.swift; sourceTree = "<group>"; };
@@ -408,6 +410,7 @@
 				3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesTests.swift */,
 				3E5E93E21CE7D899000762A1 /* PagingStateTests.swift */,
 				954842601F4251F90072038C /* PagingViewControllerTests.swift */,
+				955D02432434E56900416E71 /* PagingViewTests.swift */,
 				95D78FE5228728FD00E6EE7C /* Mocks */,
 			);
 			path = ParchmentTests;
@@ -900,6 +903,7 @@
 				95591F21222C3A0400677B4B /* PagingControllerTests.swift in Sources */,
 				95D78FDF228715C800E6EE7C /* MockPagingControllerDelegate.swift in Sources */,
 				3E5E93E31CE7D899000762A1 /* PagingStateTests.swift in Sources */,
+				955D02442434E56900416E71 /* PagingViewTests.swift in Sources */,
 				951E163720A21D3A0055E9D4 /* PagingViewControllerTests.swift in Sources */,
 				95D78FDB2287138F00E6EE7C /* MockCollectionView.swift in Sources */,
 				954E7DEE1F48AE6E00342ECF /* Item.swift in Sources */,
