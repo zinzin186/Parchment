@@ -2,6 +2,17 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.3.0](https://github.com/rechsteiner/Parchment/compare/v2.2.0...v2.3.0) - 2020-02-04
+
+### Added
+
+* Add support for SwiftUI (#460)
+* Add support for self-sizing menu cells (#461)
+
+### Fixes
+
+* Handle menu background color change after viewDidLoad (#465)
+
 ## [2.2.0](https://github.com/rechsteiner/Parchment/compare/v2.1.0...v2.2.0) - 2020-21-03
 
 ### Added
