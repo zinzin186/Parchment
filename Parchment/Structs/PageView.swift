@@ -1,6 +1,14 @@
 import UIKit
 import SwiftUI
 
+/// Check if both SwiftUI and Combine is available. Without this
+/// xcodebuild fails, saying it can't find the SwiftUI types used
+/// inside PageView, even though it's wrapped with an @available
+/// check. Found a possible fix here: https://stackoverflow.com/questions/58233454/how-to-use-swiftui-in-framework
+/// This might be related to the issue discussed in this thread:
+/// https://forums.swift.org/t/weak-linking-of-frameworks-with-greater-deployment-targets/26017/24
+#if canImport(SwiftUI) && canImport(Combine)
+
 /// `PageView` provides a SwiftUI wrapper around `PagingViewController`.
 /// It can be used with any fixed array of `PagingItem`s. Use the
 /// `PagingOptions` struct to customize the properties.
@@ -73,3 +81,4 @@ public struct PageView<Item: PagingItem, Page: View>: View {
     }
   }
 }
+#endif
