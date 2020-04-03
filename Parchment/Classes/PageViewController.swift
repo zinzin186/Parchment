@@ -1,6 +1,9 @@
 import UIKit
 
 public final class PageViewController: UIViewController {
+
+  // MARK: Public Properties
+  
   public weak var dataSource: PageViewControllerDataSource?
   public weak var delegate: PageViewControllerDelegate?
   
@@ -17,25 +20,81 @@ public final class PageViewController: UIViewController {
     scrollView.isPagingEnabled = true
     scrollView.scrollsToTop = false
     scrollView.bounces = true
-    scrollView.alwaysBounceHorizontal = true
-    scrollView.alwaysBounceVertical = false
-    scrollView.translatesAutoresizingMaskIntoConstraints = true
     scrollView.showsHorizontalScrollIndicator = false
     scrollView.showsVerticalScrollIndicator = false
     return scrollView
   }()
   
+  public var options: PagingOptions {
+    didSet {
+      switch options.contentNavigationOrientation {
+      case .vertical:
+        scrollView.alwaysBounceHorizontal = false
+        scrollView.alwaysBounceVertical = true
+      case .horizontal:
+        scrollView.alwaysBounceHorizontal = true
+        scrollView.alwaysBounceVertical = false
+      }
+    }
+  }
+  
+  // MARK: Private Properties
+  
   private let manager = PageViewManager()
-  private let options: PagingOptions
+  
+  /// The size of a single page.
+  private var pageSize: CGFloat {
+    switch options.contentNavigationOrientation {
+    case .vertical:
+      return view.bounds.height
+    case .horizontal:
+      return view.bounds.width
+    }
+  }
+  
+  /// The size of all the pages in the scroll view.
+  private var contentSize: CGSize {
+    switch options.contentNavigationOrientation {
+    case .horizontal:
+      return CGSize(
+        width: CGFloat(manager.state.count) * view.bounds.width,
+        height: view.bounds.height)
+    case .vertical:
+      return CGSize(
+        width: view.bounds.width,
+        height: CGFloat(manager.state.count) * view.bounds.height)
+    }
+  }
+  
+  /// The content offset of the scroll view, adjusted for the current
+  /// navigation orientation.
+  private var contentOffset: CGFloat {
+    get {
+      switch options.contentNavigationOrientation {
+      case .horizontal:
+        return scrollView.contentOffset.x
+      case .vertical:
+        return scrollView.contentOffset.y
+      }
+    }
+    set {
+      scrollView.contentOffset = point(newValue)
+    }
+  }
   
   private var isRightToLeft: Bool {
-    if #available(iOS 9.0, *),
-      UIView.userInterfaceLayoutDirection(for: view.semanticContentAttribute) == .rightToLeft {
-      return true
-    } else if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-      return true
-    } else {
+    switch options.contentNavigationOrientation {
+    case .vertical:
       return false
+    case .horizontal:
+      if #available(iOS 9.0, *),
+        UIView.userInterfaceLayoutDirection(for: view.semanticContentAttribute) == .rightToLeft {
+        return true
+      } else if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+        return true
+      } else {
+        return false
+      }
     }
   }
 
@@ -90,7 +149,7 @@ public final class PageViewController: UIViewController {
     })
   }
   
-  // MARK: - Public Methods
+  // MARK: Public Methods
   
   public func selectViewController(_ viewController: UIViewController, direction: PageViewDirection, animated: Bool = true) {
     manager.select(viewController: viewController, direction: direction, animated: animated)
@@ -107,7 +166,24 @@ public final class PageViewController: UIViewController {
   public func removeAll() {
     manager.removeAll()
   }
+  
+  // MARK: Private Methods
+  
+  private func setContentOffset(_ value: CGFloat, animated: Bool) {
+    scrollView.setContentOffset(point(value), animated: animated)
+  }
+  
+  private func point(_ value: CGFloat) -> CGPoint {
+    switch options.contentNavigationOrientation {
+    case .horizontal:
+      return CGPoint(x: value, y: 0)
+    case .vertical:
+      return CGPoint(x: 0, y: value)
+    }
+  }
 }
+
+// MARK: - UIScrollViewDelegate
 
 extension PageViewController: UIScrollViewDelegate {
   public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -119,28 +195,30 @@ extension PageViewController: UIScrollViewDelegate {
   }
   
   public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    let distance = view.frame.size.width
+    let distance = pageSize
     var progress: CGFloat
     
     if isRightToLeft {
       switch manager.state {
       case .last, .empty, .single:
-        progress = -(scrollView.contentOffset.x / distance)
+        progress = -(contentOffset / distance)
       case .center, .first:
-        progress = -((scrollView.contentOffset.x - distance) / distance)
+        progress = -((contentOffset - distance) / distance)
       }
     } else {
       switch manager.state {
       case .first, .empty, .single:
-        progress = scrollView.contentOffset.x / distance
+        progress = contentOffset / distance
       case .center, .last:
-        progress = (scrollView.contentOffset.x - distance) / distance
+        progress = (contentOffset - distance) / distance
       }
     }
     
     manager.didScroll(progress: progress)
   }
 }
+
+// MARK: - PageViewManagerDataSource
 
 extension PageViewController: PageViewManagerDataSource {
   func viewControllerAfter(_ viewController: UIViewController) -> UIViewController? {
@@ -152,23 +230,23 @@ extension PageViewController: PageViewManagerDataSource {
   }
 }
 
+// MARK: - PageViewManagerDelegate
+
 extension PageViewController: PageViewManagerDelegate {
   func scrollForward() {
     if isRightToLeft {
       switch manager.state {
       case .first, .center:
-        scrollView.setContentOffset(.zero, animated: true)
+        setContentOffset(.zero, animated: true)
       case .single, .empty, .last:
         break
       }
     } else {
       switch manager.state {
       case .first:
-        let contentOffset = CGPoint(x: view.bounds.width, y: 0)
-        scrollView.setContentOffset(contentOffset, animated: true)
+        setContentOffset(pageSize, animated: true)
       case .center:
-        let contentOffset = CGPoint(x: view.bounds.width * 2, y: 0)
-        scrollView.setContentOffset(contentOffset, animated: true)
+        setContentOffset(pageSize * 2, animated: true)
       case .single, .empty, .last:
         break
       }
@@ -179,11 +257,9 @@ extension PageViewController: PageViewManagerDelegate {
     if isRightToLeft {
       switch manager.state {
       case .last:
-        let contentOffset = CGPoint(x: view.bounds.width, y: 0)
-        scrollView.setContentOffset(contentOffset, animated: true)
+        setContentOffset(pageSize, animated: true)
       case .center:
-        let contentOffset = CGPoint(x: view.bounds.width * 2, y: 0)
-        scrollView.setContentOffset(contentOffset, animated: true)
+        setContentOffset(pageSize * 2, animated: true)
       case .single, .empty, .first:
         break
       }
@@ -201,11 +277,20 @@ extension PageViewController: PageViewManagerDelegate {
     let viewControllers = isRightToLeft ? viewControllers.reversed() : viewControllers
 
     for (index, viewController) in viewControllers.enumerated() {
-      viewController.view.frame = CGRect(
-        x: CGFloat(index) * scrollView.bounds.width,
-        y: 0,
-        width: scrollView.bounds.width,
-        height: scrollView.bounds.height)
+      switch options.contentNavigationOrientation {
+      case .horizontal:
+        viewController.view.frame = CGRect(
+          x: CGFloat(index) * scrollView.bounds.width,
+          y: 0,
+          width: scrollView.bounds.width,
+          height: scrollView.bounds.height)
+      case .vertical:
+        viewController.view.frame = CGRect(
+          x: 0,
+          y: CGFloat(index) * scrollView.bounds.height,
+          width: scrollView.bounds.width,
+          height: scrollView.bounds.height)
+      }
     }
     
     // When updating the content offset we need to account for the
@@ -214,34 +299,32 @@ extension PageViewController: PageViewManagerDelegate {
     // bounce effect in the scroll view.
     var diff: CGFloat = 0
     if keepContentOffset {
-      if scrollView.contentOffset.x > view.bounds.width * 2 {
-        diff = scrollView.contentOffset.x - view.bounds.width * 2
-      } else if scrollView.contentOffset.x > view.bounds.width && scrollView.contentOffset.x < view.bounds.width * 2 {
-        diff = scrollView.contentOffset.x - view.bounds.width
-      } else if scrollView.contentOffset.x < view.bounds.width && scrollView.contentOffset.x < 0 {
-        diff = scrollView.contentOffset.x
+      if contentOffset > pageSize * 2 {
+        diff = contentOffset - pageSize * 2
+      } else if contentOffset > pageSize && contentOffset < pageSize * 2 {
+        diff = contentOffset - pageSize
+      } else if contentOffset < pageSize && contentOffset < 0 {
+        diff = contentOffset
       }
     }
     
     // Need to set content size before updating content offset. If not
     // the views will be misplaced when overshooting.
-    scrollView.contentSize = CGSize(
-      width: CGFloat(manager.state.count) * view.bounds.width,
-      height: view.bounds.height)
+    scrollView.contentSize = contentSize
     
     if isRightToLeft {
       switch manager.state {
       case .first, .center:
-        scrollView.contentOffset = CGPoint(x: view.bounds.width + diff, y: 0)
+        contentOffset = pageSize + diff
       case .single, .empty, .last:
-        scrollView.contentOffset = CGPoint(x: diff, y: 0)
+        contentOffset = diff
       }
     } else {
       switch manager.state {
       case .first, .single, .empty:
-        scrollView.contentOffset = CGPoint(x: diff, y: 0)
+        contentOffset = diff
       case .last, .center:
-        scrollView.contentOffset = CGPoint(x: view.bounds.width + diff, y: 0)
+        contentOffset = pageSize + diff
       }
     }
   }

@@ -178,6 +178,13 @@ open class PagingViewController:
      set { options.menuBackgroundColor = newValue }
   }
   
+  /// The scroll navigation orientation of the content in the page
+  /// view controller. _Default: .horizontal_
+  public var contentNavigationOrientation: PagingNavigationOrientation {
+    get { return options.contentNavigationOrientation }
+    set { options.contentNavigationOrientation = newValue }
+  }
+  
   /// Determine how users can interact with the page view controller.
   /// _Default: .scrolling_
   public var contentInteraction: PagingContentInteraction = .scrolling {
@@ -264,6 +271,7 @@ open class PagingViewController:
         collectionViewLayout.options = options
       }
       
+      pageViewController.options = options
       pagingController.options = options
       pagingView.options = options
     }
