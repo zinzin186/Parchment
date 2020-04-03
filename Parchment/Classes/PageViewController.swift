@@ -27,6 +27,17 @@ public final class PageViewController: UIViewController {
   
   private let manager = PageViewManager()
   private let options: PagingOptions
+  
+  private var isRightToLeft: Bool {
+    if #available(iOS 9.0, *),
+      UIView.userInterfaceLayoutDirection(for: view.semanticContentAttribute) == .rightToLeft {
+      return true
+    } else if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+      return true
+    } else {
+      return false
+    }
+  }
 
   init(options: PagingOptions = PagingOptions()) {
     self.options = options
@@ -110,12 +121,21 @@ extension PageViewController: UIScrollViewDelegate {
   public func scrollViewDidScroll(_ scrollView: UIScrollView) {
     let distance = view.frame.size.width
     var progress: CGFloat
-
-    switch manager.state {
-    case .first, .empty, .single:
-      progress = scrollView.contentOffset.x / distance
-    case .center, .last:
-      progress = (scrollView.contentOffset.x - distance) / distance
+    
+    if isRightToLeft {
+      switch manager.state {
+      case .last, .empty, .single:
+        progress = -(scrollView.contentOffset.x / distance)
+      case .center, .first:
+        progress = -((scrollView.contentOffset.x - distance) / distance)
+      }
+    } else {
+      switch manager.state {
+      case .first, .empty, .single:
+        progress = scrollView.contentOffset.x / distance
+      case .center, .last:
+        progress = (scrollView.contentOffset.x - distance) / distance
+      }
     }
     
     manager.didScroll(progress: progress)
@@ -134,29 +154,52 @@ extension PageViewController: PageViewManagerDataSource {
 
 extension PageViewController: PageViewManagerDelegate {
   func scrollForward() {
-    switch manager.state {
-    case .first:
-      let contentOffset = CGPoint(x: view.bounds.width, y: 0)
-      scrollView.setContentOffset(contentOffset, animated: true)
-    case .center:
-      let contentOffset = CGPoint(x: view.bounds.width * 2, y: 0)
-      scrollView.setContentOffset(contentOffset, animated: true)
-    case .single, .empty, .last:
-      break
+    if isRightToLeft {
+      switch manager.state {
+      case .first, .center:
+        scrollView.setContentOffset(.zero, animated: true)
+      case .single, .empty, .last:
+        break
+      }
+    } else {
+      switch manager.state {
+      case .first:
+        let contentOffset = CGPoint(x: view.bounds.width, y: 0)
+        scrollView.setContentOffset(contentOffset, animated: true)
+      case .center:
+        let contentOffset = CGPoint(x: view.bounds.width * 2, y: 0)
+        scrollView.setContentOffset(contentOffset, animated: true)
+      case .single, .empty, .last:
+        break
+      }
     }
   }
   
   func scrollReverse() {
-    switch manager.state {
-    case .last, .center:
-      manager.willBeginDragging()
-      scrollView.setContentOffset(.zero, animated: true)
-    case .single, .empty, .first:
-      break
+    if isRightToLeft {
+      switch manager.state {
+      case .last:
+        let contentOffset = CGPoint(x: view.bounds.width, y: 0)
+        scrollView.setContentOffset(contentOffset, animated: true)
+      case .center:
+        let contentOffset = CGPoint(x: view.bounds.width * 2, y: 0)
+        scrollView.setContentOffset(contentOffset, animated: true)
+      case .single, .empty, .first:
+        break
+      }
+    } else {
+      switch manager.state {
+      case .last, .center:
+        scrollView.setContentOffset(.zero, animated: true)
+      case .single, .empty, .first:
+        break
+      }
     }
   }
   
   func layoutViews(for viewControllers: [UIViewController], keepContentOffset: Bool) {
+    let viewControllers = isRightToLeft ? viewControllers.reversed() : viewControllers
+
     for (index, viewController) in viewControllers.enumerated() {
       viewController.view.frame = CGRect(
         x: CGFloat(index) * scrollView.bounds.width,
@@ -186,11 +229,20 @@ extension PageViewController: PageViewManagerDelegate {
       width: CGFloat(manager.state.count) * view.bounds.width,
       height: view.bounds.height)
     
-    switch manager.state {
-    case .first, .single, .empty:
-      scrollView.contentOffset = CGPoint(x: diff, y: 0)
-    case .last, .center:
-      scrollView.contentOffset = CGPoint(x: view.bounds.width + diff, y: 0)
+    if isRightToLeft {
+      switch manager.state {
+      case .first, .center:
+        scrollView.contentOffset = CGPoint(x: view.bounds.width + diff, y: 0)
+      case .single, .empty, .last:
+        scrollView.contentOffset = CGPoint(x: diff, y: 0)
+      }
+    } else {
+      switch manager.state {
+      case .first, .single, .empty:
+        scrollView.contentOffset = CGPoint(x: diff, y: 0)
+      case .last, .center:
+        scrollView.contentOffset = CGPoint(x: view.bounds.width + diff, y: 0)
+      }
     }
   }
   

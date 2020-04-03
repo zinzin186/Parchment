@@ -62,6 +62,10 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
     return PagingCellLayoutAttributes.self
   }
   
+  open override var flipsHorizontallyInOppositeLayoutDirection: Bool {
+      return true
+  }
+  
   // MARK: Initializers
   
   public override required init() {
