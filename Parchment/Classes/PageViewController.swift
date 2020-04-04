@@ -98,12 +98,12 @@ public final class PageViewController: UIViewController {
     }
   }
 
-  init(options: PagingOptions = PagingOptions()) {
+  public init(options: PagingOptions = PagingOptions()) {
     self.options = options
     super.init(nibName: nil, bundle: nil)
   }
   
-  required init?(coder: NSCoder) {
+  public required init?(coder: NSCoder) {
     self.options = PagingOptions()
     super.init(coder: coder)
   }
