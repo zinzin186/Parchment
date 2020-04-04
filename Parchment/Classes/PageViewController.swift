@@ -101,17 +101,19 @@ public final class PageViewController: UIViewController {
   public init(options: PagingOptions = PagingOptions()) {
     self.options = options
     super.init(nibName: nil, bundle: nil)
+    manager.delegate = self
+    manager.dataSource = self
   }
   
   public required init?(coder: NSCoder) {
     self.options = PagingOptions()
     super.init(coder: coder)
+    manager.delegate = self
+    manager.dataSource = self
   }
   
   override public func viewDidLoad() {
     super.viewDidLoad()
-    manager.delegate = self
-    manager.dataSource = self
     view.addSubview(scrollView)
     view.constrainToEdges(scrollView)
     scrollView.delegate = self
