@@ -40,6 +40,7 @@
 		3EA04A671C53BFF40054E5E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A651C53BFF40054E5E0 /* LaunchScreen.storyboard */; };
 		3EFEFBF71C80B8820023C949 /* PagingIndicatorLayoutAttributesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesTests.swift */; };
 		950ABE422437BD4D00CAD458 /* PagingNavigationOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950ABE412437BD4D00CAD458 /* PagingNavigationOrientation.swift */; };
+		950ABE452438975300CAD458 /* PageViewExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950ABE442438975300CAD458 /* PageViewExampleViewController.swift */; };
 		951E163720A21D3A0055E9D4 /* PagingViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954842601F4251F90072038C /* PagingViewControllerTests.swift */; };
 		952D802F1E37CC09003DCB18 /* PagingTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 952D802E1E37CC09003DCB18 /* PagingTransition.swift */; };
 		953B8D352416C3DC0047BBA1 /* SelfSizingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953B8D342416C3DC0047BBA1 /* SelfSizingViewController.swift */; };
@@ -235,6 +236,7 @@
 		3EC0184C1C95F993005421AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorLayoutAttributesTests.swift; sourceTree = "<group>"; };
 		950ABE412437BD4D00CAD458 /* PagingNavigationOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingNavigationOrientation.swift; sourceTree = "<group>"; };
+		950ABE442438975300CAD458 /* PageViewExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewExampleViewController.swift; sourceTree = "<group>"; };
 		952D802E1E37CC09003DCB18 /* PagingTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingTransition.swift; sourceTree = "<group>"; };
 		953B8D342416C3DC0047BBA1 /* SelfSizingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingViewController.swift; sourceTree = "<group>"; };
 		954842581F42438E0072038C /* PagingInvalidationContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingInvalidationContext.swift; sourceTree = "<group>"; };
@@ -521,6 +523,14 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		950ABE432438972400CAD458 /* PageViewController */ = {
+			isa = PBXGroup;
+			children = (
+				950ABE442438975300CAD458 /* PageViewExampleViewController.swift */,
+			);
+			path = PageViewController;
+			sourceTree = "<group>";
+		};
 		953B8D332416C3C60047BBA1 /* SelfSizing */ = {
 			isa = PBXGroup;
 			children = (
@@ -559,6 +569,7 @@
 				955453E82413F29400923BC8 /* Scroll */,
 				955453EB2415164600923BC8 /* Header */,
 				955453EE241516CE00923BC8 /* MultipleCells */,
+				950ABE432438972400CAD458 /* PageViewController */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -1031,6 +1042,7 @@
 				955453DF2413E1B200923BC8 /* IconViewController.swift in Sources */,
 				953B8D352416C3DC0047BBA1 /* SelfSizingViewController.swift in Sources */,
 				955453D62413DD8E00923BC8 /* SizeDelegateViewController.swift in Sources */,
+				950ABE452438975300CAD458 /* PageViewExampleViewController.swift in Sources */,
 				955453D92413E11300923BC8 /* ImageCollectionViewCell.swift in Sources */,
 				955453EA241515D900923BC8 /* ScrollViewController.swift in Sources */,
 				955453E72413E39C00923BC8 /* LargeTitlesViewController.swift in Sources */,
