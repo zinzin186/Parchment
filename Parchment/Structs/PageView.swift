@@ -51,12 +51,17 @@ public struct PageView<Item: PagingItem, Page: View>: View {
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<PagingController>) -> PagingViewController {
       let pagingViewController = PagingViewController(options: options)
-      pagingViewController.dataSource = context.coordinator
       return pagingViewController
     }
     
     func updateUIViewController(_ pagingViewController: PagingViewController, context: UIViewControllerRepresentableContext<PagingController>) {
-      return
+      context.coordinator.parent = self
+      
+      if pagingViewController.dataSource == nil {
+        pagingViewController.dataSource = context.coordinator
+      } else {
+        pagingViewController.reloadData()
+      }
     }
   }
 
