@@ -11,10 +11,25 @@ public final class PageViewController: UIViewController {
     return false
   }
   
+  /// The view controller before the selected view controller.
+  public var beforeViewController: UIViewController? {
+    return manager.previousViewController
+  }
+  
+  /// The currently selected view controller. Can be `nil` if no view
+  /// controller is selected.
   public var selectedViewController: UIViewController? {
     return manager.selectedViewController
   }
   
+  /// The view controller after the selected view controller.
+  private var afterViewController: UIViewController? {
+    return manager.nextViewController
+  }
+  
+  /// The underlying scroll view where the page view controllers are
+  /// added. Changing the properties on this scroll view might cause
+  /// undefined behaviour.
   public private(set) lazy var scrollView: UIScrollView = {
     let scrollView = UIScrollView()
     scrollView.isPagingEnabled = true
