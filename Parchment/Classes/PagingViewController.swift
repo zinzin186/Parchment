@@ -14,8 +14,8 @@ import UIKit
 open class PagingViewController:
   UIViewController,
   UICollectionViewDelegate,
-  EMPageViewControllerDataSource,
-  EMPageViewControllerDelegate {
+  PageViewControllerDataSource,
+  PageViewControllerDelegate {
 
   // MARK: Public Properties
   
@@ -178,6 +178,13 @@ open class PagingViewController:
      set { options.menuBackgroundColor = newValue }
   }
   
+  /// The scroll navigation orientation of the content in the page
+  /// view controller. _Default: .horizontal_
+  public var contentNavigationOrientation: PagingNavigationOrientation {
+    get { return options.contentNavigationOrientation }
+    set { options.contentNavigationOrientation = newValue }
+  }
+  
   /// Determine how users can interact with the page view controller.
   /// _Default: .scrolling_
   public var contentInteraction: PagingContentInteraction = .scrolling {
@@ -247,11 +254,8 @@ open class PagingViewController:
   /// is enabled in the collection view.
   public let collectionView: UICollectionView
 
-  /// Used to display the view controller that you are paging
-  /// between. Instead of using UIPageViewController we use a library
-  /// called EMPageViewController which fixes a lot of the common
-  /// issues with using UIPageViewController.
-  public let pageViewController: EMPageViewController
+  /// Used to display the view controllers that you are paging between.
+  public let pageViewController: PageViewController
   
   /// An instance that stores all the customization so that it's
   /// easier to share between other classes.
@@ -267,6 +271,7 @@ open class PagingViewController:
         collectionViewLayout.options = options
       }
       
+      pageViewController.options = options
       pagingController.options = options
       pagingView.options = options
     }
@@ -301,7 +306,7 @@ open class PagingViewController:
   public init(options: PagingOptions = PagingOptions()) {
     self.options = options
     self.pagingController = PagingController(options: options)
-    self.pageViewController = EMPageViewController(navigationOrientation: .horizontal)
+    self.pageViewController = PageViewController(options: options)
     self.collectionViewLayout = createLayout(layout: options.menuLayoutClass.self)
     self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
     super.init(nibName: nil, bundle: nil)
@@ -335,7 +340,7 @@ open class PagingViewController:
   required public init?(coder: NSCoder) {
     self.options = PagingOptions()
     self.pagingController = PagingController(options: options)
-    self.pageViewController = EMPageViewController(navigationOrientation: .horizontal)
+    self.pageViewController = PageViewController(options: options)
     self.collectionViewLayout = createLayout(layout: options.menuLayoutClass.self)
     self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
     super.init(coder: coder)
@@ -475,12 +480,9 @@ open class PagingViewController:
     pageViewController.didMove(toParentViewController: self)
     #endif
     
+    pageViewController.delegate = self
     pageViewController.dataSource = self
     configureContentInteraction()
-
-    if #available(iOS 11.0, *) {
-      pageViewController.scrollView.contentInsetAdjustmentBehavior = .never
-    }
   }
   
   open override func viewDidLayoutSubviews() {
@@ -492,12 +494,6 @@ open class PagingViewController:
     if didLayoutSubviews == false {
       didLayoutSubviews = true
       pagingController.viewAppeared()
-      
-      // Selecting a view controller in the page view triggers the
-      // delegate methods even if the view has not appeared yet. This
-      // causes problems with the initial state when we select items, so
-      // we wait until the view has appeared before setting the delegate.
-      pageViewController.delegate = self
     }
   }
   
@@ -640,9 +636,9 @@ open class PagingViewController:
     return
   }
   
-  // MARK: EMPageViewControllerDataSource
+  // MARK: PageViewControllerDataSource
   
-  open func em_pageViewController(_ pageViewController: EMPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
+  public func pageViewController(_ pageViewController: PageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
     guard
       let dataSource = infiniteDataSource,
       let currentPagingItem = state.currentPagingItem,
@@ -651,7 +647,7 @@ open class PagingViewController:
     return dataSource.pagingViewController(self, viewControllerFor: pagingItem)
   }
   
-  open func em_pageViewController(_ pageViewController: EMPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
+  public func pageViewController(_ pageViewController: PageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
     guard
       let dataSource = infiniteDataSource,
       let currentPagingItem = state.currentPagingItem,
@@ -660,39 +656,22 @@ open class PagingViewController:
     return dataSource.pagingViewController(self, viewControllerFor: pagingItem)
   }
   
-  // MARK: EMPageViewControllerDelegate
+  // MARK: PageViewControllerDelegate
   
-  open func em_pageViewController(_ pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
+  public func pageViewController(_ pageViewController: PageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
     guard let currentPagingItem = state.currentPagingItem else { return }
-    let oldState = state
     
-    // EMPageViewController will trigger a scrolling event even if the
-    // view has not appeared, causing the wrong initial paging item.
-    if view.window != nil {
-      pagingController.contentScrolled(progress: progress)
-      
-      if case .selected = oldState {
-        if let upcomingPagingItem = state.upcomingPagingItem,
-          let destinationViewController = destinationViewController {
-          delegate?.pagingViewController(
-            self,
-            willScrollToItem: upcomingPagingItem,
-            startingViewController: startingViewController,
-            destinationViewController: destinationViewController)
-        }
-      } else {
-        delegate?.pagingViewController(
-          self,
-          isScrollingFromItem: currentPagingItem,
-          toItem: state.upcomingPagingItem,
-          startingViewController: startingViewController,
-          destinationViewController: destinationViewController,
-          progress: progress)
-      }
-    }
+    pagingController.contentScrolled(progress: progress)
+    delegate?.pagingViewController(
+      self,
+      isScrollingFromItem: currentPagingItem,
+      toItem: state.upcomingPagingItem,
+      startingViewController: startingViewController,
+      destinationViewController: destinationViewController,
+      progress: progress)
   }
   
-  open func em_pageViewController(_ pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController) {
+  public func pageViewController(_ pageViewController: PageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController) {
     if let upcomingPagingItem = state.upcomingPagingItem {
       delegate?.pagingViewController(
         self,
@@ -700,10 +679,9 @@ open class PagingViewController:
         startingViewController: startingViewController,
         destinationViewController: destinationViewController)
     }
-    return
   }
   
-  open func em_pageViewController(_ pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
+  public func pageViewController(_ pageViewController: PageViewController, didFinishScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController, transitionSuccessful: Bool) {
     if transitionSuccessful {
       pagingController.contentFinishedScrolling()
     }
@@ -746,25 +724,23 @@ extension PagingViewController: PagingMenuDelegate {
     
     switch direction {
     case .forward(true):
-      pageViewController.scrollForward(animated: animated, completion: nil)
-      pageViewController.view.layoutIfNeeded()
+      pageViewController.selectNext(animated: animated)
       
     case .reverse(true):
-      pageViewController.scrollReverse(animated: animated, completion: nil)
-      pageViewController.view.layoutIfNeeded()
+      pageViewController.selectPrevious(animated: animated)
       
     default:
+      let viewController = dataSource.pagingViewController(self, viewControllerFor: pagingItem)
       pageViewController.selectViewController(
-        dataSource.pagingViewController(self, viewControllerFor: pagingItem),
-        direction: direction.pageViewControllerNavigationDirection,
-        animated: animated,
-        completion: nil
+        viewController,
+        direction: PageViewDirection(from: direction),
+        animated: animated
       )
     }
   }
   
   public func removeContent() {
-    pageViewController.removeAllViewControllers()
+    pageViewController.removeAll()
   }
   
 }

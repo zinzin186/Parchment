@@ -90,31 +90,50 @@ final class PagingController: NSObject {
     case .selected:
       if let currentPagingItem = state.currentPagingItem {
         if pagingItem.isEqual(to: currentPagingItem) == false {
-          appendItemsIfNeeded(upcomingPagingItem: pagingItem)
           
-          let transition = calculateTransition(
-            from: currentPagingItem,
-            to: pagingItem
-          )
-          
-          state = .scrolling(
-            pagingItem: currentPagingItem,
-            upcomingPagingItem: pagingItem,
-            progress: 0,
-            initialContentOffset: transition.contentOffset,
-            distance: transition.distance
-          )
-          
-          let direction = visibleItems.direction(
-            from: currentPagingItem,
-            to: pagingItem
-          )
-          
-          delegate?.selectContent(
-            pagingItem: pagingItem,
-            direction: direction,
-            animated: animated
-          )
+          if animated {
+            appendItemsIfNeeded(upcomingPagingItem: pagingItem)
+            
+            let transition = calculateTransition(
+              from: currentPagingItem,
+              to: pagingItem
+            )
+            
+            state = .scrolling(
+              pagingItem: currentPagingItem,
+              upcomingPagingItem: pagingItem,
+              progress: 0,
+              initialContentOffset: transition.contentOffset,
+              distance: transition.distance
+            )
+            
+            let direction = visibleItems.direction(
+              from: currentPagingItem,
+              to: pagingItem
+            )
+            
+            delegate?.selectContent(
+              pagingItem: pagingItem,
+              direction: direction,
+              animated: animated
+            )
+          } else {
+            state = .selected(pagingItem: pagingItem)
+            
+            reloadItems(around: pagingItem)
+            
+            delegate?.selectContent(
+              pagingItem: pagingItem,
+              direction: .none,
+              animated: false
+            )
+            
+            collectionView.selectItem(
+              at: visibleItems.indexPath(for: pagingItem),
+              animated: false,
+              scrollPosition: options.scrollPosition
+            )
+          }
         }
       }
       
