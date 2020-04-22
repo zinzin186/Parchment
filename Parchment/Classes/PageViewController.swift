@@ -1,5 +1,8 @@
 import UIKit
 
+/// PageViewController is a replacement for `UIPageViewController`
+/// using `UIScrollView`. It provides detailed delegate methods, which
+/// is the main issue with `UIPageViewController`.
 public final class PageViewController: UIViewController {
 
   // MARK: Public Properties
