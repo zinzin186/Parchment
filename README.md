@@ -296,6 +296,12 @@ The spacing between the menu items.
 
 _Default: `0`_
 
+#### `menuItemLabelSpacing`
+
+The horizontal constraints of menu item label.
+
+_Default: `20`_
+
 #### `menuInsets`
 
 The insets around all of the menu items.
