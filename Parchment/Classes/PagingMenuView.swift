@@ -17,7 +17,7 @@ open class PagingMenuView: UIView {
     set { options.menuItemSpacing = newValue }
   }
     
-  /// Determine the spacing between the menu items. _Default: 0_
+  /// Determine the horizontal constraints of menu item label. _Default: 20_
   public var menuItemLabelSpacing: CGFloat {
     get { return options.menuItemLabelSpacing }
     set { options.menuItemLabelSpacing = newValue }
