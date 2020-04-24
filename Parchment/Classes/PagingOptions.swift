@@ -9,6 +9,9 @@ public struct PagingOptions {
   /// Determine the spacing between the menu items. _Default: 0_
   public var menuItemSpacing: CGFloat
   
+  /// Determine the horizontal constraints of menu item label. _Default: 20_
+  public var menuItemLabelSpacing: CGFloat
+
   /// Determine the insets at around all the menu items. _Default:
   /// UIEdgeInsets.zero_
   public var menuInsets: UIEdgeInsets
@@ -139,6 +142,7 @@ public struct PagingOptions {
     menuInteraction = .scrolling
     menuInsets = UIEdgeInsets.zero
     menuItemSpacing = 0
+    menuItemLabelSpacing = 20
     menuHorizontalAlignment = .left
     includeSafeAreaInsets = true
     indicatorClass = PagingIndicatorView.self

@@ -16,6 +16,12 @@ open class PagingMenuView: UIView {
     get { return options.menuItemSpacing }
     set { options.menuItemSpacing = newValue }
   }
+    
+  /// Determine the horizontal constraints of menu item label. _Default: 20_
+  public var menuItemLabelSpacing: CGFloat {
+    get { return options.menuItemLabelSpacing }
+    set { options.menuItemLabelSpacing = newValue }
+  }
   
   /// Determine the insets at around all the menu items. _Default:
   /// UIEdgeInsets.zero_

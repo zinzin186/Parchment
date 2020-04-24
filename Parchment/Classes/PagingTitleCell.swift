@@ -9,7 +9,23 @@ open class PagingTitleCell: PagingCell {
   
   public let titleLabel = UILabel(frame: .zero)
   private var viewModel: PagingTitleCellViewModel?
-  
+    
+  private lazy var horizontalConstraints: [NSLayoutConstraint] = {
+    NSLayoutConstraint.constraints(
+        withVisualFormat: "H:|[label]|",
+        options: NSLayoutConstraint.FormatOptions(),
+        metrics: nil,
+        views: ["label": titleLabel])
+  }()
+    
+  private lazy var verticalConstraints: [NSLayoutConstraint] = {
+    NSLayoutConstraint.constraints(
+        withVisualFormat: "V:|[label]|",
+        options: NSLayoutConstraint.FormatOptions(),
+        metrics: nil,
+        views: ["label": titleLabel])
+  }()
+    
   open override var isSelected: Bool {
     didSet {
       configureTitleLabel()
@@ -42,20 +58,8 @@ open class PagingTitleCell: PagingCell {
     contentView.isAccessibilityElement = true
     titleLabel.translatesAutoresizingMaskIntoConstraints = false
     
-    let horizontalConstraints = NSLayoutConstraint.constraints(
-      withVisualFormat: "H:|-20-[label]-20-|",
-      options: NSLayoutConstraint.FormatOptions(),
-      metrics: nil,
-      views: ["label": titleLabel])
-    
-    let verticalContraints = NSLayoutConstraint.constraints(
-      withVisualFormat: "V:|[label]|",
-      options: NSLayoutConstraint.FormatOptions(),
-      metrics: nil,
-      views: ["label": titleLabel])
-    
     contentView.addConstraints(horizontalConstraints)
-    contentView.addConstraints(verticalContraints)
+    contentView.addConstraints(verticalConstraints)
   }
   
   open func configureTitleLabel() {
@@ -72,6 +76,8 @@ open class PagingTitleCell: PagingCell {
       titleLabel.textColor = viewModel.textColor
       backgroundColor = viewModel.backgroundColor
     }
+    
+    horizontalConstraints.forEach { $0.constant = viewModel.labelSpacing }
   }
 
   open func configureAccessibility() {
