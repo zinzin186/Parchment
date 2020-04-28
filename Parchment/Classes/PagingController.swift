@@ -330,8 +330,6 @@ final class PagingController: NSObject {
   }
   
   private func configureCollectionView() {
-    collectionView.isScrollEnabled = false
-    collectionView.alwaysBounceHorizontal = false
     collectionView.showsHorizontalScrollIndicator = false
     collectionView.dataSource = self
     
@@ -350,6 +348,9 @@ final class PagingController: NSObject {
     if let swipeGestureRecognizerRight = swipeGestureRecognizerRight {
       collectionView.removeGestureRecognizer(swipeGestureRecognizerRight)
     }
+    
+    collectionView.isScrollEnabled = false
+    collectionView.alwaysBounceHorizontal = false
     
     switch (options.menuInteraction) {
     case .scrolling:
@@ -394,7 +395,7 @@ final class PagingController: NSObject {
     }
     
     if let pagingItem = upcomingPagingItem {
-      select(pagingItem: pagingItem, animated: false)
+      select(pagingItem: pagingItem, animated: true)
     }
   }
   
