@@ -474,12 +474,13 @@ final class PagingController: NSObject {
       visibleItems: visibleItems,
       sizeCache: sizeCache,
       selectedScrollPosition: options.selectedScrollPosition,
-      layoutAttributes: collectionViewLayout.layoutAttributes
+      layoutAttributes: collectionViewLayout.layoutAttributes,
+      navigationOrientation: options.contentNavigationOrientation
     )
     
     return PagingTransition(
       contentOffset: collectionView.contentOffset,
-      distance: distance.calculate()
+      distance: distance?.calculate() ?? 0
     )
   }
   
