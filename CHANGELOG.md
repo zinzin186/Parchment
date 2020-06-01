@@ -2,6 +2,14 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.4.0](https://github.com/rechsteiner/Parchment/compare/v2.3.0...v2.4.0) - 2020-01-06
+
+### Fixes
+
+* Fix PagingTitleCell label horizontal constraints (#480)
+* Fix regression causing menuInteraction property not to work properly (#486)
+* Reload data when updating paging items in SwiftUI (#470)
+
 ## [2.3.0](https://github.com/rechsteiner/Parchment/compare/v2.2.0...v2.3.0) - 2020-02-04
 
 ### Added
