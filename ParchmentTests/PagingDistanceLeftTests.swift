@@ -94,8 +94,8 @@ final class PagingDistanceLeftTests: XCTestCase {
   ///             x: 500
   /// ```
   func testDistanceLeftUsingSizeDelegateScrollingForward() {
-    sizeCache.implementsWidthDelegate = true
-    sizeCache.widthForPagingItem = { item, isSelected in
+    sizeCache.implementsSizeDelegate = true
+    sizeCache.sizeForPagingItem = { item, isSelected in
       if isSelected {
          return 100
       } else {
@@ -130,8 +130,8 @@ final class PagingDistanceLeftTests: XCTestCase {
   ///             x: 500
   /// ```
   func testDistanceLeftUsingSizeDelegateScrollingBackward() {
-    sizeCache.implementsWidthDelegate = true
-    sizeCache.widthForPagingItem = { item, isSelected in
+    sizeCache.implementsSizeDelegate = true
+    sizeCache.sizeForPagingItem = { item, isSelected in
       // Expects it to ignore this value when scrolling backwards so
       // setting it the a big number to notice if it's being used.
       return 1000

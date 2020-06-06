@@ -147,12 +147,12 @@ struct PagingDistance {
       let originalDistance = distance
       distance = contentSize - (contentOffset + viewSize)
       
-      if sizeCache.implementsWidthDelegate {
+      if sizeCache.implementsSizeDelegate {
         let toWidth = sizeCache.itemWidthSelected(for: toItem)
         distance += toWidth - toSize
         
         if let _ = fromAttributes {
-          let fromWidth = sizeCache.itemWidth(for: fromItem)
+          let fromWidth = sizeCache.itemSize(for: fromItem)
           distance -= fromSize - fromWidth
         }
         
@@ -183,10 +183,10 @@ struct PagingDistance {
     // backwards or the current item is scrolled out of view the
     // difference doesn't matter as the change in frame of the current
     // item won't have any affect on the position of the upcoming item.
-    if sizeCache.implementsWidthDelegate {
+    if sizeCache.implementsSizeDelegate {
       if let _ = fromAttributes {
         if fromItem.isBefore(item: toItem) {
-          let fromWidth = sizeCache.itemWidth(for: fromItem)
+          let fromWidth = sizeCache.itemSize(for: fromItem)
           let fromDiff = fromSize - fromWidth
           distance -= fromDiff
         }
@@ -202,7 +202,7 @@ struct PagingDistance {
     let width = contentOffset + viewSize
     var distance = currentPosition - width
     
-    if sizeCache.implementsWidthDelegate {
+    if sizeCache.implementsSizeDelegate {
       let toWidth = sizeCache.itemWidthSelected(for: toItem)
       
       // If we have layout attributes for the current item it means
@@ -214,7 +214,7 @@ struct PagingDistance {
           let toDiff = toWidth - toSize
           distance += toDiff
         } else {
-          let fromWidth = sizeCache.itemWidth(for: fromItem)
+          let fromWidth = sizeCache.itemSize(for: fromItem)
           let fromDiff = fromSize - fromWidth
           let toDiff = toWidth - toSize
           distance -= fromDiff
@@ -240,9 +240,9 @@ struct PagingDistance {
       let distanceBetweenCells = toCenter - fromCenter
       distance = distanceBetweenCells - distanceToCenter
       
-      if sizeCache.implementsWidthDelegate {
+      if sizeCache.implementsSizeDelegate {
         let toWidth = sizeCache.itemWidthSelected(for: toItem)
-        let fromWidth = sizeCache.itemWidth(for: fromItem)
+        let fromWidth = sizeCache.itemSize(for: fromItem)
         
         if toItem.isBefore(item: fromItem) {
           distance = -(toSize + (fromCenter - (toCenter + (toSize / 2))) - (toWidth / 2)) - distanceToCenter
@@ -251,7 +251,7 @@ struct PagingDistance {
           distance = fromWidth + (toCenter - (fromCenter + (fromSize / 2))) + toDiff - (fromSize / 2) - distanceToCenter
         }
       }
-    } else if sizeCache.implementsWidthDelegate {
+    } else if sizeCache.implementsSizeDelegate {
       let toWidth = sizeCache.itemWidthSelected(for: toItem)
       let toDiff = toWidth - toSize
       distance += toDiff / 2

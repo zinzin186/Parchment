@@ -98,8 +98,8 @@ final class PagingDistanceRightTests: XCTestCase {
   /// x: 0
   /// ```
   func testDistanceRightUsingSizeDelegateScrollingForward() {
-    sizeCache.implementsWidthDelegate = true
-    sizeCache.widthForPagingItem = { item, isSelected in
+    sizeCache.implementsSizeDelegate = true
+    sizeCache.sizeForPagingItem = { item, isSelected in
       if isSelected {
          return 100
       } else {
@@ -134,8 +134,8 @@ final class PagingDistanceRightTests: XCTestCase {
   /// x: 200
   /// ```
   func testDistanceRightUsingSizeDelegateScrollingBackward() {
-    sizeCache.implementsWidthDelegate = true
-    sizeCache.widthForPagingItem = { item, isSelected in
+    sizeCache.implementsSizeDelegate = true
+    sizeCache.sizeForPagingItem = { item, isSelected in
       if isSelected {
          return 100
       } else {
@@ -170,8 +170,8 @@ final class PagingDistanceRightTests: XCTestCase {
   ///                  x: 200
   /// ```
   func testDistanceRightUsingSizeDelegateWithoutFromAttributes() {
-    sizeCache.implementsWidthDelegate = true
-    sizeCache.widthForPagingItem = { item, isSelected in
+    sizeCache.implementsSizeDelegate = true
+    sizeCache.sizeForPagingItem = { item, isSelected in
       if isSelected {
          return 100
       } else {
