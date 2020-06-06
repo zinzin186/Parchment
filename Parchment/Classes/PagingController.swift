@@ -450,7 +450,7 @@ final class PagingController: NSObject {
           collectionView.setContentOffset(contentOffset, animated: false)
         }
         
-        if sizeCache.implementsWidthDelegate {
+        if sizeCache.implementsSizeDelegate {
           invalidationContext.invalidateSizes = true
         }
       }
@@ -629,14 +629,14 @@ final class PagingController: NSObject {
     if currentPagingItem.isEqual(to: pagingItem) {
       return sizeCache.itemWidthSelected(for: pagingItem)
     } else {
-      return sizeCache.itemWidth(for: pagingItem)
+      return sizeCache.itemSize(for: pagingItem)
     }
   }
   
   private func configureSizeCache(for pagingItem: PagingItem) {
     if sizeDelegate != nil {
-      sizeCache.implementsWidthDelegate = true
-      sizeCache.widthForPagingItem = { [weak self] item, selected in
+      sizeCache.implementsSizeDelegate = true
+      sizeCache.sizeForPagingItem = { [weak self] item, selected in
         return self?.sizeDelegate?.width(for: item, isSelected: selected)
       }
     }

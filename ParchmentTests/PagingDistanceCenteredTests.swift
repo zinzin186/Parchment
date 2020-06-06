@@ -97,8 +97,8 @@ final class PagingDistanceCenteredTests: XCTestCase {
   /// x: 100
   /// ```
   func testDistanceCenteredUsingSizeDelegateScrollingForward() {
-    sizeCache.implementsWidthDelegate = true
-    sizeCache.widthForPagingItem = { item, isSelected in
+    sizeCache.implementsSizeDelegate = true
+    sizeCache.sizeForPagingItem = { item, isSelected in
       if isSelected {
          return 100
       } else {
@@ -132,8 +132,8 @@ final class PagingDistanceCenteredTests: XCTestCase {
   /// x: 100
   /// ```
   func testDistanceCenteredUsingSizeDelegateScrollingBackward() {
-    sizeCache.implementsWidthDelegate = true
-    sizeCache.widthForPagingItem = { item, isSelected in
+    sizeCache.implementsSizeDelegate = true
+    sizeCache.sizeForPagingItem = { item, isSelected in
       if isSelected {
          return 100
       } else {
@@ -168,8 +168,8 @@ final class PagingDistanceCenteredTests: XCTestCase {
   ///                 x: 200
   /// ```
   func testDistanceCenteredUsingSizeDelegateWithoutFromAttributes() {
-    sizeCache.implementsWidthDelegate = true
-    sizeCache.widthForPagingItem = { item, isSelected in
+    sizeCache.implementsSizeDelegate = true
+    sizeCache.sizeForPagingItem = { item, isSelected in
       if isSelected {
          return 100
       } else {
@@ -230,8 +230,8 @@ final class PagingDistanceCenteredTests: XCTestCase {
   /// x: 0
   /// ```
   func testDistanceCenteredToLeadingEdgeWhenUsingSizeDelegate() {
-    sizeCache.implementsWidthDelegate = true
-    sizeCache.widthForPagingItem = { item, isSelected in
+    sizeCache.implementsSizeDelegate = true
+    sizeCache.sizeForPagingItem = { item, isSelected in
       if isSelected {
          return 100
       } else {
@@ -292,8 +292,8 @@ final class PagingDistanceCenteredTests: XCTestCase {
   /// x: 600
   /// ```
   func testDistanceCenteredToTrailingEdgeWhenUsingSizeDelegate() {
-    sizeCache.implementsWidthDelegate = true
-    sizeCache.widthForPagingItem = { item, isSelected in
+    sizeCache.implementsSizeDelegate = true
+    sizeCache.sizeForPagingItem = { item, isSelected in
       if isSelected {
          return 100
       } else {
@@ -329,8 +329,8 @@ final class PagingDistanceCenteredTests: XCTestCase {
   ///                               x: 600
   /// ```
   func testDistanceCenteredToTrailingEdgeWhenUsingSizeDelegateWithHugeSelectedWidth() {
-    sizeCache.implementsWidthDelegate = true
-    sizeCache.widthForPagingItem = { item, isSelected in
+    sizeCache.implementsSizeDelegate = true
+    sizeCache.sizeForPagingItem = { item, isSelected in
       if isSelected {
          return 500
       } else {
