@@ -3,6 +3,8 @@
 The easiest way of using Parchment is to initialize `PagingViewController` with the an array of the view controllers you want to display:
 
 ```Swift
+import Parchment
+
 class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -20,9 +22,9 @@ class ViewController: UIViewController {
 Then add the `pagingViewController` as a child view controller and setup the constraints for the view:
 
 ```Swift
-addChildViewController(pagingViewController)
+addChild(pagingViewController)
 view.addSubview(pagingViewController.view)
-pagingViewController.didMove(toParentViewController: self)
+pagingViewController.didMove(toParent: self)
 pagingViewController.view.translatesAutoresizingMaskIntoConstraints = false
 
 NSLayoutConstraint.activate([
