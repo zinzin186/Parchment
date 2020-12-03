@@ -638,7 +638,7 @@ open class PagingViewController:
   
   // MARK: PageViewControllerDataSource
   
-  public func pageViewController(_ pageViewController: PageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
+  open func pageViewController(_ pageViewController: PageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
     guard
       let dataSource = infiniteDataSource,
       let currentPagingItem = state.currentPagingItem,
@@ -647,7 +647,7 @@ open class PagingViewController:
     return dataSource.pagingViewController(self, viewControllerFor: pagingItem)
   }
   
-  public func pageViewController(_ pageViewController: PageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
+  open func pageViewController(_ pageViewController: PageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
     guard
       let dataSource = infiniteDataSource,
       let currentPagingItem = state.currentPagingItem,
@@ -658,7 +658,7 @@ open class PagingViewController:
   
   // MARK: PageViewControllerDelegate
   
-  public func pageViewController(_ pageViewController: PageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
+  open func pageViewController(_ pageViewController: PageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
     guard let currentPagingItem = state.currentPagingItem else { return }
     
     pagingController.contentScrolled(progress: progress)
@@ -671,7 +671,7 @@ open class PagingViewController:
       progress: progress)
   }
   
-  public func pageViewController(_ pageViewController: PageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController) {
+  open func pageViewController(_ pageViewController: PageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController) {
     if let upcomingPagingItem = state.upcomingPagingItem {
       delegate?.pagingViewController(
         self,
@@ -681,7 +681,7 @@ open class PagingViewController:
     }
   }
   
-  public func pageViewController(_ pageViewController: PageViewController, didFinishScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController, transitionSuccessful: Bool) {
+  open func pageViewController(_ pageViewController: PageViewController, didFinishScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController, transitionSuccessful: Bool) {
     if transitionSuccessful {
       pagingController.contentFinishedScrolling()
     }
