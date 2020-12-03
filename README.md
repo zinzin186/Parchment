@@ -216,7 +216,7 @@ protocol PagingViewControllerDelegate: class {
         startingViewController: UIViewController?,
         destinationViewController: UIViewController,
         transitionSuccessful: Bool)
-        
+
     func pagingViewController(
         _ pagingViewController: PagingViewController,
         didSelectItem pagingItem: PagingItem)
@@ -245,7 +245,7 @@ pagingViewController.sizeDelegate = self
 
 ## Customization
 
-Parchment is built to be very flexible. The menu items are displayed using UICollectionView, so they can display pretty much whatever you want. If you need any further customization you can even subclass the collection view layout. All customization is handled by the properties listed below. 
+Parchment is built to be very flexible. The menu items are displayed using UICollectionView, so they can display pretty much whatever you want. If you need any further customization you can even subclass the collection view layout. All customization is handled by the properties listed below.
 
 ### Custom cells
 
@@ -534,10 +534,6 @@ Parchment also supports [Carthage](https://github.com/Carthage/Carthage). To ins
    `copy-frameworks` script phase
 
 See [this guide](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application) for more details on using Carthage.
-
-## Acknowledgements
-
-* Parchment uses [`EMPageViewController`](https://github.com/emalyak/EMPageViewController) as a replacement for `UIPageViewController`.
 
 ## Changelog
 

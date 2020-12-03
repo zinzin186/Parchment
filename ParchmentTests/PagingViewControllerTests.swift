@@ -45,7 +45,6 @@ final class PagingViewControllerTests: XCTestCase {
     
     // Should not updated the view controllers
     XCTAssertEqual(pagingViewController.pageViewController.selectedViewController, viewController0)
-    XCTAssertEqual(pagingViewController.pageViewController.afterViewController, viewController1)
   }
   
   func testReloadData() {
@@ -86,7 +85,6 @@ final class PagingViewControllerTests: XCTestCase {
     XCTAssertEqual(cell3?.item, item3)
     XCTAssertEqual(pagingViewController.state, PagingState.selected(pagingItem: item2))
     XCTAssertEqual(pagingViewController.pageViewController.selectedViewController, viewController2)
-    XCTAssertEqual(pagingViewController.pageViewController.afterViewController, viewController3)
   }
   
   func testReloadDataSameItemsUpdatesViewControllers() {
@@ -118,7 +116,6 @@ final class PagingViewControllerTests: XCTestCase {
     
     // Assert
     XCTAssertEqual(pagingViewController.pageViewController.selectedViewController, viewController2)
-    XCTAssertEqual(pagingViewController.pageViewController.afterViewController, viewController3)
   }
   
   func testReloadDataSelectsPreviouslySelectedItem() {

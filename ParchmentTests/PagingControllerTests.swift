@@ -491,7 +491,7 @@ final class PagingControllerTests: XCTestCase {
     delegate.calls = []
     
     // Select a new item.
-    pagingController.select(pagingItem: Item(index: 0), animated: false)
+    pagingController.select(pagingItem: Item(index: 0), animated: true)
     
     // Expect it to enter the scrolling state.
     XCTAssertEqual(pagingController.state, PagingState.scrolling(
@@ -516,7 +516,7 @@ final class PagingControllerTests: XCTestCase {
     delegate.calls = []
     
     // Select the previous sibling.
-    pagingController.select(pagingItem: Item(index: 0), animated: false)
+    pagingController.select(pagingItem: Item(index: 0), animated: true)
     
     // Expect it to select the previous content view.
     XCTAssertEqual(collectionView.calls, [])
@@ -525,7 +525,7 @@ final class PagingControllerTests: XCTestCase {
       .delegate(.selectContent(
         pagingItem: Item(index: 0),
         direction: .reverse(sibling: true),
-        animated: false
+        animated: true
       ))
     ])
   }
@@ -543,7 +543,7 @@ final class PagingControllerTests: XCTestCase {
     delegate.calls = []
     
     // Select the previous sibling.
-    pagingController.select(pagingItem: Item(index: 2), animated: false)
+    pagingController.select(pagingItem: Item(index: 2), animated: true)
     
     // Expect it to select the previous content view.
     XCTAssertEqual(collectionView.calls, [])
@@ -552,7 +552,7 @@ final class PagingControllerTests: XCTestCase {
       .delegate(.selectContent(
         pagingItem: Item(index: 2),
         direction: .forward(sibling: true),
-        animated: false
+        animated: true
       ))
     ])
   }
@@ -570,7 +570,7 @@ final class PagingControllerTests: XCTestCase {
     delegate.calls = []
     
     // Select an item that is not the sibling of the selected item.
-    pagingController.select(pagingItem: Item(index: 4), animated: false)
+    pagingController.select(pagingItem: Item(index: 4), animated: true)
     
     // Expect it to select the content view.
     XCTAssertEqual(collectionView.calls, [])
@@ -579,7 +579,7 @@ final class PagingControllerTests: XCTestCase {
       .delegate(.selectContent(
         pagingItem: Item(index: 4),
         direction: .forward(sibling: false),
-        animated: false
+        animated: true
       ))
     ])
   }
@@ -604,7 +604,7 @@ final class PagingControllerTests: XCTestCase {
     
     // Select the item next to the selected item, which is now
     // scrolled out of view.
-    pagingController.select(pagingItem: Item(index: 1), animated: false)
+    pagingController.select(pagingItem: Item(index: 1), animated: true)
     
     // The visible items should now contain the items that were
     // visible before scrolling (6..10), plus the items around
@@ -639,7 +639,7 @@ final class PagingControllerTests: XCTestCase {
       .delegate(.selectContent(
         pagingItem: Item(index: 1),
         direction: .forward(sibling: true),
-        animated: false
+        animated: true
       ))
     ])
   }
