@@ -2,6 +2,13 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.0](https://github.com/rechsteiner/Parchment/compare/v2.4.0...v3.0.0) - 2020-12-03
+
+### Changes
+
+* Custom PageViewController (#468)
+* RTL language support (#468)
+
 ## [2.4.0](https://github.com/rechsteiner/Parchment/compare/v2.3.0...v2.4.0) - 2020-01-06
 
 ### Fixes
