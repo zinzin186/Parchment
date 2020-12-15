@@ -2,6 +2,13 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.1](https://github.com/rechsteiner/Parchment/compare/v3.0.0...v3.0.1) - 2020-12-15
+
+### Fixes
+
+* Fix layout issue in PageViewController #543
+* Fix crash when using UIColor(patternImage:) #544
+
 ## [3.0.0](https://github.com/rechsteiner/Parchment/compare/v2.4.0...v3.0.0) - 2020-12-03
 
 ### Changes
