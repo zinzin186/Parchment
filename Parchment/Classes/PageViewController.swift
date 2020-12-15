@@ -36,8 +36,15 @@ public final class PageViewController: UIViewController {
   public private(set) lazy var scrollView: UIScrollView = {
     let scrollView = UIScrollView()
     scrollView.isPagingEnabled = true
+    scrollView.autoresizingMask = [
+      .flexibleTopMargin,
+      .flexibleRightMargin,
+      .flexibleBottomMargin,
+      .flexibleLeftMargin
+    ]
     scrollView.scrollsToTop = false
     scrollView.bounces = true
+    scrollView.translatesAutoresizingMaskIntoConstraints = true
     scrollView.showsHorizontalScrollIndicator = false
     scrollView.showsVerticalScrollIndicator = false
     return scrollView
@@ -133,7 +140,6 @@ public final class PageViewController: UIViewController {
   override public func viewDidLoad() {
     super.viewDidLoad()
     view.addSubview(scrollView)
-    view.constrainToEdges(scrollView)
     scrollView.delegate = self
     
     if #available(iOS 11.0, *) {
@@ -143,7 +149,6 @@ public final class PageViewController: UIViewController {
   
   public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    view.layoutIfNeeded()
     manager.viewWillAppear(animated)
   }
   
@@ -293,8 +298,17 @@ extension PageViewController: PageViewManagerDelegate {
     }
   }
   
+  public override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    scrollView.frame = view.bounds
+  }
+
   func layoutViews(for viewControllers: [UIViewController], keepContentOffset: Bool) {
     let viewControllers = isRightToLeft ? viewControllers.reversed() : viewControllers
+
+    // Need to trigger a layout here to ensure that the scroll view
+    // bounds is updated before we use its frame for calculations.
+    view.layoutIfNeeded()
 
     for (index, viewController) in viewControllers.enumerated() {
       switch options.contentNavigationOrientation {
