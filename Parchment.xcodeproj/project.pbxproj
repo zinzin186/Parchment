@@ -81,6 +81,8 @@
 		95591F21222C3A0400677B4B /* PagingControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95591F20222C3A0400677B4B /* PagingControllerTests.swift */; };
 		95591F23222C522800677B4B /* PagingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95591F22222C522800677B4B /* PagingController.swift */; };
 		955D02442434E56900416E71 /* PagingViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955D02432434E56900416E71 /* PagingViewTests.swift */; };
+		9566F55F257982B500CCA8FC /* UIColorInterpolationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9566F55E257982B500CCA8FC /* UIColorInterpolationTests.swift */; };
+		9566F567257983B200CCA8FC /* Resources.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9566F566257983B200CCA8FC /* Resources.xcassets */; };
 		9568922B222C525C00AFF250 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9568922A222C525C00AFF250 /* CollectionView.swift */; };
 		956EBE5E248BC426003ED4BA /* PagingCollectionViewLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956EBE5D248BC426003ED4BA /* PagingCollectionViewLayoutTests.swift */; };
 		9575BEB32461FEF9002403F6 /* CreateDistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9575BEB22461FEF9002403F6 /* CreateDistance.swift */; };
@@ -272,6 +274,8 @@
 		95591F20222C3A0400677B4B /* PagingControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingControllerTests.swift; sourceTree = "<group>"; };
 		95591F22222C522800677B4B /* PagingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingController.swift; sourceTree = "<group>"; };
 		955D02432434E56900416E71 /* PagingViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingViewTests.swift; sourceTree = "<group>"; };
+		9566F55E257982B500CCA8FC /* UIColorInterpolationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorInterpolationTests.swift; sourceTree = "<group>"; };
+		9566F566257983B200CCA8FC /* Resources.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Resources.xcassets; sourceTree = "<group>"; };
 		9568922A222C525C00AFF250 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		956EBE5D248BC426003ED4BA /* PagingCollectionViewLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingCollectionViewLayoutTests.swift; sourceTree = "<group>"; };
 		9575BEB22461FEF9002403F6 /* CreateDistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDistance.swift; sourceTree = "<group>"; };
@@ -454,8 +458,10 @@
 				3E5E93E21CE7D899000762A1 /* PagingStateTests.swift */,
 				954842601F4251F90072038C /* PagingViewControllerTests.swift */,
 				955D02432434E56900416E71 /* PagingViewTests.swift */,
+				9566F55E257982B500CCA8FC /* UIColorInterpolationTests.swift */,
 				95D78FE5228728FD00E6EE7C /* Mocks */,
 				9575BEB12461FEE3002403F6 /* Utilities */,
+				9566F566257983B200CCA8FC /* Resources.xcassets */,
 			);
 			path = ParchmentTests;
 			sourceTree = "<group>";
@@ -920,6 +926,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9566F567257983B200CCA8FC /* Resources.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -981,6 +988,7 @@
 				95FEEA4524215FCA009B5B64 /* PageViewManagerTests.swift in Sources */,
 				95D78FDB2287138F00E6EE7C /* MockCollectionView.swift in Sources */,
 				9575BEB72463490B002403F6 /* PagingDistanceCenteredTests.swift in Sources */,
+				9566F55F257982B500CCA8FC /* UIColorInterpolationTests.swift in Sources */,
 				954E7DEE1F48AE6E00342ECF /* Item.swift in Sources */,
 				954842631F4252070072038C /* PagingDiffTests.swift in Sources */,
 				95D78FDD228713B800E6EE7C /* MockCollectionViewLayout.swift in Sources */,
