@@ -868,7 +868,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Martin Rechsteiner";
 				TargetAttributes = {
 					3E504EC31C7465B000AE1CE3 = {
