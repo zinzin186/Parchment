@@ -5,6 +5,7 @@ enum Example: CaseIterable {
   case selfSizing
   case calendar
   case sizeDelegate
+  case infiniteLooping
   case images
   case icons
   case storyboard
@@ -25,6 +26,8 @@ enum Example: CaseIterable {
       return "Calendar"
     case .sizeDelegate:
       return "Size delegate"
+    case .infiniteLooping:
+      return "Infinite looping"
     case .images:
       return "Images"
     case .icons:
@@ -105,6 +108,8 @@ final class ExamplesViewController: UITableViewController {
       return SelfSizingViewController()
     case .sizeDelegate:
       return SizeDelegateViewController(nibName: nil, bundle: nil)
+    case .infiniteLooping:
+      return InfiniteLoopingViewController(nibName: nil, bundle: nil)
     case .images:
       return UnsplashViewController(nibName: nil, bundle: nil)
     case .icons:

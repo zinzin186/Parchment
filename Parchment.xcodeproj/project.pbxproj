@@ -128,6 +128,7 @@
 		95E4BA701FF15E84008871A3 /* PagingViewControllerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E4BA6F1FF15E84008871A3 /* PagingViewControllerDataSource.swift */; };
 		95E4BA721FF15EFE008871A3 /* PagingFiniteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E4BA711FF15EFE008871A3 /* PagingFiniteDataSource.swift */; };
 		95F5660F2128707900F2A75E /* PagingMenuItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D1BE1D211E409400E86B72 /* PagingMenuItemSource.swift */; };
+		95F83D09261E4F60003B728F /* InfiniteLoopingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F83D05261E4EB2003B728F /* InfiniteLoopingViewController.swift */; };
 		95FE3AF91FFEDBCE00E6F2AD /* PagingDistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FE3AF81FFEDBCE00E6F2AD /* PagingDistance.swift */; };
 		95FEEA4524215FCA009B5B64 /* PageViewManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FEEA4424215FCA009B5B64 /* PageViewManagerTests.swift */; };
 		95FEEA4D2423C44A009B5B64 /* MockPageViewManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FEEA4C2423C44A009B5B64 /* MockPageViewManagerDelegate.swift */; };
@@ -325,6 +326,7 @@
 		95D790172299D57A00E6EE7C /* PagingMenuDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingMenuDelegate.swift; sourceTree = "<group>"; };
 		95E4BA6F1FF15E84008871A3 /* PagingViewControllerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingViewControllerDataSource.swift; sourceTree = "<group>"; };
 		95E4BA711FF15EFE008871A3 /* PagingFiniteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingFiniteDataSource.swift; sourceTree = "<group>"; };
+		95F83D05261E4EB2003B728F /* InfiniteLoopingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteLoopingViewController.swift; sourceTree = "<group>"; };
 		95FE3AF81FFEDBCE00E6F2AD /* PagingDistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingDistance.swift; sourceTree = "<group>"; };
 		95FEEA4424215FCA009B5B64 /* PageViewManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewManagerTests.swift; sourceTree = "<group>"; };
 		95FEEA4C2423C44A009B5B64 /* MockPageViewManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPageViewManagerDelegate.swift; sourceTree = "<group>"; };
@@ -477,7 +479,9 @@
 				3EA04A4C1C53BFE40054E5E0 /* Products */,
 				95D2AE63242BED9B00AC3D46 /* Frameworks */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		3EA04A4C1C53BFE40054E5E0 /* Products */ = {
 			isa = PBXGroup;
@@ -585,6 +589,7 @@
 				955453CD2413DC5A00923BC8 /* Calendar */,
 				953B8D332416C3C60047BBA1 /* SelfSizing */,
 				955453D42413DD7A00923BC8 /* SizeDelegate */,
+				95F83D04261E4EA4003B728F /* InfiniteLooping */,
 				955453D72413E0FA00923BC8 /* Images */,
 				955453DC2413E1A500923BC8 /* Icons */,
 				955453F12415180A00923BC8 /* Storyboard */,
@@ -752,6 +757,14 @@
 				95FEEA502423F752009B5B64 /* MockPageViewManagerDataSource.swift */,
 			);
 			path = Mocks;
+			sourceTree = "<group>";
+		};
+		95F83D04261E4EA4003B728F /* InfiniteLooping */ = {
+			isa = PBXGroup;
+			children = (
+				95F83D05261E4EB2003B728F /* InfiniteLoopingViewController.swift */,
+			);
+			path = InfiniteLooping;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1073,6 +1086,7 @@
 				955453DA2413E11300923BC8 /* ImagePagingCell.swift in Sources */,
 				955453C62413D76C00923BC8 /* ExamplesViewController.swift in Sources */,
 				955453C82413DB7900923BC8 /* UIView+constraints.swift in Sources */,
+				95F83D09261E4F60003B728F /* InfiniteLoopingViewController.swift in Sources */,
 				955453ED2415165800923BC8 /* HeaderViewController.swift in Sources */,
 				955453CF2413DC6900923BC8 /* UIColor+interpolation.swift in Sources */,
 				955453F32415181800923BC8 /* StoryboardViewController.swift in Sources */,

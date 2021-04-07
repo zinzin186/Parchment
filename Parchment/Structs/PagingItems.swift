@@ -50,14 +50,23 @@ public struct PagingItems {
   /// - Parameter to: The `PagingItem` being scrolled towards
   /// - Returns: The `PagingDirection` for a given `PagingItem`
   public func direction(from: PagingItem, to: PagingItem) -> PagingDirection {
-    if from.isBefore(item: to) {
+    if isBefore(from, to) {
       return .forward(sibling: isSibling(from: from, to: to))
-    } else if to.isBefore(item: from) {
+    } else if isBefore(to, from) {
       return .reverse(sibling: isSibling(from: from, to: to))
     }
     return .none
   }
   
+  func isBefore(_ lhs: PagingItem, _ rhs: PagingItem) -> Bool {
+    guard
+      let lhsIndex = items.firstIndex(where : { $0.isEqual(to: lhs) }),
+      let rhsIndex = items.firstIndex(where: { $0.isEqual(to: rhs) })
+      else { return lhs.isBefore(item: rhs) }
+
+    return lhsIndex < rhsIndex
+  }
+
   func isSibling(from: PagingItem, to: PagingItem) -> Bool {
     guard
       let fromIndex = items.firstIndex(where : { $0.isEqual(to: from) }),
@@ -75,13 +84,5 @@ public struct PagingItems {
   
   func contains(_ pagingItem: PagingItem) -> Bool {
     return cachedItems[pagingItem.identifier] != nil ? true : false
-  }
-  
-  func union(_ newItems: [PagingItem]) -> [PagingItem] {
-    let old = Set(items.map { AnyPagingItem(base: $0) })
-    let new = Set(newItems.map { AnyPagingItem(base: $0) })
-    return Array(old.union(new))
-      .map({ $0.base })
-      .sorted(by: { $0.isBefore(item: $1) })
   }
 }
