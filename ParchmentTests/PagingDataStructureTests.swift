@@ -42,11 +42,4 @@ final class PagingDataTests: XCTestCase {
     let direction = visibleItems.direction(from: currentPagingItem, to: upcomingPagingItem)
     XCTAssertEqual(direction, PagingDirection.reverse(sibling: true))
   }
-  
-  func testDirectionForIndexPathNone() {
-    let currentPagingItem = Item(index: -1)
-    let upcomingPagingItem = Item(index: 0)
-    let direction = visibleItems.direction(from: currentPagingItem, to: upcomingPagingItem)
-    XCTAssertEqual(direction, PagingDirection.none)
-  }
 }

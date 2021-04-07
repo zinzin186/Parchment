@@ -1,8 +1,7 @@
 import UIKit
 import Parchment
 
-struct IconItem: PagingItem, Hashable, Comparable {
-  
+struct IconItem: PagingItem, Hashable {
   let icon: String
   let index: Int
   let image: UIImage?
@@ -12,9 +11,20 @@ struct IconItem: PagingItem, Hashable, Comparable {
     self.index = index
     self.image = UIImage(named: icon)
   }
-  
-  static func <(lhs: IconItem, rhs: IconItem) -> Bool {
-    return lhs.index < rhs.index
+
+  /// By default, isBefore is implemented when the PagingItem conforms
+  /// to Comparable, but in this case we want a custom implementation
+  /// where we also compare IconItem with PagingIndexItem. This
+  /// ensures that we animate the page transition in the correct
+  /// direction when selecting items.
+  func isBefore(item: PagingItem) -> Bool {
+    if let item = item as? PagingIndexItem {
+      return index < item.index
+    } else if let item = item as? Self {
+      return index < item.index
+    } else {
+      return false
+    }
   }
 }
 
