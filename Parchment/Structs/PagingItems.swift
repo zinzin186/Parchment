@@ -50,9 +50,7 @@ public struct PagingItems {
   /// - Parameter to: The `PagingItem` being scrolled towards
   /// - Returns: The `PagingDirection` for a given `PagingItem`
   public func direction(from: PagingItem, to: PagingItem) -> PagingDirection {
-    if contains(from) == false {
-      return .none
-    } else if from.isBefore(item: to) {
+    if from.isBefore(item: to) {
       return .forward(sibling: isSibling(from: from, to: to))
     } else if to.isBefore(item: from) {
       return .reverse(sibling: isSibling(from: from, to: to))
