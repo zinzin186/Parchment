@@ -1,5 +1,5 @@
-import UIKit
 import Parchment
+import UIKit
 
 // This example shows how to use Parchment togehter with
 // "prefersLargeTitles" on UINavigationBar. It works by creating a
@@ -12,7 +12,6 @@ import Parchment
 // small title state when scrolling down. I haven't figured out any
 // of getting around this. Any ideas are welcome.
 
-
 // This first thing we need to do is to create our own custom paging
 // view and override the layout constraints. The default
 // implementation positions the menu view above the page view
@@ -20,14 +19,13 @@ import Parchment
 // navigation bar we don't want to setup any layout constraints for
 // the menu view.
 class LargeTitlesPagingView: PagingView {
-    
     override func setupConstraints() {
         pageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             pageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             pageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             pageView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            pageView.topAnchor.constraint(equalTo: topAnchor)
+            pageView.topAnchor.constraint(equalTo: topAnchor),
         ])
     }
 }
@@ -45,25 +43,24 @@ class LargeTitlesPagingViewController: PagingViewController {
 }
 
 class LargeTitlesViewController: UIViewController {
-
     // Create an instance of UIScrollView that we will be used to
     // "trick" the navigation bar to update.
     private let hiddenScrollView = UIScrollView()
-    
+
     // Create an instance of our custom paging view controller that
     // does not setup any constraints for the menu view.
     private let pagingViewController = LargeTitlesPagingViewController()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let navigationController = navigationController else { return }
-      
+
         // Tell the navigation bar that we want to have large titles
         navigationController.navigationBar.prefersLargeTitles = true
-        
+
         // Customize the menu to match the navigation bar color
-        let blue = UIColor(red: 3/255, green: 125/255, blue: 233/255, alpha: 1)
-      
+        let blue = UIColor(red: 3 / 255, green: 125 / 255, blue: 233 / 255, alpha: 1)
+
         if #available(iOS 13.0, *) {
             let appearance = UINavigationBarAppearance()
             appearance.backgroundColor = blue
@@ -79,15 +76,15 @@ class LargeTitlesViewController: UIViewController {
             UINavigationBar.appearance().barTintColor = blue
             UINavigationBar.appearance().isTranslucent = false
         }
-      
+
         view.backgroundColor = .white
         pagingViewController.menuBackgroundColor = blue
         pagingViewController.menuItemSize = .fixed(width: 150, height: 30)
         pagingViewController.textColor = UIColor.white.withAlphaComponent(0.7)
         pagingViewController.selectedTextColor = UIColor.white
         pagingViewController.borderOptions = .hidden
-        pagingViewController.indicatorColor = UIColor(red: 10/255, green: 0, blue: 105/255, alpha: 1)
-        
+        pagingViewController.indicatorColor = UIColor(red: 10 / 255, green: 0, blue: 105 / 255, alpha: 1)
+
         // Add the "hidden" scroll view to the root of the UIViewController.
         view.addSubview(hiddenScrollView)
         hiddenScrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -97,15 +94,15 @@ class LargeTitlesViewController: UIViewController {
             hiddenScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             hiddenScrollView.topAnchor.constraint(equalTo: view.topAnchor),
         ])
-        
+
         // Add the PagingViewController and constrain it to all edges.
         addChild(pagingViewController)
         view.addSubview(pagingViewController.view)
         pagingViewController.didMove(toParent: self)
-        
+
         pagingViewController.dataSource = self
         pagingViewController.delegate = self
-        
+
         pagingViewController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             pagingViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -128,54 +125,50 @@ class LargeTitlesViewController: UIViewController {
         ])
         extendedLayoutIncludesOpaqueBars = true
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
+
+    override func viewDidAppear(_: Bool) {
         guard let viewController = pagingViewController.pageViewController.selectedViewController as? TableViewController else { return }
-        
+
         // When switching to another view controller, update the hidden
         // scroll view to match the current table view.
         hiddenScrollView.contentSize = viewController.tableView.contentSize
         hiddenScrollView.contentInset = viewController.tableView.contentInset
         hiddenScrollView.contentOffset = viewController.tableView.contentOffset
-        
+
         // Set the UITableViewDelegate to the currenly visible table view.
         viewController.tableView.delegate = self
     }
-
 }
 
 extension LargeTitlesViewController: PagingViewControllerDataSource {
-    
-  func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
+    func pagingViewController(_: PagingViewController, viewControllerAt _: Int) -> UIViewController {
         let viewController = TableViewController(style: .plain)
-        
+
         // Inset the table view with the height of the menu height.
         let insets = UIEdgeInsets(top: pagingViewController.options.menuItemSize.height, left: 0, bottom: 0, right: 0)
         viewController.tableView.scrollIndicatorInsets = insets
         viewController.tableView.contentInset = insets
         return viewController
     }
-    
+
     func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
         return PagingIndexItem(index: index, title: "View \(index)")
     }
-    
-    func numberOfViewControllers(in pagingViewController: PagingViewController) -> Int {
+
+    func numberOfViewControllers(in _: PagingViewController) -> Int {
         return 3
     }
-    
 }
 
 extension LargeTitlesViewController: PagingViewControllerDelegate {
-    
-    func pagingViewController(_: PagingViewController, willScrollToItem pagingItem: PagingItem, startingViewController: UIViewController, destinationViewController: UIViewController) {
+    func pagingViewController(_: PagingViewController, willScrollToItem _: PagingItem, startingViewController: UIViewController, destinationViewController _: UIViewController) {
         guard let startingViewController = startingViewController as? TableViewController else { return }
         // Remove the UITableViewDelegate delegate when starting to
         // scroll to another page.
         startingViewController.tableView.delegate = nil
     }
 
-    func pagingViewController(_: PagingViewController, didScrollToItem pagingItem: PagingItem, startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
+    func pagingViewController(_: PagingViewController, didScrollToItem _: PagingItem, startingViewController: UIViewController?, destinationViewController: UIViewController, transitionSuccessful: Bool) {
         guard let destinationViewController = destinationViewController as? TableViewController else { return }
         guard let startingViewController = startingViewController as? TableViewController else { return }
 
@@ -183,7 +176,7 @@ extension LargeTitlesViewController: PagingViewControllerDelegate {
         // view controller when the page scroll ended.
         if transitionSuccessful {
             destinationViewController.tableView.delegate = self
-            
+
             // When switching to another view controller, update the
             // hidden scroll view to match the current table view.
             hiddenScrollView.contentSize = destinationViewController.tableView.contentSize
@@ -192,14 +185,12 @@ extension LargeTitlesViewController: PagingViewControllerDelegate {
         } else {
             startingViewController.tableView.delegate = self
         }
-        
+
         return
     }
-    
 }
 
 extension LargeTitlesViewController: UITableViewDelegate {
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // When the current table view is scrolling, we update the
         // content offset of the hidden scroll view to trigger the
@@ -207,5 +198,4 @@ extension LargeTitlesViewController: UITableViewDelegate {
         hiddenScrollView.contentOffset = scrollView.contentOffset
         hiddenScrollView.panGestureRecognizer.state = scrollView.panGestureRecognizer.state
     }
-    
 }
