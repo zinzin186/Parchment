@@ -13,80 +13,133 @@ import UIKit
     /// It can be used with any fixed array of `PagingItem`s. Use the
     /// `PagingOptions` struct to customize the properties.
     @available(iOS 13.0, *)
-    public struct PageView<Item: PagingItem, Page: View>: View where Item: Hashable {
-        public typealias WillScrollCallback = ((PagingItem) -> Void)
-        public typealias DidScrollCallback = ((PagingItem) -> Void)
-        public typealias DidSelectCallback = ((PagingItem) -> Void)
+    public struct PageView<Item: PagingItem, Page: View>: View {
+        let content: (Item) -> Page
+
         private let options: PagingOptions
         private var items = [Item]()
-        let content: (Item) -> Page
-        @Binding
-        private var scrollToPosition: PageViewScrollPosition?
-        var willScrollCallback: WillScrollCallback?
-        var didScrollCallback: DidScrollCallback?
-        var didSelectCallback: DidSelectCallback?
+        private var onWillScroll: ((PagingItem) -> Void)?
+        private var onDidScroll: ((PagingItem) -> Void)?
+        private var onDidSelect: ((PagingItem) -> Void)?
+        @Binding private var selectedIndex: Int
 
         /// Initialize a new `PageView`.
         ///
         /// - Parameters:
         ///   - options: The configuration parameters we want to customize.
         ///   - items: The array of `PagingItem`s to display in the menu.
+        ///   - selectedIndex: The index of the currently selected page.
+        ///   Updating this index will transition to the new index.
         ///   - content: A callback that returns the `View` for each item.
-        public init(options: PagingOptions = PagingOptions(),
-                    scrollToPosition: Binding<PageViewScrollPosition?>? = nil,
-                    items: [Item],
-                    content: @escaping (Item) -> Page) {
-            _scrollToPosition = scrollToPosition ?? .constant(nil)
+        public init(
+            options: PagingOptions = PagingOptions(),
+            items: [Item],
+            selectedIndex: Binding<Int> = .constant(0),
+            content: @escaping (Item) -> Page
+        ) {
+            _selectedIndex = selectedIndex
             self.options = options
             self.items = items
             self.content = content
         }
 
         public var body: some View {
-            PagingController(items: items,
-                             options: options,
-                             content: content,
-                             scrollToPosition: $scrollToPosition,
-                             willScrollCallback: willScrollCallback,
-                             didScrollCallback: didScrollCallback,
-                             didSelectCallback: didSelectCallback)
+            PagingController(
+                items: items,
+                options: options,
+                content: content,
+                onWillScroll: onWillScroll,
+                onDidScroll: onDidScroll,
+                onDidSelect: onDidSelect,
+                selectedIndex: $selectedIndex
+            )
+        }
+
+        /// Called when the user finished scrolling to a new view.
+        ///
+        /// - Parameter action: A closure that is called with the
+        /// paging item that was scrolled to.
+        /// - Returns: An instance of self
+        public func didScroll(_ action: @escaping (PagingItem) -> Void) -> Self {
+            var view = self
+            view.onDidScroll = action
+            return view
+        }
+
+        /// Called when the user is about to start scrolling to a new view.
+        ///
+        /// - Parameter action: A closure that is called with the
+        /// paging item that is being scrolled to.
+        /// - Returns: An instance of self
+        public func willScroll(_ action: @escaping (PagingItem) -> Void) -> Self {
+            var view = self
+            view.onWillScroll = action
+            return view
+        }
+
+        /// Called when an item was selected in the menu.
+        ///
+        /// - Parameter action: A closure that is called with the
+        /// selected paging item.
+        /// - Returns: An instance of self
+        public func didSelect(_ action: @escaping (PagingItem) -> Void) -> Self {
+            var view = self
+            view.onDidSelect = action
+            return view
+        }
+
+        /// Create a custom paging view controller subclass that we
+        /// can use to store state to avoid reloading data unnecessary.
+        final class CustomPagingViewController: PagingViewController {
+            var items: [Item]?
         }
 
         struct PagingController: UIViewControllerRepresentable {
             let items: [Item]
             let options: PagingOptions
             let content: (Item) -> Page
-            var viewControllers = [Item: UIHostingController<Page>]()
-            @Binding
-            var scrollToPosition: PageViewScrollPosition?
-            var willScrollCallback: WillScrollCallback?
-            var didScrollCallback: DidScrollCallback?
-            var didSelectCallback: DidSelectCallback?
+            var onWillScroll: ((PagingItem) -> Void)?
+            var onDidScroll: ((PagingItem) -> Void)?
+            var onDidSelect: ((PagingItem) -> Void)?
+
+            @Binding var selectedIndex: Int
 
             func makeCoordinator() -> Coordinator {
                 Coordinator(self)
             }
 
-            func makeUIViewController(context: UIViewControllerRepresentableContext<PagingController>) -> PagingViewController {
-                let pagingViewController = PagingViewController(options: options)
+            func makeUIViewController(context: UIViewControllerRepresentableContext<PagingController>) -> CustomPagingViewController {
+                let pagingViewController = CustomPagingViewController(options: options)
                 pagingViewController.dataSource = context.coordinator
                 pagingViewController.delegate = context.coordinator
                 return pagingViewController
             }
 
-            func updateUIViewController(_ pagingViewController: PagingViewController,
+            func updateUIViewController(_ pagingViewController: CustomPagingViewController,
                                         context: UIViewControllerRepresentableContext<PagingController>) {
                 context.coordinator.parent = self
 
-                if let position = $scrollToPosition.wrappedValue {
-                    pagingViewController.select(index: position.index, animated: position.animated)
-                } else {
+                if pagingViewController.dataSource == nil {
+                    pagingViewController.dataSource = context.coordinator
+                }
+
+                // If the menu items have changed we call reload data
+                // to update both the menu and content views.
+                if let previousItems = pagingViewController.items,
+                    !previousItems.elementsEqual(items, by: { $0.isEqual(to: $1) }) {
                     pagingViewController.reloadData()
                 }
+
+                // Store the current items so we can compare it with
+                // the new items the next time this method is called.
+                pagingViewController.items = items
+
+                let index = $selectedIndex.wrappedValue
+                pagingViewController.select(index: index, animated: true)
             }
         }
 
-        class Coordinator: NSObject, PagingViewControllerDataSource, PagingViewControllerDelegate {
+        final class Coordinator: PagingViewControllerDataSource, PagingViewControllerDelegate {
             var parent: PagingController
 
             init(_ pagingController: PagingController) {
@@ -94,32 +147,28 @@ import UIKit
             }
 
             func numberOfViewControllers(in _: PagingViewController) -> Int {
-                parent.items.count
+                return parent.items.count
             }
 
             func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
-                guard let viewController = parent.viewControllers[parent.items[index]] else {
-                    let view = parent.content(parent.items[index])
-                    let viewController = UIHostingController(rootView: view)
-                    parent.viewControllers[parent.items[index]] = viewController
-                    return viewController
-                }
-                return viewController
+                let view = parent.content(parent.items[index])
+                return UIHostingController(rootView: view)
             }
 
             func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
                 parent.items[index]
             }
 
-            func pagingViewController(_: PagingViewController,
+            func pagingViewController(_ controller: PagingViewController,
                                       didScrollToItem pagingItem: PagingItem,
                                       startingViewController _: UIViewController?,
                                       destinationViewController _: UIViewController,
                                       transitionSuccessful _: Bool) {
-                parent.didScrollCallback?(pagingItem)
+                parent.onDidScroll?(pagingItem)
 
-                DispatchQueue.main.async {
-                    self.parent.scrollToPosition = nil
+                if let item = pagingItem as? Item,
+                    let index = parent.items.firstIndex(where: { $0.isEqual(to: item) }) {
+                    parent.selectedIndex = index
                 }
             }
 
@@ -127,45 +176,12 @@ import UIKit
                                       willScrollToItem pagingItem: PagingItem,
                                       startingViewController _: UIViewController,
                                       destinationViewController _: UIViewController) {
-                parent.willScrollCallback?(pagingItem)
+                parent.onWillScroll?(pagingItem)
             }
 
             func pagingViewController(_: PagingViewController, didSelectItem pagingItem: PagingItem) {
-                parent.didSelectCallback?(pagingItem)
+                parent.onDidSelect?(pagingItem)
             }
         }
     }
-
-    @available(iOS 13.0, *)
-    public struct PageViewScrollPosition: Equatable {
-        public var index: Int
-        public var animated: Bool
-
-        public init(index: Int, animated: Bool = true) {
-            self.index = index
-            self.animated = animated
-        }
-    }
-
-    @available(iOS 13.0, *)
-    public extension PageView {
-        func didScroll(_ didScrollCallback: @escaping DidScrollCallback) -> Self {
-            var this = self
-            this.didScrollCallback = didScrollCallback
-            return this
-        }
-
-        func willScroll(_ willScrollCallback: @escaping WillScrollCallback) -> Self {
-            var this = self
-            this.willScrollCallback = willScrollCallback
-            return this
-        }
-
-        func didSelect(_ didSelectCallback: @escaping DidSelectCallback) -> Self {
-            var this = self
-            this.didSelectCallback = didSelectCallback
-            return this
-        }
-    }
-
 #endif
