@@ -88,6 +88,12 @@ import UIKit
             return view
         }
 
+        /// Create a custom paging view controller subclass that we
+        /// can use to store state to avoid reloading data unnecessary.
+        final class CustomPagingViewController: PagingViewController {
+            var items: [Item]?
+        }
+
         struct PagingController: UIViewControllerRepresentable {
             let items: [Item]
             let options: PagingOptions
@@ -102,22 +108,31 @@ import UIKit
                 Coordinator(self)
             }
 
-            func makeUIViewController(context: UIViewControllerRepresentableContext<PagingController>) -> PagingViewController {
-                let pagingViewController = PagingViewController(options: options)
+            func makeUIViewController(context: UIViewControllerRepresentableContext<PagingController>) -> CustomPagingViewController {
+                let pagingViewController = CustomPagingViewController(options: options)
                 pagingViewController.dataSource = context.coordinator
                 pagingViewController.delegate = context.coordinator
                 return pagingViewController
             }
 
-            func updateUIViewController(_ pagingViewController: PagingViewController,
+            func updateUIViewController(_ pagingViewController: CustomPagingViewController,
                                         context: UIViewControllerRepresentableContext<PagingController>) {
                 context.coordinator.parent = self
 
                 if pagingViewController.dataSource == nil {
                     pagingViewController.dataSource = context.coordinator
-                } else {
+                }
+
+                // If the menu items have changed we call reload data
+                // to update both the menu and content views.
+                if let previousItems = pagingViewController.items,
+                    !previousItems.elementsEqual(items, by: { $0.isEqual(to: $1) }) {
                     pagingViewController.reloadData()
                 }
+
+                // Store the current items so we can compare it with
+                // the new items the next time this method is called.
+                pagingViewController.items = items
 
                 let index = $selectedIndex.wrappedValue
                 pagingViewController.select(index: index, animated: true)
