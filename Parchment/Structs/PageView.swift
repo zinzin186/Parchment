@@ -13,7 +13,7 @@ import UIKit
     /// It can be used with any fixed array of `PagingItem`s. Use the
     /// `PagingOptions` struct to customize the properties.
     @available(iOS 13.0, *)
-    public struct PageView<Item: PagingItem, Page: View>: View where Item: Hashable {
+    public struct PageView<Item: PagingItem, Page: View>: View {
         let content: (Item) -> Page
 
         private let options: PagingOptions
