@@ -1,6 +1,6 @@
 import CoreGraphics
-import XCTest
 @testable import Parchment
+import XCTest
 
 final class UIColorInterpolationTests: XCTestCase {
     // Colors initialized with UIColor(patternImage:) have only 1

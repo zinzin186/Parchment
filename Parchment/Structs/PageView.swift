@@ -35,9 +35,8 @@ import UIKit
         public init(options: PagingOptions = PagingOptions(),
                     scrollToPosition: Binding<PageViewScrollPosition?>? = nil,
                     items: [Item],
-                    content: @escaping (Item) -> Page)
-        {
-            self._scrollToPosition = scrollToPosition ?? .constant(nil)
+                    content: @escaping (Item) -> Page) {
+            _scrollToPosition = scrollToPosition ?? .constant(nil)
             self.options = options
             self.items = items
             self.content = content
@@ -76,8 +75,7 @@ import UIKit
             }
 
             func updateUIViewController(_ pagingViewController: PagingViewController,
-                                        context: UIViewControllerRepresentableContext<PagingController>)
-            {
+                                        context: UIViewControllerRepresentableContext<PagingController>) {
                 context.coordinator.parent = self
 
                 if let position = $scrollToPosition.wrappedValue {
@@ -92,10 +90,10 @@ import UIKit
             var parent: PagingController
 
             init(_ pagingController: PagingController) {
-                self.parent = pagingController
+                parent = pagingController
             }
 
-            func numberOfViewControllers(in pagingViewController: PagingViewController) -> Int {
+            func numberOfViewControllers(in _: PagingViewController) -> Int {
                 parent.items.count
             }
 
@@ -113,12 +111,11 @@ import UIKit
                 parent.items[index]
             }
 
-            func pagingViewController(_ pagingViewController: PagingViewController,
+            func pagingViewController(_: PagingViewController,
                                       didScrollToItem pagingItem: PagingItem,
-                                      startingViewController: UIViewController?,
-                                      destinationViewController: UIViewController,
-                                      transitionSuccessful: Bool)
-            {
+                                      startingViewController _: UIViewController?,
+                                      destinationViewController _: UIViewController,
+                                      transitionSuccessful _: Bool) {
                 parent.didScrollCallback?(pagingItem)
 
                 DispatchQueue.main.async {
@@ -126,15 +123,14 @@ import UIKit
                 }
             }
 
-            func pagingViewController(_ pagingViewController: PagingViewController,
+            func pagingViewController(_: PagingViewController,
                                       willScrollToItem pagingItem: PagingItem,
-                                      startingViewController: UIViewController,
-                                      destinationViewController: UIViewController)
-            {
+                                      startingViewController _: UIViewController,
+                                      destinationViewController _: UIViewController) {
                 parent.willScrollCallback?(pagingItem)
             }
 
-            func pagingViewController(_ pagingViewController: PagingViewController, didSelectItem pagingItem: PagingItem) {
+            func pagingViewController(_: PagingViewController, didSelectItem pagingItem: PagingItem) {
                 parent.didSelectCallback?(pagingItem)
             }
         }
