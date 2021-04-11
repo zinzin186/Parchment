@@ -124,7 +124,7 @@ import UIKit
             }
         }
 
-        class Coordinator: NSObject, PagingViewControllerDataSource, PagingViewControllerDelegate {
+        final class Coordinator: PagingViewControllerDataSource, PagingViewControllerDelegate {
             var parent: PagingController
 
             init(_ pagingController: PagingController) {
