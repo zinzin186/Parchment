@@ -20,7 +20,7 @@ class BasicViewController: UIViewController {
         ]
 
         let pagingViewController = PagingViewController(viewControllers: viewControllers)
-
+        pagingViewController.indicatorOptions = .visible(height: 10, zIndex: 0, spacing: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), position: .left(30))
         // Make sure you add the PagingViewController as a child view
         // controller and constrain it to the edges of the view.
         addChild(pagingViewController)
@@ -29,3 +29,4 @@ class BasicViewController: UIViewController {
         pagingViewController.didMove(toParent: self)
     }
 }
+

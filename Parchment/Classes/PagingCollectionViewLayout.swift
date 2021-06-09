@@ -498,14 +498,14 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
     }
 
     private func indicatorSpacingForIndex(_: Int) -> UIEdgeInsets {
-        if case let .visible(_, _, insets, _) = options.indicatorOptions {
+        if case let .visible(_, _, insets, _, _) = options.indicatorOptions {
             return insets
         }
         return UIEdgeInsets.zero
     }
 
     private func indicatorInsetsForIndex(_ index: Int) -> PagingIndicatorMetric.Inset {
-        if case let .visible(_, _, _, insets) = options.indicatorOptions {
+        if case let .visible(_, _, _, insets, _) = options.indicatorOptions {
             if index == 0, range.upperBound == 1 {
                 return .both(insets.left, insets.right)
             } else if index == range.lowerBound {
@@ -518,15 +518,32 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
     }
 
     private func indicatorFrameForIndex(_ index: Int) -> CGRect {
+        var newFrame: CGRect = .zero
         if index < range.lowerBound {
             let frame = frameForIndex(0)
-            return frame.offsetBy(dx: -frame.width, dy: 0)
+            newFrame = frame.offsetBy(dx: -frame.width, dy: 0)
         } else if index > range.upperBound - 1 {
             let frame = frameForIndex(visibleItems.items.count - 1)
-            return frame.offsetBy(dx: frame.width, dy: 0)
+            newFrame = frame.offsetBy(dx: frame.width, dy: 0)
+        } else {
+            newFrame = frameForIndex(index)
         }
-
-        return frameForIndex(index)
+        
+        if case let .visible(_, _, _, _, _position) = options.indicatorOptions {
+            if let position = _position {
+                switch position {
+                case .left(let width):
+                    newFrame.size.width = width
+                case .right(let width):
+                    newFrame.origin.x += (newFrame.width - width)
+                    newFrame.size.width = width
+                case .center(let width):
+                    newFrame.origin.x += (newFrame.width - width)/2
+                    newFrame.size.width = width
+                }
+            }
+        }
+        return newFrame
     }
 
     private func frameForIndex(_ index: Int) -> CGRect {

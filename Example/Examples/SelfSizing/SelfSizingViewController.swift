@@ -21,6 +21,7 @@ final class SelfSizingViewController: PagingViewController {
         super.viewDidLoad()
         dataSource = self
         menuItemSize = .selfSizing(estimatedWidth: 100, height: 40)
+        self.indicatorOptions = .visible(height: 10, zIndex: 0, spacing: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0), position: .right(30))
     }
 }
 
